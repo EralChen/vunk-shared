@@ -12,6 +12,8 @@ export default [
       'docs/components.d.ts',
       'coverage',
       'ssr-testing/cases/*',
+      '**/__test__/*',
+
     ],
   },
 ]

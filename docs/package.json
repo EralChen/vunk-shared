@@ -6,7 +6,10 @@
     "preview": "vite build && vite preview"
   },
   "dependencies": {
+    "@skzz/platform": "0.0.0-alpha.73",
+    "@vunk/core": "0.0.0-alpha.118",
     "@vunk/gsap": "0.0.0-alpha.3",
+    "@vunk/skzz": "0.0.0-alpha.111",
     "deepdash-es": "^5.3.9",
     "gsap": "^3.12.5",
     "prism-theme-vars": "^0.2.4",

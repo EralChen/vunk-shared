@@ -1,13 +1,11 @@
-<script lang="ts" setup>
-import { SkUserSelectTables } from '@vunk-shared/components/user-select-tables'
-import { ref } from 'vue'
-import { User } from '@vunk-shared/api/user'
-
-const currentUsers = ref<User[]>([])
+<script lang="ts">
+import { defineComponent } from 'vue'
+export default defineComponent({
+  setup () {
+    return {}
+  },
+})
 </script>
 <template>
-  <p>currentUsers: {{ currentUsers }}</p>
-  <SkUserSelectTables
-    v-model="currentUsers"
-  ></SkUserSelectTables>
+  <div>123</div>
 </template>

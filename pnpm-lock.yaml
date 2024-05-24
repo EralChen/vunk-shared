@@ -13,7 +13,7 @@ importers:
         version: 2.3.1(vue@3.4.26(typescript@5.4.5))
       '@vuesri/core':
         specifier: ^1.0.9
-        version: 1.0.21(@arcgis/core@4.29.10)(@vunk/core@0.0.0-alpha.116)(vue@3.4.26(typescript@5.4.5))
+        version: 1.0.21(@arcgis/core@4.29.10)(@vunk/core@0.0.0-alpha.118)(vue@3.4.26(typescript@5.4.5))
       '@vueuse/core':
         specifier: ^10.9.0
         version: 10.9.0(vue@3.4.26(typescript@5.4.5))
@@ -100,14 +100,23 @@ importers:
         specifier: ^7.0.27
         version: 7.1.3(rollup@4.17.2)(vite@5.2.11(@types/node@18.0.4)(sass@1.76.0)(terser@5.31.0))(vue@3.4.26(typescript@5.4.5))
       vitest:
-        specifier: ^1.3.1
+        specifier: ^1.6.0
         version: 1.6.0(@types/node@18.0.4)(sass@1.76.0)(terser@5.31.0)
 
   docs:
     dependencies:
+      '@skzz/platform':
+        specifier: 0.0.0-alpha.73
+        version: 0.0.0-alpha.73
+      '@vunk/core':
+        specifier: 0.0.0-alpha.118
+        version: 0.0.0-alpha.118
       '@vunk/gsap':
         specifier: 0.0.0-alpha.3
         version: 0.0.0-alpha.3
+      '@vunk/skzz':
+        specifier: 0.0.0-alpha.111
+        version: 0.0.0-alpha.111
       deepdash-es:
         specifier: ^5.3.9
         version: 5.3.9
@@ -161,6 +170,9 @@ importers:
       '@types/markdown-it-container':
         specifier: ^2.0.9
         version: 2.0.10
+      markdown-it:
+        specifier: ^14.1.0
+        version: 14.1.0
       markdown-it-container:
         specifier: ^4.0.0
         version: 4.0.0
@@ -1125,6 +1137,9 @@ packages:
     resolution: {integrity: sha512-LtoMMhxAlorcGhmFYI+LhPgbPZCkgP6ra1YL604EeF6U98pLlQ3iWIGMdWSC+vWmPBWBNgmDBAhnAobLROJmwg==}
     engines: {node: '>=18'}
 
+  '@skzz/platform@0.0.0-alpha.73':
+    resolution: {integrity: sha512-HQ4/2Ft1/ld7vHMQX+TW/f5r5G2hCabf2skycb2t6lG8Vtpm1fPsreLzfxWiMPAqRhn2+0TB/DkBzXcFbkxqPw==}
+
   '@stencil/core@4.17.1':
     resolution: {integrity: sha512-nlARe1QtK5abnCG8kPQKJMWiELg39vKabvf3ebm6YEhQA35CgrxC1pVYTsYq3yktJKoY+k+VzGRnATLKyaLbvA==}
     engines: {node: '>=16.0.0', npm: '>=7.10.0'}
@@ -1585,11 +1600,14 @@ packages:
   '@vueuse/shared@9.13.0':
     resolution: {integrity: sha512-UrnhU+Cnufu4S6JLCPZnkWh0WwZGUp72ktOF2DFptMlOs3TOdVv8xJN53zhHGARmVOsz5KqOls09+J1NR6sBKw==}
 
-  '@vunk/core@0.0.0-alpha.116':
-    resolution: {integrity: sha512-P+LxhIC4mKOB3w6/AKppCp6b037u/FLJi9LOEDRuXUQd02unhnfyZ22dEw4YAvhyPWWU0XdLa6DTJnCn1yUh3A==}
+  '@vunk/core@0.0.0-alpha.118':
+    resolution: {integrity: sha512-I6we2gOyKYNTnDxZHmj1X/iqumqKcpS7X6WIYa/NKwlxzSCQoYkVOHCo1UWaEeIbWOUT55Cy+e6vLFy7Lz5tLQ==}
 
   '@vunk/gsap@0.0.0-alpha.3':
     resolution: {integrity: sha512-UTyP4VmeAoMY+eab/OhFyyXrd21W4zgQuV2px4r/5x8iox187yf3AH42zuI//ub+loVTgE74iu9MQasTJ8NdMw==}
+
+  '@vunk/skzz@0.0.0-alpha.111':
+    resolution: {integrity: sha512-Vk/47vffp+RsFXIN0qjdZ943YibHqMuv9SHzsSXGQImXY8p3EO4nJgdXvEyig4FaKZZhIGxNXsYAO9VC8wl3YA==}
 
   '@webcomponents/shadycss@1.11.2':
     resolution: {integrity: sha512-vRq+GniJAYSBmTRnhCYPAPq6THYqovJ/gzGThWbgEZUQaBccndGTi1hdiUP15HzEco0I6t4RCtXyX0rsSmwgPw==}
@@ -5761,6 +5779,8 @@ snapshots:
 
   '@sindresorhus/merge-streams@2.3.0': {}
 
+  '@skzz/platform@0.0.0-alpha.73': {}
+
   '@stencil/core@4.17.1': {}
 
   '@sxzz/popperjs-es@2.11.7': {}
@@ -6397,11 +6417,11 @@ snapshots:
 
   '@vue/shared@3.4.26': {}
 
-  '@vuesri/core@1.0.21(@arcgis/core@4.29.10)(@vunk/core@0.0.0-alpha.116)(vue@3.4.26(typescript@5.4.5))':
+  '@vuesri/core@1.0.21(@arcgis/core@4.29.10)(@vunk/core@0.0.0-alpha.118)(vue@3.4.26(typescript@5.4.5))':
     dependencies:
       '@arcgis/core': 4.29.10
       '@vueuse/core': 10.9.0(vue@3.4.26(typescript@5.4.5))
-      '@vunk/core': 0.0.0-alpha.116
+      '@vunk/core': 0.0.0-alpha.118
       lodash-es: 4.17.21
       vue: 3.4.26(typescript@5.4.5)
     transitivePeerDependencies:
@@ -6458,9 +6478,11 @@ snapshots:
       - '@vue/composition-api'
       - vue
 
-  '@vunk/core@0.0.0-alpha.116': {}
+  '@vunk/core@0.0.0-alpha.118': {}
 
   '@vunk/gsap@0.0.0-alpha.3': {}
+
+  '@vunk/skzz@0.0.0-alpha.111': {}
 
   '@webcomponents/shadycss@1.11.2': {}
 

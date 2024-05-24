@@ -134,7 +134,6 @@ export default defineConfig(async ({ mode }) => {
       }),
 
       Icons(),
-      Inspect(),
     ],
     // We manually add a list of dependencies to be pre-bundled, in order to avoid a page reload at dev start which breaks vike's CI
     optimizeDeps: { 

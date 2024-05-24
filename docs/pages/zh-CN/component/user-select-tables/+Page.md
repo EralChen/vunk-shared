@@ -14,8 +14,3 @@ UserSelectTables
 user-select-tables/basic
 :::
 
-## UserSelectTables Props
-
-:::props
-user-select-tables/src/ctx
-:::
