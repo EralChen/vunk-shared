@@ -1,3 +1,3 @@
-export * from '@skzz-template/shared'
+export * from '@vunk-shared/shared'
 
 /* [PLACEHOLDER] components export */

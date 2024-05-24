@@ -1,5 +1,5 @@
 {
-  "name": "@skzz-template/docs",
+  "name": "@vunk-shared/docs",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

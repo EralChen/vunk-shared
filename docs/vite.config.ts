@@ -9,7 +9,6 @@ import { appRoot, srcRoot } from './path.config'
 
 import path from 'path'
 
-import Inspect from 'vite-plugin-inspect'
 import Icons from 'unplugin-icons/vite'
 import IconsResolver from 'unplugin-icons/resolver'
 
@@ -18,6 +17,7 @@ import Components from 'unplugin-vue-components/vite'
 import { MarkdownTransform } from './vitepress/plugins/markdown-transform'
 import { linkPlugin } from './vitepress/plugins/link'
 import { anchorPlugin } from './vitepress/plugins/anchor'
+import VueDevTools from 'vite-plugin-vue-devtools'
 
 
 
@@ -76,7 +76,7 @@ export default defineConfig(async ({ mode }) => {
     },
     
     plugins: [
-      
+      VueDevTools(),
       MarkdownTransform(),
       vike({
         prerender: true, 
