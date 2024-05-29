@@ -1,0 +1,19 @@
+{
+  "name": "@vunk-shared/markdown",
+  "private": true,
+  "scripts": {
+    "build": "gulp -f gulpfile.ts"
+  },
+  "devDependencies": {
+    "@types/markdown-it-container": "^2.0.9"
+  },
+  "dependencies": {
+    "@shikijs/core": "^1.6.0",
+    "@shikijs/transformers": "^1.6.0",
+    "markdown-it": "^14.1.0",
+    "markdown-it-container": "^4.0.0",
+    "picocolors": "^1.0.0",
+    "shiki": "^1.6.0",
+    "vitepress": "1.1.4"
+  }
+}

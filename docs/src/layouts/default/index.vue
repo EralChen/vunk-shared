@@ -86,7 +86,7 @@ onContentUpdated(() => {
 html{
   height: 100%;
 }
-body, #app, #page-view {
+body, #app, #page-view, #vue-root {
   height: inherit;
 }
 

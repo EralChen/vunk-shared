@@ -13,7 +13,7 @@ export const pkgsEntryFile = path.resolve(pkgsEntryDir, './main.ts')
 
 // dist
 export const distDir = path.resolve(workRoot, './dist')
-export const distTypesDir = path.resolve(distDir, './types')
+export const distTypesDir = path.resolve(distDir, './typings')
 
 
 // Docs

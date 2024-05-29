@@ -80,19 +80,9 @@ export async function rollupFile (opts: {
     input: opts.inputFile,
     
     plugins: [
-      alias({
-        entries: [
-          { find: 'esri', replacement: '@arcgis/core' },
-        ],
-      }),
       nodeResolve({
         extensions: ['.js', '.json', '.ts'],
-        browser: true,
       }),
-      // css({
-      //   output: 'index.css',
-      // }),
-      // vue(),
       esbuildPlugin,
       commonjs(),
     ],

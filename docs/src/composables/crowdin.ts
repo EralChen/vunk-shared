@@ -13,3 +13,8 @@ export const useCrowdinFile = (
   return pageContext.crowdin[path]
 }
 
+
+export const useCrowdinLang = () => {
+  const pageContext = usePageContext()
+  return pageContext.lang
+}

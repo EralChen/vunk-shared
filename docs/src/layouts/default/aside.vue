@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { useCrowdinFile, CrowdinFilePath } from '#s/composables/crowdin'
+import { useCrowdinLang } from '#s/composables/crowdin'
 import { ElMenu } from 'element-plus'
 import { VkRoutesMenuContent } from '@vunk/skzz/components/routes-menu-content'
 import type { RouteRecordRaw } from 'vue-router'
@@ -8,43 +8,39 @@ import { SkAppIcon } from '@skzz/platform/components/app-icon'
 import { useSharedMenuClick } from '#s/composables/menuClick'
 import { VkDuplex } from '@vunk/core'
 import { findDeep } from 'deepdash-es/standalone'
+import explorerTreeList from 'virtual:explorer'
+import { toNestedTree } from '@vunk-shared/data'
 
-
-interface MenuRaw {
-  text: string
-  link?: string
-  children: MenuRaw[]
-}
+type ExplorerTreeNode = (typeof explorerTreeList)[0] 
+type MenuRaw = RouteRecordRaw & ExplorerTreeNode
 
 const menuComponent = ref() as Ref<{
   open: (index: string) => void
 }>
 const { listenerToggle } =  useSharedMenuClick()
-const componentCrow = useCrowdinFile(CrowdinFilePath.component)
-const basePath = import.meta.env.BASE_URL + componentCrow.lang + '/component' 
+const lang = useCrowdinLang()
+const basePath = import.meta.env.BASE_URL + lang
 
 
 /* menu source */
-const source = componentCrow.source as Record<string, MenuRaw>
-const menu = genRoutes(Object.values(source))
-function genRoutes (menus: MenuRaw[], parentPath = basePath): RouteRecordRaw[] {
-  return menus.map((menu) => {
-    const path = parentPath + (menu.link ?? '')
+const source  = explorerTreeList
+const menu = toNestedTree(genRoutes(source)) 
+function genRoutes (
+  raws: ExplorerTreeNode[], 
+): MenuRaw[] {
+  return raws.map((menu) => {
+    const path = (menu.label ?? '')
     const meta: NonNullable<RouteRecordRaw['meta']>  = {
-      title: menu.text,
+      title: menu.label,
       alwaysShow: true,
     } 
-
-    if (menu.children?.length) { // 如果是父级菜单, 以第一个子菜单为默认 Index
-      meta.subMenuIndex = path + menu.children[0].link
-    }
-
     const route = {
+      ...menu,
       path,
       meta,
-      name: menu.text,
-      children: genRoutes(menu.children ?? [], path),
-    } as RouteRecordRaw
+      name: menu.id,
+    } as MenuRaw
+
     return route
   })
 }

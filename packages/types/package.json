@@ -1,0 +1,7 @@
+{
+  "name": "@vunk-shared/types",
+  "private": true,
+  "scripts": {
+    "build": "gulp -f gulpfile.ts"
+  }
+}

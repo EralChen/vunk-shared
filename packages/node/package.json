@@ -1,0 +1,10 @@
+{
+  "name": "@vunk-shared/node",
+  "private": true,
+  "scripts": {
+    "build": "gulp -f gulpfile.ts"
+  },
+  "dependencies": {
+    "minimatch": "^9.0.4"
+  }
+}

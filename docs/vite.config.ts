@@ -1,10 +1,9 @@
 import vue from '@vitejs/plugin-vue'
 import vueJsx from '@vitejs/plugin-vue-jsx'
-import markdown from 'unplugin-vue-markdown/vite'
 import vike from 'vike/plugin'
 
 import { AliasOptions, UserConfig, defineConfig, loadEnv } from 'vite'
-import { unocssPreferences, containerPlugin, getDefaultHighlight, preWrapperPlugin } from '@lib-env/app-utils'
+import { unocssPreferences,  explorerPlugin, createMarkdownPlugin, mdDemoContainerPlugin } from '@lib-env/app-utils'
 import { appRoot, srcRoot } from './path.config'
 
 import path from 'path'
@@ -14,10 +13,9 @@ import IconsResolver from 'unplugin-icons/resolver'
 
 import Components from 'unplugin-vue-components/vite'
 
-import { MarkdownTransform } from './vitepress/plugins/markdown-transform'
-import { linkPlugin } from './vitepress/plugins/link'
-import { anchorPlugin } from './vitepress/plugins/anchor'
+// import { MarkdownTransform } from './vitepress/plugins/markdown-transform'
 import VueDevTools from 'vite-plugin-vue-devtools'
+import { packagesDir } from '@lib-env/path'
 
 
 
@@ -77,7 +75,22 @@ export default defineConfig(async ({ mode }) => {
     
     plugins: [
       VueDevTools(),
-      MarkdownTransform(),
+      
+      explorerPlugin({
+        root: packagesDir,
+        ignore: [
+          '**/node_modules**',
+          '**/__tests__**',
+          '**/index.ts',
+          '**/package.json',
+          '**/gulpfile.ts',
+          '**/types.ts',
+          'entry',
+        ],
+      }),
+
+      // MarkdownTransform(),
+
       vike({
         prerender: true, 
       }),
@@ -86,53 +99,24 @@ export default defineConfig(async ({ mode }) => {
       
       vue({
         include: [/\.vue$/, /\.md$/],
+        
       }),
       vueJsx({}),
 
- 
 
-      markdown({
-        
-        markdownItOptions: {
-          html: true,
-          linkify: true,
-          highlight: (await getDefaultHighlight()),
+      await createMarkdownPlugin({
+        base: base,
+        markdownItSetup (markdownIt) {
+          markdownIt.use(mdDemoContainerPlugin)
         },
-        
-        markdownItSetup (md) {
-          md
-            .use(preWrapperPlugin)
-            .use(containerPlugin)
-            .use(linkPlugin,
-              { 
-                target: '_blank', 
-                rel: 'noreferrer', 
-              },
-              {
-                base,
-                cleanUrls: true,
-              },
-            )
-            .use(anchorPlugin)
-  
-        },
-        wrapperClasses: [
-          'vp-doc',
-          'VPDoc',
-          'doc-content',
-        ],
-        
       }),
-      
-
-
-
+  
       Components({
+        
         resolvers: [
           IconsResolver(),
         ],
       }),
-
       Icons(),
     ],
     // We manually add a list of dependencies to be pre-bundled, in order to avoid a page reload at dev start which breaks vike's CI

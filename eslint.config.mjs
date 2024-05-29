@@ -12,9 +12,12 @@ export default [
       'docs/components.d.ts',
       'coverage',
       'ssr-testing/cases/*',
-      '**/__test__/*',
+      '**/__tests__/*',
 
     ],
+    rules: {
+      'vue/no-v-html': 'off',
+    },
   },
 ]
 

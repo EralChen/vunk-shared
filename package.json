@@ -28,8 +28,14 @@
 	},
 	"dependencies": {
 		"@element-plus/icons-vue": "^2.3.1",
+		"@vunk-shared/data": "workspace:*",
+		"@vunk-shared/function": "workspace:*",
+		"@vunk-shared/markdown": "workspace:*",
+		"@vunk-shared/node": "workspace:*",
+		"@vunk-shared/regexp": "workspace:*",
+		"@vunk-shared/types": "workspace:*",
+		"@vunk-shared/vite": "workspace:*",
 		"@vunk/shared": "workspace:*",
-		"@vuesri/core": "^1.0.9",
 		"@vueuse/core": "^10.9.0",
 		"element-plus": "npm:element-plus@latest",
 		"vue": "^3.4.21"

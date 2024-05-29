@@ -6,7 +6,6 @@ import { getHeadSetting } from '#/vike-vue/renderer/getHeadSetting'
 import type { OnRenderClientAsync } from 'vike/types'
 import type { VikeVueApp } from 'vike-vue/dist/types/PageContext'
 
-import { esriConfig } from '@vuesri/core/arcgis'
 
 import { useCopyCode } from '../vitepress/composables/copy-code'
 
@@ -14,7 +13,7 @@ import { useCopyCode } from '../vitepress/composables/copy-code'
 // 初始化代码复制功能
 useCopyCode()
 
-esriConfig.apiKey = 'AAPKb14837d0d1fd48c2a9e834966b090d71jkWd8RL_697p0sRB9s87pEWRaefvBwcC_pdbOKwZd3Ka8xiulyqbHPassAKuHBxH'
+
 
 
 
