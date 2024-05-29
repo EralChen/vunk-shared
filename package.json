@@ -42,11 +42,11 @@
 	},
 	"scripts": {
 		"dev": "pnpm run -C docs dev",
-		"build": "pnpm run -C docs build",
+		"build": "gulp -f scripts/build/index.ts",
+		"docs:build": "pnpm run -C docs build",
 		"test": "vitest",
 		"lint:fix": "eslint . --fix",
 		"lint": "eslint --fix app/**/*.{ts,tsx,vue}",
-		"lib:build": "gulp -f scripts/build/index.ts",
 		"stub": "pnpm run -r --parallel stub",
 		"postinstall": "pnpm stub",
 		"publish": "gulp -f scripts/publish.ts",

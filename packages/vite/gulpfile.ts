@@ -36,6 +36,9 @@ export default series(
         inputFile: item,
         outputFile: getOutputFile(item),
         format: 'esm',
+        external: [
+          /^unplugin-vue-markdown/,
+        ],
       })
     })
 
@@ -45,6 +48,7 @@ export default series(
     genTypes({
       filesRoot: path.resolve(__dirname),
       source: buildFile,
+      outDir: baseDirname,
     })
   }),
 

@@ -6,7 +6,7 @@ import { distDir, distTypesDir } from '@lib-env/path'
 import { fixDtsPaths } from '@lib-env/build-utils'
 import path from 'path'
 import { readdirAsFlattenedTree } from '@vunk-shared/node/fs'
-import { isEqual } from 'lodash-es'
+import { isEqual } from 'lodash'
 import { LIB_ENTRY_DIRNAME, LIB_ENTRY_FLIENAME } from '@lib-env/build-constants'
 
 
@@ -57,14 +57,19 @@ export default series(
       }
 
       if (!isExist) {
-        throw new Error(`找不到 ${dir} 对应的类型声明目录`)
+        console.warn(`[to-dist-type] 
+          coreDir: ${coreDir}
+          typeDir: ${typeDir}
+          can not find typeDir
+        `)
+      } else {
+        // 拷贝类型声明文件
+        await fsp.cp(typeDir, coreDir, {
+          recursive: true,
+        })
       }
 
-      // 拷贝类型声明文件
-      await fsp.cp(typeDir, coreDir, {
-        recursive: true,
-      })
-  
+
     }
 
   }),
@@ -72,6 +77,7 @@ export default series(
   taskWithName('cp entry types', async () => {
     const distTypesEntryDirs = [
       path.resolve(distTypesDir, LIB_ENTRY_DIRNAME),
+      path.resolve(distDir, LIB_ENTRY_DIRNAME),
     ]
     for (const item of distTypesEntryDirs) {
       if (fs.existsSync(item)) {
@@ -113,10 +119,20 @@ function isSameDirStructure (
   })
 
   const dir1SubSet = new Set(
-    dir1FlattenedTree.map(item => item.filename.split('.').shift()),
+    dir1FlattenedTree
+      .filter( // 过滤掉入口文件外的其他文件
+        item => item.isDirectory 
+        || item.filename.includes('index'),
+      )
+      .map(item => item.filename.split('.').shift()),
   )
   const dir2SubSet = new Set(
-    dir2FlattenedTree.map(item => item.filename.split('.').shift()),
+    dir2FlattenedTree
+      .filter(
+        item => item.isDirectory 
+        || item.filename.includes('index'),
+      )
+      .map(item => item.filename.split('.').shift()),
   )
 
   return isEqual(dir1SubSet, dir2SubSet)
