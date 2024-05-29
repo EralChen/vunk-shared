@@ -1,7 +1,7 @@
 import type MarkdownIt from 'markdown-it'
 import container from 'markdown-it-container'
 import { ContainerPluginWithParams } from './types'
-import { MarkdownEnv } from 'vitepress'
+import type { MarkdownEnv } from 'vitepress'
 
 /**
  * 

@@ -39,6 +39,7 @@ export default series(
         external: [
           '@shikijs/transformers',
           'shiki',
+          /^markdown-it/,
         ],
       })
     })
