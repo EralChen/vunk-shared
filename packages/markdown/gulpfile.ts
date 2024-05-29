@@ -41,6 +41,7 @@ export default series(
           'shiki',
           /^markdown-it/,
         ],
+        hasVue: true,
       })
     })
 
@@ -51,6 +52,12 @@ export default series(
       filesRoot: path.resolve(__dirname),
       source: buildFile,
     })
+
+    genTypes({
+      filesRoot: path.resolve(__dirname),
+      source: 'components/*.vue',
+    })
+
   }),
 
 )

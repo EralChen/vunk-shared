@@ -10,6 +10,11 @@ export interface DirFlattenedTreeNode extends FlattenedTreeNode {
 
 export interface ReaddirAsFlattenedTreeSettings {
   ignore?: string[]
+  /**
+   * 是否递归
+   * @default true
+   */
+  recursive?: boolean
 }
 
 
@@ -24,6 +29,8 @@ export function readdirAsFlattenedTree (
   settings?: ReaddirAsFlattenedTreeSettings,
 ) {
   const ignore = settings?.ignore ?? []
+  const recursive = settings?.recursive ?? true
+
   const dirFlattenedTree:DirFlattenedTreeNode[] = []
   const dirs: string[] = [dirPath]
   while (dirs.length > 0) {
@@ -55,7 +62,9 @@ export function readdirAsFlattenedTree (
       })
 
       if (isDirectory) {
-        dirs.push(id)
+        if (recursive) {
+          dirs.push(id)
+        }
       }
     }
   }

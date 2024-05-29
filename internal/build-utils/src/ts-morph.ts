@@ -1,6 +1,6 @@
 import { ModuleResolutionKind, Project, ScriptTarget, SourceFile } from 'ts-morph'
 import path from 'path'
-import { distTypesDir, pkgsEntryFile, workRoot } from '@lib-env/path'
+import { distTypesDir, workRoot } from '@lib-env/path'
 import { LIB_ALIAS, LIB_NAME } from '@lib-env/build-constants'
 import glob from 'fast-glob'
 import fs from 'fs/promises'
@@ -13,9 +13,11 @@ import { JsxEmit } from 'typescript'
 export async function genTypes (opts = {} as {
   filesRoot: string
   source?: string
+  outDir?: string
 }) { // 生成一个 .d.ts
   const _opts = {
     source: '**/*',
+    outDir: '',
     ...opts,
   } as Required<typeof opts>
 
@@ -29,7 +31,7 @@ export async function genTypes (opts = {} as {
       jsx: JsxEmit.Preserve,
       disableSizeLimit: true,
       esModuleInterop: true,
-      outDir: distTypesDir,
+      outDir: path.resolve(distTypesDir, _opts.outDir),
       baseUrl: workRoot,
       preserveSymlinks: true,
       paths: {
@@ -59,7 +61,7 @@ export async function genTypes (opts = {} as {
   project.addSourceFilesAtPaths(path.resolve(workRoot, 'typings', './**/*{.d.ts,.ts}'))
 
   /* [TODO]固定.d.ts文件输入路径的临时解决方案，令outDir中目录结构于packages相同 */
-  project.addSourceFilesAtPaths(pkgsEntryFile)
+  // project.addSourceFilesAtPaths(pkgsEntryFile)
 
   const sourceFiles: SourceFile[] = []
   await Promise.all([

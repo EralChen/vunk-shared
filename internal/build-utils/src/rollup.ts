@@ -8,7 +8,6 @@ import { nodeResolve } from '@rollup/plugin-node-resolve'
 import esbuild from 'rollup-plugin-esbuild'
 import { libExternal } from '@lib-env/build-constants'
 import commonjs from '@rollup/plugin-commonjs'
-import alias from '@rollup/plugin-alias'
 import multiInput from 'rollup-plugin-multi-input'
 
 const esbuildPlugin = esbuild({
@@ -32,11 +31,6 @@ export function rollupComponents (opts: {
     const inputConfig: InputOptions = {
       input: entry,
       plugins: [
-        alias({
-          entries: [
-            { find: 'esri', replacement: '@arcgis/core' },
-          ],
-        }),
         nodeResolve({
           extensions: ['.json', '.js',  '.ts'],
           browser: true,
@@ -44,7 +38,6 @@ export function rollupComponents (opts: {
         css({
           output: 'index.css',
         }),
-        
         vue(),
         vueJsx({}),
  
@@ -75,7 +68,17 @@ export async function rollupFile (opts: {
   external?: (string|RegExp)[]
   format: 'umd'|'esm'
   multi?: boolean
+  hasVue?: boolean
 }) {
+
+  const vuePlugins = [
+    css({
+      output: 'index.css',
+    }),
+    vue(),
+    vueJsx({}),
+  ]
+
   const inputConfig = {
     input: opts.inputFile,
     
@@ -83,6 +86,7 @@ export async function rollupFile (opts: {
       nodeResolve({
         extensions: ['.js', '.json', '.ts'],
       }),
+      ...(opts.hasVue ? vuePlugins : []),
       esbuildPlugin,
       commonjs(),
     ],

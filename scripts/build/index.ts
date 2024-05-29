@@ -2,7 +2,6 @@ import { series } from 'gulp'
 import { run, taskWithName } from '@lib-env/shared'
 import clearDist from './clear-dist'
 import toDistType from './to-dist-type'
-import mergeCssToDist from './merge-css-to-dist'
 export default series(
 
   clearDist,
@@ -11,5 +10,4 @@ export default series(
   taskWithName('buildPackages', async () => run('pnpm run --filter "./packages/**" --parallel build')),
   
   toDistType,
-  mergeCssToDist,
 )

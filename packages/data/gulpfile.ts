@@ -45,6 +45,7 @@ export default series(
     genTypes({
       filesRoot: path.resolve(__dirname),
       source: buildFile,
+      outDir: baseDirname,
     })
   }),
 

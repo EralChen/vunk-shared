@@ -81,11 +81,13 @@ export default defineConfig(async ({ mode }) => {
         ignore: [
           '**/node_modules**',
           '**/__tests__**',
+          '**/__internal__**',
           '**/index.ts',
           '**/package.json',
           '**/gulpfile.ts',
           '**/types.ts',
           'entry',
+  
         ],
       }),
 
