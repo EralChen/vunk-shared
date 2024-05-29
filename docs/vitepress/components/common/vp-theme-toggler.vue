@@ -3,6 +3,7 @@ import { nextTick, ref, watch } from 'vue'
 import { isDark, toggleDark } from '../../composables/dark'
 import DarkIcon from '../icons/dark.vue'
 import LightIcon from '../icons/light.vue'
+import { VkClientOnly } from '@vunk/core/components/client-only'
 
 const darkMode = ref(isDark.value)
 
@@ -16,6 +17,7 @@ watch(
 let resolveFn: (value: boolean | PromiseLike<boolean>) => void
 const switchTheme = (event: MouseEvent) => {
   const isAppearanceTransition =
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-expect-error
     document.startViewTransition &&
     !window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -62,14 +64,14 @@ const beforeChange = (): Promise<boolean> => {
 
 <template>
   <div @click.stop="switchTheme">
-    <ClientOnly>
+    <VkClientOnly>
       <el-switch
         v-model="darkMode"
         :before-change="beforeChange"
         :active-action-icon="DarkIcon"
         :inactive-action-icon="LightIcon"
       />
-    </ClientOnly>
+    </VkClientOnly>
   </div>
 </template>
 

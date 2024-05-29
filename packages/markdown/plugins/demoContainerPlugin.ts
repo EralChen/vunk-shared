@@ -71,9 +71,19 @@ export const demoContainerPlugin = async (
         }
       })
 
+      const demoLeadings = process.env.NODE_ENV === 'production' 
+        ? [
+          `import { DemoContainer } from '@vunk/shared/markdown/components'`,
+          `import '@vunk/shared/markdown/components/index.css'`,
+        ] 
+        : [
+          `import { DemoContainer } from '@vunk-shared/markdown/components'`,
+        ]
+
       const mdSetupInject = markdownSetupInject({
         leadingCode: [
           `import { defineAsyncComponent } from 'vue'`,
+          ...demoLeadings,
         ],
         trailingCode: [
           'const demos = {',
@@ -135,7 +145,7 @@ export const demoContainerPlugin = async (
         }
         /* end of tabs add  */
   
-        return `<Demo subsources="${
+        return `<DemoContainer subsources="${
           encodeURIComponent(JSON.stringify(tabsSource))
         }" :demos="demos" source="${
           encodeURIComponent(
@@ -146,7 +156,7 @@ export const demoContainerPlugin = async (
         )}" description="${encodeURIComponent(md.render(description))}"
           >`
       } else {
-        return '</Demo>'
+        return '</DemoContainer>'
       }
     },
     

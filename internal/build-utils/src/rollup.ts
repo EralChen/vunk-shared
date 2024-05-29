@@ -9,6 +9,7 @@ import esbuild from 'rollup-plugin-esbuild'
 import { libExternal } from '@lib-env/build-constants'
 import commonjs from '@rollup/plugin-commonjs'
 import multiInput from 'rollup-plugin-multi-input'
+import replace from '@rollup/plugin-replace'
 
 const esbuildPlugin = esbuild({
   target: 'esnext',
@@ -89,6 +90,11 @@ export async function rollupFile (opts: {
       ...(opts.hasVue ? vuePlugins : []),
       esbuildPlugin,
       commonjs(),
+
+      replace({
+        'process.env.NODE_ENV': JSON.stringify('production'),
+      }),
+      
     ],
     external: [
       ...libExternal,
