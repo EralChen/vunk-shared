@@ -1,5 +1,3 @@
-import { customAlphabet } from 'nanoid'
-import c from 'picocolors'
 import type { ShikiTransformer } from 'shiki'
 import { bundledLanguages, getHighlighter, isSpecialLang } from 'shiki'
 import {
@@ -13,7 +11,18 @@ import {
 import type { Logger } from 'vite'
 import type { MarkdownOptions, ThemeOptions } from 'vitepress'
 
-const nanoid = customAlphabet('abcdefghijklmnopqrstuvwxyz', 10)
+function generateRandomString (length: number) {
+  const characters = 'abcdefghijklmnopqrstuvwxyz'
+  let result = ''
+  const charactersLength = characters.length
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(
+      Math.floor(Math.random() * charactersLength),
+    )
+  }
+  return result
+}
+const nanoid = () => generateRandomString(10)
 
 /**
  * 2 steps:
@@ -108,11 +117,9 @@ export async function highlight (
       const langLoaded = highlighter.getLoadedLanguages().includes(lang as any)
       if (!langLoaded && !isSpecialLang(lang)) {
         logger.warn(
-          c.yellow(
-            `\nThe language '${lang}' is not loaded, falling back to '${
-              defaultLang || 'txt'
-            }' for syntax highlighting.`,
-          ),
+          `\nThe language '${lang}' is not loaded, falling back to '${
+            defaultLang || 'txt'
+          }' for syntax highlighting.`,
         )
         lang = defaultLang
       }

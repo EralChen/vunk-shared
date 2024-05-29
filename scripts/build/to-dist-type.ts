@@ -7,6 +7,7 @@ import { fixDtsPaths } from '@lib-env/build-utils'
 import path from 'path'
 import { readdirAsFlattenedTree } from '@vunk-shared/node/fs'
 import { isEqual } from 'lodash-es'
+import { LIB_ENTRY_DIRNAME, LIB_ENTRY_FLIENAME } from '@lib-env/build-constants'
 
 
 export default series(
@@ -35,6 +36,18 @@ export default series(
       const coreDir = path.resolve(distDir, dir)
       let typeDir = path.resolve(distTypesDir, dir)
       let isExist = fs.existsSync(typeDir)
+
+      // 有时候类型声明文件在 packages 目录下， 它直接对应 distDir
+      const packagesTypeDir = path.resolve(typeDir, 'packages')
+      if (
+        fs.existsSync(packagesTypeDir)
+      ) {
+        await fsp.cp(packagesTypeDir, distDir, {
+          recursive: true,
+        })
+      }
+
+
       while (
         isExist
         && !isSameDirStructure(coreDir, typeDir)
@@ -54,18 +67,36 @@ export default series(
   
     }
 
-
-
-
-    
   }),
 
-  // taskWithName('clear types', async () => {
-  //   await fsp.rm(distTypesDir, {
-  //     force: true,
-  //     recursive: true,
-  //   })
-  // }),
+  taskWithName('cp entry types', async () => {
+    const distTypesEntryDirs = [
+      path.resolve(distTypesDir, LIB_ENTRY_DIRNAME),
+    ]
+    for (const item of distTypesEntryDirs) {
+      if (fs.existsSync(item)) {
+        await fsp.cp(item, distDir, {
+          recursive: true,
+        })
+      }
+    }
+    const distEntryDts = path.resolve(distDir, `${LIB_ENTRY_FLIENAME}.d.ts`)
+
+    if (fs.existsSync(distEntryDts)) {
+      await fsp.rename(
+        distEntryDts, 
+        path.resolve(distDir, `index.d.ts`),
+      )
+    }
+  
+  }),
+
+  taskWithName('clear types', async () => {
+    await fsp.rm(distTypesDir, {
+      force: true,
+      recursive: true,
+    })
+  }),
 )
 
 

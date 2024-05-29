@@ -2,9 +2,6 @@ import { LIB_ALIAS, LIB_NAME } from './name'
 
 export const libExternal = [
   'vue',
-  /^@vunk\/core/,
-  /^@vunk\/skzz/,
-  /^@vunk\/form/,
   /^element-plus/,
   /^@vueuse\/core/,
   new RegExp(`^${LIB_NAME}`),
