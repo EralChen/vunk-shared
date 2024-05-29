@@ -228,4 +228,7 @@ const onSourceVisibleKeydown = (e: KeyboardEvent) => {
   border: 1px solid var(--border-color);
   border-radius: var(--el-border-radius-base);
 }
+.vunk-shared-demo-container .m-0{
+  margin: 0;
+}
 </style>
