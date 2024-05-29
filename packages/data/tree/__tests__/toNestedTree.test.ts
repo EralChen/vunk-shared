@@ -17,5 +17,5 @@ const data: TestTree[] = [
 
 test('toNestedTree', () => {
   const res = toNestedTree(data)
-  console.log(res)
+  res
 })

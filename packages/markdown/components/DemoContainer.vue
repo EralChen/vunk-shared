@@ -21,7 +21,7 @@ interface Props {
   path: string
   rawSource: string
   description?: string
-  rawTabsSource: string
+  subsources: string
 }
 const props = withDefaults(defineProps<Props>(), {
   rawTabsSource: '{}',
@@ -33,9 +33,8 @@ const props = withDefaults(defineProps<Props>(), {
 const prepath = computed(() => {
   return props.path.split('/')[0] + '/'
 })
-
 const tabsSource = computed(() => {
-  const jsonStr = decodeURIComponent(props.rawTabsSource)
+  const jsonStr = decodeURIComponent(props.subsources)
   return JSON.parse(jsonStr)
 })
 const tabsData = computed(() => {
@@ -52,7 +51,6 @@ const tabsData = computed(() => {
     }),
   ]
 })
-
 /* tabs end */
 
 const [sourceVisible, toggleSourceVisible] = useToggle()

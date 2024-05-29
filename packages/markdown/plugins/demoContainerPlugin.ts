@@ -1,23 +1,98 @@
 import type MarkdownIt from 'markdown-it'
 import type { Token } from 'markdown-it'
-import container from 'markdown-it-container'
+import container, { type ContainerOpts } from 'markdown-it-container'
 import fs from 'fs'
 import path from 'path'
-import { fixPath } from '@lib-env/build-utils'
+import { markdownSetupInject } from '@vunk-shared/vite/plugins'
+import { globSync } from 'fast-glob'
+import { relativeOfFile } from '@vunk-shared/node/path'
+
+export interface DemoContainerPluginSettings {
+  /**
+   * @description
+   * 示例代码根目录
+   */
+  root: string
+
+  /**
+   * @description
+   * 源码转换函数
+   */
+  codeSourceTransform?: (code: string) => string
+} 
 
 
-export const demoContainerPlugin = (
+export const demoContainerPlugin = async (
   md: MarkdownIt,
-  options = {
-    root: process.cwd(),
-  },
+  options?: DemoContainerPluginSettings,
 ) => {
-  const appRoot = options.root
+  const demoRoot = options?.root || path.resolve(process.cwd(), 'examples')
+
+  const codeSourceTransform = options?.codeSourceTransform || ((code: string) => code)
+
+
+
+
+
+
+  md.core.ruler.before(
+    'normalize', 
+    'add_demos_script', 
+    (state) => {
+
+      const currentMdPath: string = state.env.id
+      if (!currentMdPath) return
+      
+      let componentId = path.basename(currentMdPath, '.md')
+      
+      if (
+        componentId === '+Page'
+        || componentId === 'index'
+      ) { // 如果是入口文件, 取上一级目录名
+        componentId = path.basename(path.dirname(state.env.id))
+      }
+
+      // 遍历 demo 目录，找到对应的组件目录下所有的 .vue 文件
+      const vueFiles = globSync(`${componentId}/**/*.vue`, {
+        cwd: demoRoot,
+        absolute: true,
+      })
+
+      const rawDemos = vueFiles.map(filepath => {
+        return {
+          // filepath 相对 demoRoot 的路径
+          key: path
+            .relative(demoRoot, filepath)
+            .replace(/\\/g, '/'),
+          // 导入 vue 文件， file path 相对 state.env.id 的路径 
+          value: `defineAsyncComponent(() => import('${relativeOfFile(currentMdPath, filepath)
+            .replace(/\\/g, '/')
+          }'))`,
+        }
+      })
+
+      const mdSetupInject = markdownSetupInject({
+        leadingCode: [
+          `import { defineAsyncComponent } from 'vue'`,
+        ],
+        trailingCode: [
+          'const demos = {',
+          ...rawDemos.map(raw => `'${raw.key}': ${raw.value},`),
+          '}',
+        ],
+      })
+
+      state.src = mdSetupInject.transform(
+        state.src, currentMdPath,
+      )
+  
+    })
 
   md.use(container, 'demo', {
     validate (params: string) {
       return !!params.trim().match(/^demo\s*(.*)$/)
     }, 
+
     render (tokens: Token[], idx: number) {
           
       const m = tokens[idx].info.trim().match(/^demo\s*(.*)$/)
@@ -28,17 +103,12 @@ export const demoContainerPlugin = (
         const sourceFile = sourceFileToken.children?.[0].content ?? ''
       
         if (sourceFileToken.type === 'inline') {
-          source = fixPath(
-            fs.readFileSync(
-              path.resolve(appRoot, 'examples', `${sourceFile}.vue`),
-              'utf-8',
-            ),
-          ) 
+          source = readCodeInfo(sourceFile)?.code || ''
         }
         if (!source) throw new Error(`Incorrect source file: ${sourceFile}`)
   
   
-        /* tabs add */
+    
         let tabsTokenIndex = idx + 2
         while (!['blockquote_open', 'container_demo_close'].includes(tokens[tabsTokenIndex].type)) {
           tabsTokenIndex++
@@ -52,20 +122,20 @@ export const demoContainerPlugin = (
           tabsToken = tokens[tabsTokenIndex + 4]
                     
           if (tabsToken.type === 'inline') {
-            const tabsRE = /^tabs\s*\[(.+)\]/
-            const m = tabsToken.content.match(tabsRE)
+            const subsRE = /^subs\s*\[(.+)\]/
+            const m = tabsToken.content.match(subsRE)
             const content = m && m.length > 1 ? m[1] : ''
           
             content && content.split(',').forEach(item => {
               item = item.trim()
-              tabsSource[item] = genCodeSource(item)
+              tabsSource[item] = genMdSource(item)
             })
           }
     
         }
         /* end of tabs add  */
   
-        return `<Demo raw-tabs-source="${
+        return `<Demo subsources="${
           encodeURIComponent(JSON.stringify(tabsSource))
         }" :demos="demos" source="${
           encodeURIComponent(
@@ -79,33 +149,43 @@ export const demoContainerPlugin = (
         return '</Demo>'
       }
     },
-  })
+    
+  } as ContainerOpts)
   
   
-  const genCodeSource = (
-    filename: string, 
-    exPath = path.resolve(appRoot, 'examples'),
-  ) => {
+
+
+
+  function genMdSource (filename: string) {
+    const info = readCodeInfo(filename)
+    if (!info) return ''
+    return md.render('```' + info.suffix + '\n' + info.code + '\n```')
+  }
+
+
+  function readCodeInfo (
+    filename: string,
+  ) {
     const suffix = [ 'vue', 'ts' ]
-    const files = suffix.map(
-      sfx => path.resolve(exPath, `${filename}.${sfx}`),
-    )
+    const fileIndex = suffix
+      .map(sfx => path.resolve(demoRoot, `${filename}.${sfx}`))
+      .findIndex(item => fs.existsSync(item))
       
-    const fileIndex = files.findIndex(item => fs.existsSync(item))
-    if (fileIndex === -1) return ''
-    return md.render(
-      '```' + suffix[fileIndex] + '\n' 
-        + fixPath(
-          fs.readFileSync(
-            path.resolve(
-              appRoot, 'examples', 
-              `${files[fileIndex]}`,
-            ),
-            'utf-8',
-          ),
-        )
-        + '\n```',
+    if (fileIndex === -1) return 
+    const code = codeSourceTransform(
+      fs.readFileSync(
+        path.resolve(
+          demoRoot, 
+          `${filename}.${suffix[fileIndex]}`,
+        ),
+        'utf-8',
+      ),
     )
+
+    return {
+      code,
+      suffix: suffix[fileIndex],
+    }
   }
   
 }

@@ -1,4 +1,3 @@
-import { Plugin } from 'vite'
 import { fromMarkdown } from 'mdast-util-from-markdown'
 import { toMarkdown } from 'mdast-util-to-markdown'
 import { scriptSetupRE } from '@vunk-shared/regexp/vue'
@@ -44,8 +43,8 @@ export function markdownSetupInject (
   return {
     name,
     enforce: 'pre',
-    async transform (code, id) {
-      if (!id.endsWith('.md')) return
+    transform (code: string, id: string) {
+      if (!id.endsWith('.md')) return ''
       const tree = fromMarkdown(code)
 
       const setupNode = tree.children.find(item => {
@@ -83,6 +82,6 @@ export function markdownSetupInject (
 
       return toMarkdown(tree)
     },
-  } as Plugin
+  }
 
 }
