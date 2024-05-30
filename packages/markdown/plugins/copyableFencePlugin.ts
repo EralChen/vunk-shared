@@ -1,4 +1,5 @@
 
+import { markdownSetupInject } from '@vunk-shared/vite/plugins'
 import type MarkdownIt from 'markdown-it'
 
 /**
@@ -6,6 +7,8 @@ import type MarkdownIt from 'markdown-it'
  * @param md  markdown-it 实例
  */
 export function copyableFencePlugin (md: MarkdownIt) {
+
+
 
   const fence = md.renderer.rules.fence
   md.renderer.rules.fence = (...args) => {
@@ -23,12 +26,42 @@ export function copyableFencePlugin (md: MarkdownIt) {
     
     return (
       `<div class="language-${lang} ${active}">` +
-      `<button  class="copy"></button>` +
+      `<button class="copy"></button>` +
       `<span class="lang">${lang}</span>` +
       fence?.(...args) +
       '</div>'
     )
   }
+
+  md.core.ruler.before(
+    'normalize', 
+    'add_copy_code_script', 
+    (state) => {
+      const currentMdPath: string = state.env.id
+      if (!currentMdPath) return
+      
+
+      const leadings = process.env.NODE_ENV === 'production' 
+        ? [
+          `import { useCopyCode } from '@vunk/shared/markdown/plugins/copyableFence'`,
+        ] 
+        : [
+          `import { useCopyCode } from '@vunk-shared/markdown/plugins/copyableFence'`,
+        ]
+
+      const mdSetupInject = markdownSetupInject({
+        leadingCode: leadings,
+        trailingCode: [
+          'useCopyCode()',
+        ],
+      })
+
+      state.src = mdSetupInject.transform(
+        state.src, currentMdPath,
+      )
+    },
+  )
+
 }
 
 
