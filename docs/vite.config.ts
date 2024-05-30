@@ -3,7 +3,7 @@ import vueJsx from '@vitejs/plugin-vue-jsx'
 import vike from 'vike/plugin'
 
 import { AliasOptions, UserConfig, defineConfig, loadEnv } from 'vite'
-import { unocssPreferences,  explorerPlugin, createMarkdownPlugin, mdDemoContainerPlugin } from '@lib-env/app-utils'
+import { unocssPreferences, explorerTree, createMarkdownPlugin, mdCopyableFencePlugin } from '@lib-env/app-utils'
 import { appRoot, srcRoot } from './path.config'
 
 import path from 'path'
@@ -13,9 +13,9 @@ import IconsResolver from 'unplugin-icons/resolver'
 
 import Components from 'unplugin-vue-components/vite'
 
-// import { MarkdownTransform } from './vitepress/plugins/markdown-transform'
-import VueDevTools from 'vite-plugin-vue-devtools'
+import vueDevTools from 'vite-plugin-vue-devtools'
 import { packagesDir } from '@lib-env/path'
+import { fixPath } from '@lib-env/build-utils'
 
 
 
@@ -74,9 +74,9 @@ export default defineConfig(async ({ mode }) => {
     },
     
     plugins: [
-      VueDevTools(),
+      vueDevTools(),
       
-      explorerPlugin({
+      explorerTree({
         root: packagesDir,
         ignore: [
           '**/node_modules**',
@@ -87,11 +87,8 @@ export default defineConfig(async ({ mode }) => {
           '**/gulpfile.ts',
           '**/types.ts',
           'entry',
-  
         ],
       }),
-
-      // MarkdownTransform(),
 
       vike({
         prerender: true, 
@@ -101,20 +98,22 @@ export default defineConfig(async ({ mode }) => {
       
       vue({
         include: [/\.vue$/, /\.md$/],
-        
       }),
       vueJsx({}),
 
 
       await createMarkdownPlugin({
         base: base,
+        demoContainerPluginSettings: {
+          root: path.resolve(appRoot, './examples'),
+          codeSourceTransform: fixPath,
+        },
         markdownItSetup (markdownIt) {
-          markdownIt.use(mdDemoContainerPlugin)
+          markdownIt.use(mdCopyableFencePlugin)
         },
       }),
   
       Components({
-        
         resolvers: [
           IconsResolver(),
         ],

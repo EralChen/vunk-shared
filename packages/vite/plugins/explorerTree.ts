@@ -1,6 +1,5 @@
 
 import { Plugin } from 'vite'
-import { packagesDir } from '@lib-env/path'
 import path from 'path'
 import { readdirAsFlattenedTree, DirFlattenedTreeNode } from '@vunk-shared/node/fs'
 
@@ -12,24 +11,36 @@ export interface ExplorerTreeNode extends DirFlattenedTreeNode {
 }
 
 
-export interface ExplorerOptions {
-  root: string
-  ignore: string[]
+export interface ExplorerTreeSettings {
+  root?: string
+  ignore?: string[]
 }
 
-export function explorerPlugin (
-  options: ExplorerOptions = {
-    root: packagesDir,
-    ignore: [
-      '**/node_modules**',
-      '**/__tests__**',
-    ],
-  },
+
+/**
+ * 获取文件目录树
+ * @param settings 
+ * @param settings.root - root directory
+ * @param settings.ignore - ignore files
+ * @returns 
+ * 
+ * @example
+ * ```ts
+ import explorerTreeList from 'virtual:explorer/packages'
+  console.log(explorerTreeList)
+ * ```
+ */
+export function explorerTree (
+  settings?: ExplorerTreeSettings,
 ) {
+
+  const root = settings?.root || process.cwd()
+  const ignore = settings?.ignore || []
+  
   const virtualModulePre = 'virtual:explorer'
   
   return {
-    name: 'vite-plugin-explorer',
+    name: 'vite-plugin-explorer-tree',
     resolveId (id) {
       if (id.startsWith(virtualModulePre)) {
         return '\0' + id
@@ -40,9 +51,9 @@ export function explorerPlugin (
       if (id.startsWith('\0' + virtualModulePre)) {
         // +2 to remove '/' and '\0'
         const url = id.slice(virtualModulePre.length + 2)
-        const rootdir = path.resolve(options.root, url)
+        const rootdir = path.resolve(root, url)
         const tree = readdirAsFlattenedTree(rootdir, {
-          ignore: options.ignore,
+          ignore: ignore,
         }).map(item => {
           return {
             ...item,

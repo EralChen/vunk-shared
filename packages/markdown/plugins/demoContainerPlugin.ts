@@ -30,16 +30,10 @@ export const demoContainerPlugin = async (
 
   const codeSourceTransform = options?.codeSourceTransform || ((code: string) => code)
 
-
-
-
-
-
   md.core.ruler.before(
     'normalize', 
     'add_demos_script', 
     (state) => {
-
       const currentMdPath: string = state.env.id
       if (!currentMdPath) return
       
@@ -73,11 +67,11 @@ export const demoContainerPlugin = async (
 
       const demoLeadings = process.env.NODE_ENV === 'production' 
         ? [
-          `import { DemoContainer } from '@vunk/shared/markdown/components'`,
-          `import '@vunk/shared/markdown/components/index.css'`,
+          `import { DemoContainer } from '@vunk/shared/markdown/components/DemoContainer'`,
+          `import '@vunk/shared/markdown/components/DemoContainer/index.css'`,
         ] 
         : [
-          `import { DemoContainer } from '@vunk-shared/markdown/components'`,
+          `import { DemoContainer } from '@vunk-shared/markdown/components/DemoContainer'`,
         ]
 
       const mdSetupInject = markdownSetupInject({
@@ -95,8 +89,8 @@ export const demoContainerPlugin = async (
       state.src = mdSetupInject.transform(
         state.src, currentMdPath,
       )
-  
-    })
+    },
+  )
 
   md.use(container, 'demo', {
     validate (params: string) {
@@ -154,7 +148,11 @@ export const demoContainerPlugin = async (
         }"  path="${sourceFile}" raw-source="${encodeURIComponent(
           source,
         )}" description="${encodeURIComponent(md.render(description))}"
-          >`
+          >
+            <template #code>
+              ${md.render('```vue\n' + source + '\n```')}
+            </template>
+          `
       } else {
         return '</DemoContainer>'
       }
@@ -162,9 +160,6 @@ export const demoContainerPlugin = async (
     
   } as ContainerOpts)
   
-  
-
-
 
   function genMdSource (filename: string) {
     const info = readCodeInfo(filename)

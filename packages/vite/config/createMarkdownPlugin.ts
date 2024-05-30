@@ -4,6 +4,8 @@ import {
   detailsContainerPlugin, 
   linkPlugin,
   anchorPlugin,
+  demoContainerPlugin,
+  DemoContainerPluginSettings,
 } from '@vunk-shared/markdown/plugins'
 
 import {
@@ -23,60 +25,70 @@ const customBlocks = [
 
 export interface CreateMarkdownPluginSettings {
   base: string
+  demoContainerPluginSettings?: DemoContainerPluginSettings
   markdownItSetup?: (MarkdownIt: MarkdownIt) => ReturnVoid
 }
 
 export const createMarkdownPlugin = async (
   settings: CreateMarkdownPluginSettings,
-) => markdown({
+) => {
 
-  markdownItOptions: {
-    linkify: true,
-    highlight: (await highlight({
-      dark: 'github-dark',
-      light: 'github-light',
-    }, {})),
-  },
+  const demoContainerPluginSettings = settings.demoContainerPluginSettings
 
-  markdownItSetup (markdownIt) {
+  return markdown({
 
-    // customBlocks
-    customBlocks.forEach((block) => {
-      markdownIt.use(
-        customContainerPlugin, 
-        block,
+
+    markdownItOptions: {
+      linkify: true,
+      highlight: (await highlight({
+        dark: 'github-dark',
+        light: 'github-light',
+      }, {})),
+    },
+  
+    markdownItSetup (markdownIt) {
+  
+      // customBlocks
+      customBlocks.forEach((block) => {
+        markdownIt.use(
+          customContainerPlugin, 
+          block,
+        )
+      })
+  
+      // details
+      markdownIt.use(detailsContainerPlugin)
+      
+      // 为标题添加锚点
+      markdownIt.use(anchorPlugin)
+  
+  
+      // link
+      markdownIt.use(linkPlugin,
+        { 
+          target: '_blank', 
+          rel: 'noreferrer', 
+        },
+        {
+          base: settings.base,
+          cleanUrls: true,
+        },
       )
-    })
-
-    // details
-    markdownIt.use(detailsContainerPlugin)
-    
-    // 为标题添加锚点
-    markdownIt.use(anchorPlugin)
-
-
-    // link
-    markdownIt.use(linkPlugin,
-      { 
-        target: '_blank', 
-        rel: 'noreferrer', 
-      },
-      {
-        base: settings.base,
-        cleanUrls: true,
-      },
-    )
-
-
-    // 用户自定义
-    settings.markdownItSetup?.(markdownIt)
-
-  },
-
-  wrapperClasses: [
-    'vp-doc',
-    'VPDoc',
-    'doc-content',
-  ],
-
-})
+  
+      // demo
+      markdownIt.use(demoContainerPlugin, demoContainerPluginSettings)
+  
+  
+      // 用户自定义
+      settings.markdownItSetup?.(markdownIt)
+  
+    },
+  
+    wrapperClasses: [
+      'vp-doc',
+      'VPDoc',
+      'doc-content',
+    ],
+  
+  })
+} 

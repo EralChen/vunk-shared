@@ -2,12 +2,13 @@
 import { computed, ref } from 'vue'
 import { useToggle } from '@vueuse/core'
 import { CaretTop } from '@element-plus/icons-vue'
-import DemoContainerExample from './__internal__/DemoContainerExample.vue'
-import DemoContainerCode from './__internal__/DemoContainerCode.vue'
-import DemoContainerCodes from './__internal__/DemoContainerCodes.vue'
+import DemoContainerExample from './DemoContainerExample.vue'
+import DemoContainerCode from './DemoContainerCode.vue'
+import DemoContainerCodes from './DemoContainerCodes.vue'
 
 import { NormalObject } from '@vunk/shared'
 import { VkClientOnly } from '@vunk/core/components/client-only'
+
 import { 
   ElDivider, 
   ElIcon, 

@@ -14,7 +14,7 @@ export const fixSourceCodeImport = (source: string) => {
   source = source
     .replace(
       componentRe, 
-      function (a, p1, p2){
+      function (a, p1){
         return `import${p1}from '${LIB_NAME}'`
       },
     )

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { computed } from 'vue'
-
 const props = defineProps({
   source: {
     type: String,
@@ -22,7 +21,7 @@ const decoded = computed(() => {
 </template>
 
 <style>
-.vunk-shared-demo-code .language-vue {
+.vunk-shared-demo-code.vunk-shared-demo-code div[class*='language-'] {
   margin: 0;
   border-radius: 0;
 }
