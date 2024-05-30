@@ -7,16 +7,6 @@ import type { OnRenderClientAsync } from 'vike/types'
 import type { VikeVueApp } from 'vike-vue/dist/types/PageContext'
 
 
-import { useCopyCode } from '../vitepress/composables/copy-code'
-
-
-// 初始化代码复制功能
-useCopyCode()
-
-
-
-
-
 let app: VikeVueApp | undefined = undefined
 const onRenderClient: OnRenderClientAsync = async (pageContext): ReturnType<OnRenderClientAsync> => {
   if (!app) {

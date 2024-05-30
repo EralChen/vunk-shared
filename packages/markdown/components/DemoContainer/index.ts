@@ -1,4 +1,4 @@
-import DemoContainer from './__internal__/DemoContainer.vue'
+import DemoContainer from './src/DemoContainer.vue'
 
 
 export default DemoContainer
