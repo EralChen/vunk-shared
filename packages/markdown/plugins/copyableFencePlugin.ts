@@ -41,7 +41,7 @@ export function copyableFencePlugin (md: MarkdownIt) {
       if (!currentMdPath) return
       
 
-      const leadings = process.env.NODE_ENV === 'production' 
+      const leadings = process.env.ROLLUP_BUILD 
         ? [
           `import { useCopyCode } from '@vunk/shared/markdown/plugins/copyableFence'`,
         ] 

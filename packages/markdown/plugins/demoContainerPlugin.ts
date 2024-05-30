@@ -65,7 +65,7 @@ export const demoContainerPlugin = async (
         }
       })
 
-      const demoLeadings = process.env.NODE_ENV === 'production' 
+      const demoLeadings = process.env.ROLLUP_BUILD === 'production' 
         ? [
           `import { DemoContainer } from '@vunk/shared/markdown/components/DemoContainer'`,
           `import '@vunk/shared/markdown/components/DemoContainer/index.css'`,

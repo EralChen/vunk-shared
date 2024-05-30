@@ -92,7 +92,10 @@ export async function rollupFile (opts: {
       commonjs(),
 
       replace({
-        'process.env.NODE_ENV': JSON.stringify('production'),
+        preventAssignment: true,
+        values: {
+          'process.env.ROLLUP_BUILD': 'true',
+        },
       }),
       
     ],
