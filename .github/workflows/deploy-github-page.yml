@@ -1,0 +1,39 @@
+name: Build and Deploy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - uses: actions/checkout@v2
+
+    - name: Install dependencies
+      run: | 
+        npm install -g pnpm
+        pnpm install
+
+    - name: Build
+      run: npm run docs:build
+      env:
+        DOC_ENV: production
+        NODE_OPTIONS: --max-old-space-size=4096
+
+    - name: Deploy
+      uses: JamesIves/github-pages-deploy-action@v4.3.4
+      with:
+        token: ${{ secrets.PATC_TOKEN }}
+        branch: gh-pages
+        folder: docs/dist/client
+        force: true
+        commit-message: website deploy
+        repository-name: EralChen/vunk-shared
+
+    - name: Cleanup
+      run: rm -rf docs/dist
+
