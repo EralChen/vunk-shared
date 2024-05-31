@@ -28,8 +28,8 @@ defineProps({
 <style>
 .vunk-shared-demo-example-showcase{
   background-color: var(--bg-color);
-  padding: var(--gap-page);
-  min-height: 450px;
+  padding: var(--gap-m);
+  
 }
 </style>
 

@@ -29,8 +29,15 @@ const indexRE = /(^|.*\/)index.md(#?.*)$/i
 export const linkPlugin = (
   md: MarkdownIt,
   externalAttrs: Record<string, string>,
-  base: string,
+  settings?: {
+    base: string
+    cleanUrls: boolean
+  },
 ) => {
+
+  const base = settings?.base || '/'
+  const cleanUrls = settings?.cleanUrls || true
+
   md.renderer.rules.link_open = (
     tokens,
     idx,
@@ -108,15 +115,15 @@ export const linkPlugin = (
       let cleanUrl = url.replace(/[?#].*$/, '')
       // transform foo.md -> foo[.html]
       if (cleanUrl.endsWith('.md')) {
-        cleanUrl = cleanUrl.replace(/\.md$/, env.cleanUrls ? '' : '.html')
+        cleanUrl = cleanUrl.replace(/\.md$/, cleanUrls ? '' : '.html')
       }
       // transform ./foo -> ./foo[.html]
       if (
-        !env.cleanUrls &&
+        !cleanUrls &&
         !cleanUrl.endsWith('.html') &&
         !cleanUrl.endsWith('/')
       ) {
-        cleanUrl += '.html'
+        cleanUrl += ''
       }
       const parsed = new URL(url, 'http://a.com')
       url = cleanUrl + parsed.search + parsed.hash

@@ -1,9 +1,10 @@
 # DemoContainer
 
-`DemoContainer` 是一个用于展示组件示例的组件，和 `demoContainerPlugin` 配合使用，可以在 markdown 中展示组件示例。
+[demoContainerPlugin](../../plugins/demoContainerPlugin/+Page.md) 的内置组件, 用于展示 vue 示例的组件.
 
 
-dependencies: 
+## dependencies
+
 + [element-plus](https://www.npmjs.com/package/element-plus)
 
 ## Useage
