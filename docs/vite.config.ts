@@ -3,7 +3,7 @@ import vueJsx from '@vitejs/plugin-vue-jsx'
 import vike from 'vike/plugin'
 
 import { AliasOptions, UserConfig, defineConfig, loadEnv } from 'vite'
-import { unocssPreferences, explorerTree, createMarkdownPlugin, mdCopyableFencePlugin } from '@lib-env/app-utils'
+import { explorerTree, createMarkdownPlugin, mdCopyableFencePlugin } from '@lib-env/app-utils'
 import { appRoot, srcRoot } from './path.config'
 
 import path from 'path'
@@ -16,6 +16,8 @@ import Components from 'unplugin-vue-components/vite'
 import vueDevTools from 'vite-plugin-vue-devtools'
 import { packagesDir } from '@lib-env/path'
 import { fixPath } from '@lib-env/build-utils'
+
+import unocss from 'unocss/vite'
 
 
 
@@ -94,7 +96,7 @@ export default defineConfig(async ({ mode }) => {
         prerender: true, 
       }),
 
-      unocssPreferences(),
+      unocss(),
       
       vue({
         include: [/\.vue$/, /\.md$/],

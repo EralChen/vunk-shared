@@ -1,5 +1,5 @@
 
-import { markdownSetupInject } from '@vunk-shared/vite/plugins'
+import { markdownSetupInject } from '@vunk-shared/vite/markdown'
 import type MarkdownIt from 'markdown-it'
 
 /**

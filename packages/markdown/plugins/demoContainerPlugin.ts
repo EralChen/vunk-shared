@@ -3,7 +3,7 @@ import type { Token } from 'markdown-it'
 import container, { type ContainerOpts } from 'markdown-it-container'
 import fs from 'fs'
 import path from 'path'
-import { markdownSetupInject } from '@vunk-shared/vite/plugins'
+import { markdownSetupInject } from '@vunk-shared/vite/markdown'
 import { globSync } from 'fast-glob'
 import { relativeOfFile } from '@vunk-shared/node/path'
 

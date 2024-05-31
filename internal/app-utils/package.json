@@ -8,18 +8,5 @@
     "build": "unbuild",
     "dev": "pnpm run stub",
     "stub": "unbuild --stub"
-  },
-  "dependencies": {
-    "unocss-preset-vunk": "^1.0.3"
-  },
-  "devDependencies": {
-    "@shikijs/core": "^1.6.0",
-    "@shikijs/transformers": "^1.6.0",
-    "@types/markdown-it-container": "^2.0.9",
-    "markdown-it": "^14.1.0",
-    "markdown-it-container": "^4.0.0",
-    "picocolors": "^1.0.0",
-    "shiki": "^1.6.0",
-    "vitepress": "1.1.4"
   }
 }
