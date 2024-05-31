@@ -57,7 +57,7 @@
     "typings/**/*.d.ts",
 
     "../typings/**/*.d.ts",
-    "vite.config.ts"
+    "vite.config.mts",
   ],
   "exclude": [
     "node_modules"

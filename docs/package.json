@@ -1,5 +1,6 @@
 {
   "name": "@vunk-shared/docs",
+  "type": "module",
   "scripts": {
     "dev": "vite",
     "build": "vite build",

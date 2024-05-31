@@ -1,9 +1,13 @@
 {
   "name": "@lib-env/app-utils",
   "private": true,
-  "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
-  "main": "./dist/index.cjs",
+  "exports": {
+    ".": {
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    }
+  },
   "scripts": {
     "build": "unbuild",
     "dev": "pnpm run stub",
