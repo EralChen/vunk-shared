@@ -7,7 +7,7 @@ import VpThemeToggler from '#/vitepress/components/navbar/vp-theme-toggler.vue'
     sk-flex="row-between-center"
     class="h-full layout-default-navbar"
   >
-    <div class="font-600 plr-l ptb-s text-primary">
+    <div class="font-600 gplr-l gptb-s text-primary">
       @vunk/shared
     </div>
     <VpThemeToggler></VpThemeToggler>

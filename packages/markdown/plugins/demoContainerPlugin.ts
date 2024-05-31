@@ -36,6 +36,7 @@ export const demoContainerPlugin = async (
     (state) => {
       const currentMdPath: string = state.env.id
       if (!currentMdPath) return
+      if (state.env.__vunk_noMarkdownSetupInject) return
       
       let componentId = path.basename(currentMdPath, '.md')
       
@@ -147,12 +148,9 @@ export const demoContainerPlugin = async (
           )
         }"  path="${sourceFile}" raw-source="${encodeURIComponent(
           source,
-        )}" description="${encodeURIComponent(md.render(description))}"
-          >
-            <template #code>
-              ${md.render('```vue\n' + source + '\n```')}
-            </template>
-          `
+        )}" description="${
+          encodeURIComponent(md.render(description))
+        }">`
       } else {
         return '</DemoContainer>'
       }

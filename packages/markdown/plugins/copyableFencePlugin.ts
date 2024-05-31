@@ -5,6 +5,10 @@ import type MarkdownIt from 'markdown-it'
 /**
  * @link https://github.com/vuejs/vitepress/blob/1188951785fd2a72f9242d46dc55abb1effd212a/src/node/markdown/plugins/preWrapper.ts#L8
  * @param md  markdown-it 实例
+ * @example
+ * ```ts
+ * md.use(copyableFencePlugin)
+ * ```
  */
 export function copyableFencePlugin (md: MarkdownIt) {
 
@@ -38,6 +42,8 @@ export function copyableFencePlugin (md: MarkdownIt) {
     'add_copy_code_script', 
     (state) => {
       const currentMdPath: string = state.env.id
+      if (state.env.__vunk_noMarkdownSetupInject) return
+
       if (!currentMdPath) return
       
 

@@ -6,6 +6,9 @@ import {
   anchorPlugin,
   demoContainerPlugin,
   DemoContainerPluginSettings,
+  copyableFencePlugin,
+  sourceContainerPlugin,
+  SourceContainerPluginSettings,
 } from '@vunk-shared/markdown/plugins'
 
 import {
@@ -26,6 +29,7 @@ const customBlocks = [
 export interface CreateMarkdownPluginSettings {
   base: string
   demoContainerPluginSettings?: DemoContainerPluginSettings
+  sourceContainerPluginSettings?: SourceContainerPluginSettings
   markdownItSetup?: (MarkdownIt: MarkdownIt) => ReturnVoid
 }
 
@@ -34,6 +38,7 @@ export const createMarkdownPlugin = async (
 ) => {
 
   const demoContainerPluginSettings = settings.demoContainerPluginSettings
+  const sourceContainerPluginSettings = settings.sourceContainerPluginSettings
 
   return markdown({
 
@@ -78,6 +83,12 @@ export const createMarkdownPlugin = async (
       // demo
       markdownIt.use(demoContainerPlugin, demoContainerPluginSettings)
   
+
+      // source
+      markdownIt.use(sourceContainerPlugin, sourceContainerPluginSettings)
+
+      // copyableFence
+      markdownIt.use(copyableFencePlugin)
   
       // 用户自定义
       settings.markdownItSetup?.(markdownIt)

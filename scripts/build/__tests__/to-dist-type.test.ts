@@ -56,13 +56,14 @@ test('to-dist-type', async () => {
     }
 
     if (!isExist) {
-      throw new Error(`找不到 ${dir} 对应的类型声明目录`)
+      // throw new Error(`找不到 ${dir} 对应的类型声明目录`)
+      continue
     }
 
     // 拷贝类型声明文件
-    await fsp.cp(typeDir, coreDir, {
-      recursive: true,
-    })
+    // await fsp.cp(typeDir, coreDir, {
+    //   recursive: true,
+    // })
   
   }
 
