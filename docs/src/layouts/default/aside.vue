@@ -86,11 +86,20 @@ const filterMenu = computed(() => {
 
 const pathname = shallowRef('')
 onMounted(() => {
-  pathname.value = window.location.pathname
   // menu 点击事件监听
   listenerToggle.add()
-  initOpenMenu()
+
+  setInterval(() => {
+    if (pathname.value === window.location.pathname) return
+    pathname.value = window.location.pathname
+    initOpenMenu()
+  }, 400)
+
+
+
 })
+
+
 function initOpenMenu () {
 
   // const testIndex = route.matched.map(item => item.path)
@@ -147,7 +156,6 @@ function initOpenMenu () {
                     :icon="data.meta.icon"
                   />
                 </ElIcon>
-
               </a>
             </template>
 

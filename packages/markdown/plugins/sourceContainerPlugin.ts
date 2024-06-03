@@ -53,7 +53,7 @@ export function sourceContainerPlugin (
           if (!filepath) {
             return ''
           }
-          const source = fs.readFileSync(filepath).toString()
+          const source = fs.readFileSync(filepath).toString().replaceAll('```', '\\`\\`\\`')
           
           const prerenderSource = [
             '```' + path.extname(filepath).slice(1),

@@ -32,7 +32,7 @@ export default series(
       main: string,
       exports: Record<string, {
         import: string,
-        types: string,
+        types?: string,
         require?: string,
       }>
     }
@@ -45,11 +45,11 @@ export default series(
       },
     }
 
-    const modelEntries = readdirAsFlattenedTree(distDir)
+    const distTree = readdirAsFlattenedTree(distDir)
+    const modelEntries = distTree
       .filter(item => item.filename === 'index.mjs')
 
 
-      
     modelEntries.forEach(item => {
       let relativePath = path.relative(distDir, item.pid).replace(/\\/g, '/')
 
@@ -61,6 +61,22 @@ export default series(
       }
 
     })
+
+    const cssEntries = distTree
+      .filter(item => item.filename === 'index.css')
+    
+    cssEntries.forEach(item => {
+      let relativePath = path.relative(distDir, item.pid).replace(/\\/g, '/')
+
+      relativePath = './' + relativePath
+
+      const relativeFile = `${relativePath}` + `/${item.filename}`
+
+      jsonObj.exports[relativeFile] = {
+        import: relativeFile,
+      }
+    })
+    
     writeJsonSync(distPkgFile, jsonObj, 2)
   }),
   

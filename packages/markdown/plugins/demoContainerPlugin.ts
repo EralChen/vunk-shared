@@ -6,6 +6,8 @@ import path from 'path'
 import { markdownSetupInject } from '@vunk-shared/vite/markdown'
 import { globSync } from 'fast-glob'
 import { relativeOfFile } from '@vunk-shared/node/path'
+import type { MarkdownEnv } from 'vitepress'
+import { isCallable } from '@vunk-shared/function'
 
 export interface DemoContainerPluginSettings {
   /**
@@ -19,14 +21,38 @@ export interface DemoContainerPluginSettings {
    * 源码转换函数
    */
   codeSourceTransform?: (code: string) => string
+
+  /**
+   * @description
+   * 示例代码文件匹配规则
+   */
+  globSource: string | ((env: MarkdownEnv & {
+    id: string
+  }) => string)
 } 
 
+
+const defaultGlobSource = (env: MarkdownEnv & {
+  id: string
+}) => {
+  const currentMdPath: string = env.id
+  let componentId = path.basename(currentMdPath, '.md')
+  if (
+    componentId === '+Page'
+    || componentId === 'index'
+  ) { // 如果是入口文件, 取上一级目录名
+    componentId = path.basename(path.dirname(currentMdPath))
+  }
+  return `${componentId}/**/*.vue`
+}
 
 export const demoContainerPlugin = async (
   md: MarkdownIt,
   options?: DemoContainerPluginSettings,
 ) => {
   const demoRoot = options?.root || path.resolve(process.cwd(), 'examples')
+
+  const globSource = options?.globSource || defaultGlobSource
 
   const codeSourceTransform = options?.codeSourceTransform || ((code: string) => code)
 
@@ -37,18 +63,13 @@ export const demoContainerPlugin = async (
       const currentMdPath: string = state.env.id
       if (!currentMdPath) return
       if (state.env.__vunk_noMarkdownSetupInject) return
-      
-      let componentId = path.basename(currentMdPath, '.md')
-      
-      if (
-        componentId === '+Page'
-        || componentId === 'index'
-      ) { // 如果是入口文件, 取上一级目录名
-        componentId = path.basename(path.dirname(state.env.id))
-      }
+
+      const globSourceStr = isCallable(globSource) 
+        ? globSource(state.env) 
+        : globSource
 
       // 遍历 demo 目录，找到对应的组件目录下所有的 .vue 文件
-      const vueFiles = globSync(`${componentId}/**/*.vue`, {
+      const vueFiles = globSync(globSourceStr, {
         cwd: demoRoot,
         absolute: true,
       })
@@ -66,11 +87,10 @@ export const demoContainerPlugin = async (
         }
       })
 
-      const demoLeadings = process.env.ROLLUP_BUILD === 'production' 
-        ? [
-          `import { DemoContainer } from '@vunk/shared/markdown/components/DemoContainer'`,
-          `import '@vunk/shared/markdown/components/DemoContainer/index.css'`,
-        ] 
+      const demoLeadings = process.env.ROLLUP_BUILD ? [
+        `import { DemoContainer } from '@vunk/shared/markdown/components/DemoContainer'`,
+        `import '@vunk/shared/markdown/components/DemoContainer/index.css'`,
+      ] 
         : [
           `import { DemoContainer } from '@vunk-shared/markdown/components/DemoContainer'`,
         ]
