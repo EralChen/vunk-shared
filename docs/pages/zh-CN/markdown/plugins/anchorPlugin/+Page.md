@@ -12,6 +12,7 @@ ref [vitepress](https://github.com/vuejs/vitepress/blob/b2fa9326c727170d127d9509
 ## Useage
 
 ```ts
+// vite.config.ts
 import md from 'unplugin-vue-markdown/vite'
 import vue from '@vitejs/plugin-vue'
 import { anchorPlugin } from '@vunk/shared/markdown/plugins/anchorPlugin'
@@ -29,9 +30,26 @@ defineConfig({
 })
 ```
 
+如果你想使用 `vitepress` 样式
+```ts 
+// vite.config.ts
+md({
+  markdownItSetup (mdit) {
+    mdit.use(anchorPlugin)
+  },
+  wrapperClasses: [
+    'vp-doc'
+  ]
+})
+
+// main.ts
+import 'vitepress/dist/client/theme-default/styles/vars.css'
+import 'vitepress/dist/client/theme-default/styles/components/vp-doc.css'
+```
+
 
 ## Source
 
 :::source
-markdown/plugins/anchorPlugin
+markdown/plugins/anchorPlugin/index
 :::
