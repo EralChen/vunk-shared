@@ -23,8 +23,13 @@ jobs:
     - name: Gen npmrc
       run: echo "//registry.npmjs.com/:_authToken=${{ secrets.NPM_TOKEN }}" >> ./.npmrc
 
+    - name: See npm config
+      run: npm config ls
+
     - name: Publish
       run: npm run publish
+      env: 
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
     - name: Cleanup
       run: rm -rf dist
