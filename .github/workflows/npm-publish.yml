@@ -21,7 +21,7 @@ jobs:
       run: npm run build
 
     - name: Gen npmrc
-      run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" >> ./.npmrc
+      run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}" >> ./dist/.npmrc
 
     - name: Publish
       run: npm run publish
