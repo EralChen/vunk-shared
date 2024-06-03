@@ -2,7 +2,7 @@ import { errorAndExit, readJson, taskWithName, writeJson } from '@lib-env/shared
 import { series } from 'gulp'
 import mri from 'mri'
 import { docRoot } from '@lib-env/path'
-import path from 'node:path'
+import path from 'path'
 import { createMd, createVue } from './temp'
 import fsp from 'fs/promises'
 import { camelize, capitalize } from 'vue'

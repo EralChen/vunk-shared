@@ -1,6 +1,6 @@
 
 import type { Plugin } from 'vite'
-import path from 'node:path'
+import path from 'path'
 import { readdirAsFlattenedTree, DirFlattenedTreeNode } from '@vunk-shared/node/fs'
 
 export interface ExplorerTreeNode extends DirFlattenedTreeNode {

@@ -1,4 +1,4 @@
-import { readFileSync } from 'node:fs'
+import { readFileSync } from 'fs'
 
 
 export const readJsonSync = (path: string) => JSON.parse(

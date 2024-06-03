@@ -1,6 +1,6 @@
 import { test } from 'vitest'
 import { existentFilepath } from '../existentFilepath'
-import path from 'node:path'
+import path from 'path'
 import { packagesDir } from '@lib-env/path'
 
 

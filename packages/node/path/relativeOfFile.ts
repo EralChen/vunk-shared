@@ -1,4 +1,4 @@
-import path from 'node:path'
+import path from 'path'
 
 /**
  * 计算两个文件之间的相对路径

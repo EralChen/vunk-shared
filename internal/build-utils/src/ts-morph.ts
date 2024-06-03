@@ -1,5 +1,5 @@
 import { ModuleResolutionKind, Project, ScriptTarget, SourceFile } from 'ts-morph'
-import path from 'node:path'
+import path from 'path'
 import { distTypesDir, workRoot } from '@lib-env/path'
 import { LIB_ALIAS, LIB_NAME } from '@lib-env/build-constants'
 import glob from 'fast-glob'

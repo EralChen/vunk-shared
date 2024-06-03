@@ -6,7 +6,7 @@ import { AliasOptions, UserConfig, defineConfig, loadEnv } from 'vite'
 import { explorerTree, createMarkdownPlugin } from '@lib-env/app-utils'
 import { appRoot, srcRoot } from './path.config'
 
-import path from 'node:path'
+import path from 'path'
 
 import Icons from 'unplugin-icons/vite'
 import IconsResolver from 'unplugin-icons/resolver'

@@ -1,5 +1,5 @@
 import { NormalObject } from '@vunk/core'
-import path from 'node:path'
+import path from 'path'
 
 export interface CrowdinFile<S extends NormalObject = NormalObject> {
   lang: string

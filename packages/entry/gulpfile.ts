@@ -1,5 +1,5 @@
 import { series, parallel } from 'gulp'
-import path from 'node:path'
+import path from 'path'
 import { taskWithName } from '@lib-env/shared'
 import { genTypes, rollupFile } from '@lib-env/build-utils'
 import { distDir, pkgsEntryDir } from '@lib-env/path'

@@ -1,6 +1,6 @@
 import {series} from 'gulp'
 import fsp from 'fs/promises'
-import path from 'node:path'
+import path from 'path'
 import { entryPackage, distDir } from '@lib-env/path'
 import { run, taskWithName } from '@lib-env/shared'
 import { readJsonSync, writeJsonSync, readdirAsFlattenedTree } from '@vunk-shared/node/fs'
@@ -32,6 +32,7 @@ export default series(
       main: string,
       exports: Record<string, {
         import: string,
+        types: string,
         require?: string,
       }>
     }
@@ -40,6 +41,7 @@ export default series(
     jsonObj.exports = {
       '.': {
         import: './index.esm.js',
+        types: './index.d.ts',
       },
     }
 
@@ -55,6 +57,7 @@ export default series(
 
       jsonObj.exports[relativePath] = {
         import: `${relativePath}` + `/${item.filename}`,
+        types: `${relativePath}` + `/${item.filename.replace('.mjs', '.d.ts')}`,
       }
 
     })

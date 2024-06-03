@@ -1,4 +1,4 @@
-import { writeFileSync } from 'node:fs'
+import { writeFileSync } from 'fs'
 
 export const writeJsonSync = (
   path: string, 

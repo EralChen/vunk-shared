@@ -1,6 +1,6 @@
-import { statSync, readdirSync } from 'node:fs'
+import { statSync, readdirSync } from 'fs'
 import { FlattenedTreeNode } from '@vunk-shared/types'
-import { resolve, relative } from 'node:path'
+import { resolve, relative } from 'path'
 import { minimatch } from 'minimatch'
 
 export interface DirFlattenedTreeNode extends FlattenedTreeNode {
