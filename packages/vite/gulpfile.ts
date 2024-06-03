@@ -38,6 +38,7 @@ export default series(
         format: 'esm',
         external: [
           /^unplugin-vue-markdown/,
+          /^unocss/,
         ],
       })
     })

@@ -1,7 +1,7 @@
 import { existsSync, readFileSync } from 'fs'
 import { mkdir, writeFile } from 'fs/promises'
 
-export const writeJson = (path: string, data: any, spaces = 0) =>
+export const writeJson = (path: string, data: any, spaces = 2) =>
   writeFile(path, JSON.stringify(data, undefined, spaces), 'utf-8')
   
 export const readJson = (path: string) => JSON.parse(

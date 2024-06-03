@@ -2,13 +2,13 @@ import {series} from 'gulp'
 import fsp from 'fs/promises'
 import path from 'path'
 import { entryPackage, distDir } from '@lib-env/path'
-import { readJson, run, taskWithName, writeJson } from '@lib-env/shared'
-
+import { run, taskWithName } from '@lib-env/shared'
+import { readJsonSync, writeJsonSync, readdirAsFlattenedTree } from '@vunk-shared/node/fs'
+import { NormalObject } from '@vunk-shared/types'
 export default series(
   taskWithName('update:vision', async () => {
 
-    const fileObj = readJson(entryPackage) as { version: string; module: string }
-    
+    const fileObj = readJsonSync(entryPackage) as { version: string; module: string }
     // 默认小版本+1
     const versionList = fileObj.version.split('.')
     const sVersion = versionList.at(-1)
@@ -16,10 +16,9 @@ export default series(
       versionList[versionList.length - 1] = +sVersion + 1 + ''
     }
     fileObj.version = versionList.join('.')
- 
-    await writeJson(entryPackage, fileObj, 2)
-
+    writeJsonSync(entryPackage, fileObj, 2)
   }),
+
   taskWithName('destPkg', async () => {
     const distPkgFile = path.resolve(distDir, './package.json')
 
@@ -28,17 +27,43 @@ export default series(
       distPkgFile,
     )
     // 处理 pkg
-    const jsonObj = readJson(distPkgFile) as { module: string, main: string }
-    jsonObj.module = 'index.esm.js'
-    jsonObj.main = 'index.esm.js'
+    const jsonObj = readJsonSync(distPkgFile) as { 
+      module: string, 
+      main: string,
+      exports: Record<string, {
+        import: string,
+        require?: string,
+      }>
+    }
+    // jsonObj.module = 'index.esm.js'
+    // jsonObj.main = 'index.esm.js'
 
-    await writeJson(distPkgFile, jsonObj, 2)
+    jsonObj.exports = {
+      '.': {
+        import: './index.esm.js',
+      },
+    }
+
+    const modelEntries = readdirAsFlattenedTree(distDir)
+      .filter(item => item.filename === 'index.mjs')
+
+
+      
+    modelEntries.forEach(item => {
+      const relativePath = path.relative(distDir, item.pid).replace(/\\/g, '/')
+      jsonObj.exports[relativePath] = {
+        import: `./${relativePath}` + `/${item.filename}`,
+      }
+    })
+
+    writeJsonSync(distPkgFile, jsonObj, 2)
     
   }),
-  taskWithName('publish', async () => {
-    run(
-      'npm publish --tag alpha --registry https://registry.npmjs.org --access public',
-      distDir,
-    )
-  }),
+  
+  // taskWithName('publish', async () => {
+  //   run(
+  //     'npm publish --registry https://registry.npmjs.org --access public',
+  //     distDir,
+  //   )
+  // }),
 )

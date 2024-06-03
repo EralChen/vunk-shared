@@ -14,7 +14,7 @@ import {
 import {
   highlight,
 } from '@vunk-shared/markdown/shiki'
-import { ReturnVoid } from '@vunk-shared/types'
+import type { ReturnVoid } from '@vunk-shared/types'
 import type MarkdownIt from 'markdown-it'
 
 

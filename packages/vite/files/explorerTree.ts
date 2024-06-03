@@ -1,5 +1,5 @@
 
-import { Plugin } from 'vite'
+import type { Plugin } from 'vite'
 import path from 'path'
 import { readdirAsFlattenedTree, DirFlattenedTreeNode } from '@vunk-shared/node/fs'
 
