@@ -1,6 +1,6 @@
 {
   "name": "@vunk/shared",
-  "version": "0.0.0-alpha.5",
+  "version": "0.0.1",
   "description": "",
   "main": "index.ts",
   "scripts": {
@@ -8,5 +8,5 @@
   },
   "keywords": [],
   "author": "",
-  "license": "ISC"
+  "license": "MIT"
 }

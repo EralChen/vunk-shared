@@ -35,9 +35,8 @@ export default series(
         require?: string,
       }>
     }
-    // jsonObj.module = 'index.esm.js'
-    // jsonObj.main = 'index.esm.js'
-
+    jsonObj.module = 'index.esm.js'
+    jsonObj.main = 'index.esm.js'
     jsonObj.exports = {
       '.': {
         import: './index.esm.js',
