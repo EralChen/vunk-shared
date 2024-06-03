@@ -30,7 +30,7 @@ defineConfig({
 })
 ```
 
-如果你想使用 `vitepress` 样式
+使用 `vitepress` 样式
 ```ts 
 // vite.config.ts
 md({
@@ -46,6 +46,10 @@ md({
 import 'vitepress/dist/client/theme-default/styles/vars.css'
 import 'vitepress/dist/client/theme-default/styles/components/vp-doc.css'
 ```
+
+:::warning
+如需自定义样式，请自行实现 css
+:::
 
 
 ## Source
