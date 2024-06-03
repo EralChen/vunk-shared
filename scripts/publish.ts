@@ -4,7 +4,7 @@ import path from 'path'
 import { entryPackage, distDir } from '@lib-env/path'
 import { run, taskWithName } from '@lib-env/shared'
 import { readJsonSync, writeJsonSync, readdirAsFlattenedTree } from '@vunk-shared/node/fs'
-import { NormalObject } from '@vunk-shared/types'
+
 export default series(
   taskWithName('update:vision', async () => {
 
@@ -49,20 +49,22 @@ export default series(
 
       
     modelEntries.forEach(item => {
-      const relativePath = path.relative(distDir, item.pid).replace(/\\/g, '/')
-      jsonObj.exports[relativePath] = {
-        import: `./${relativePath}` + `/${item.filename}`,
-      }
-    })
+      let relativePath = path.relative(distDir, item.pid).replace(/\\/g, '/')
 
+      relativePath = './' + relativePath
+
+      jsonObj.exports[relativePath] = {
+        import: `${relativePath}` + `/${item.filename}`,
+      }
+
+    })
     writeJsonSync(distPkgFile, jsonObj, 2)
-    
   }),
   
-  // taskWithName('publish', async () => {
-  //   run(
-  //     'npm publish --registry https://registry.npmjs.org --access public',
-  //     distDir,
-  //   )
-  // }),
+  taskWithName('publish', async () => {
+    run(
+      'npm publish --registry https://registry.npmjs.org --access public',
+      distDir,
+    )
+  }),
 )

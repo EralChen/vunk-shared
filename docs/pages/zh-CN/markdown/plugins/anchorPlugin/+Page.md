@@ -12,7 +12,21 @@ ref [vitepress](https://github.com/vuejs/vitepress/blob/b2fa9326c727170d127d9509
 ## Useage
 
 ```ts
-md.use(anchorPlugin)
+import md from 'unplugin-vue-markdown/vite'
+import vue from '@vitejs/plugin-vue'
+import { anchorPlugin } from '@vunk/shared/markdown/plugins/anchorPlugin'
+defineConfig({
+  plugins: [
+    vue({
+      include: [/\.vue$/, /\.md$/]
+    }),
+    md({
+      markdownItSetup (mdit) {
+        mdit.use(anchorPlugin)
+      }
+    }),
+  ]
+})
 ```
 
 
