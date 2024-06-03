@@ -4,7 +4,7 @@ import pluginVue from 'eslint-plugin-vue'
 import importLint from 'eslint-plugin-import'
 import parserVue from 'vue-eslint-parser'
 
-// import path from 'path'
+// import path from 'node:path'
 // import { fileURLToPath } from 'url'
 // import { FlatCompat } from '@eslint/eslintrc'
 // import pluginJs from '@eslint/js'

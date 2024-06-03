@@ -1,6 +1,6 @@
 import { series, dest,src } from 'gulp'
 import { taskWithName } from '@lib-env/shared'
-import path from 'path'
+import path from 'node:path'
 import { workRoot, docRoot } from '@lib-env/path'
 
 const inputAssets = path.resolve(workRoot, './node_modules/@arcgis/core/assets')

@@ -1,6 +1,6 @@
 import {series} from 'gulp'
 import fsp from 'fs/promises'
-import path from 'path'
+import path from 'node:path'
 import { entryPackage, distDir } from '@lib-env/path'
 import { run, taskWithName } from '@lib-env/shared'
 import { readJsonSync, writeJsonSync, readdirAsFlattenedTree } from '@vunk-shared/node/fs'

@@ -1,7 +1,7 @@
 import { appRootDirs } from '@lib-env/path'
 import { taskWithName, run } from '@lib-env/shared'
 import { series } from 'gulp'
-import path from 'path'
+import path from 'node:path'
 
 export default series([
   taskWithName('build', async () => {

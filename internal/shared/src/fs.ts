@@ -1,4 +1,4 @@
-import { existsSync, readFileSync } from 'fs'
+import { existsSync, readFileSync } from 'node:fs'
 import { mkdir, writeFile } from 'fs/promises'
 
 export const writeJson = (path: string, data: any, spaces = 2) =>

@@ -1,5 +1,5 @@
 import {series} from 'gulp'
-import path from 'path'
+import path from 'node:path'
 import glob from 'fast-glob'
 import { distDir } from '@lib-env/path'
 import { taskWithName } from '@lib-env/shared'

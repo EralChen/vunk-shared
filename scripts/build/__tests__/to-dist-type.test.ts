@@ -1,7 +1,7 @@
 import fsp from 'fs/promises'
-import fs from 'fs'
+import fs from 'node:fs'
 import { distDir, distTypesDir } from '@lib-env/path'
-import path from 'path'
+import path from 'node:path'
 import { readdirAsFlattenedTree } from '@vunk-shared/node/fs'
 import { isEqual } from 'lodash-es'
 

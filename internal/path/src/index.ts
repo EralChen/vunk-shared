@@ -1,5 +1,5 @@
 import { DOCS_DIR_NAME } from '@lib-env/build-constants'
-import path from 'path'
+import path from 'node:path'
 
 export const workRoot = path.resolve(__dirname, '../../../')
 export const packagesDir = path.resolve(workRoot, './packages')

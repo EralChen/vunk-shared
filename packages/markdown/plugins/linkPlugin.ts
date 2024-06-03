@@ -6,7 +6,7 @@ import {
   externalUrlRE,
 } from '@vunk-shared/regexp'
 import { MarkdownEnv } from 'vitepress'
-import path from 'path'
+import path from 'node:path'
 
 const indexRE = /(^|.*\/)index.md(#?.*)$/i
 
