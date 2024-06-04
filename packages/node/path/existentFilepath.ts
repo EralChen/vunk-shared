@@ -16,7 +16,12 @@ export function existentFilepath (
   // 如果文件携带extname
   const ext = extname(path)
   if (ext) {
-    if (extnames && !extnames.includes(ext)) {
+    if (
+      extnames 
+      && !extnames.some(
+        (extname) => ext === `.${extname}` || ext === extname,
+      )
+    ) {
       // eslint-disable-next-line no-console
       console.warn(
         `文件后缀名不匹配，期望 ${extnames.join(',')}，实际 ${ext}`,
