@@ -185,14 +185,14 @@ const onSourceVisibleKeydown = (e: KeyboardEvent) => {
 }
 
 .vunk-shared-demo-op-btns{
-  padding: 0.5rem;
+  padding: 0.75em 0.5em;
   display: flex;
   align-items: center;
   justify-content: flex-end;
-  height: 2.5rem;
+  /* height: 2.5em; */
 }
 .vunk-shared-demo-op-btn {
-  margin: 0 0.5rem;
+  margin: 0 0.5em;
   cursor: pointer;
   color: var(--text-color-lighter);
   transition: 0.2s;
