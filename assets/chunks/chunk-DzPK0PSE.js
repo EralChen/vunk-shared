@@ -1,4 +1,4 @@
-import{l as i}from"./chunk-8hXFf3E9.js";import{T as c}from"./chunk-CUVbWrbg.js";import{d as g,I as m,J as u,o as p,c as f,f as r,w as n,g as l,b as s}from"./chunk-COS1FzrJ.js";import"./chunk-HCS4kJPh.js";const S={id:"loadStyleStringDemoNode","sk-flex":"row-center2"},C=g({__name:"basic",setup(_){class a extends c{color="red";get cssRule(){return`
+import{l as i}from"./chunk-8hXFf3E9.js";import{T as c}from"./chunk-98OqWthP.js";import{d as g,J as m,K as u,o as p,c as f,f as r,w as n,g as l,b as s}from"./chunk-frwgQZzY.js";import"./chunk-HCS4kJPh.js";const S={id:"loadStyleStringDemoNode","sk-flex":"row-center2"},C=g({__name:"basic",setup(_){class a extends c{color="red";get cssRule(){return`
     #loadStyleStringDemoNode{
       background: ${this.color};
     }
