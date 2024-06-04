@@ -15,6 +15,7 @@ import {
   ElTooltip, 
   ElCollapseTransition, 
 } from 'element-plus'
+import IconCodeLine from './IconCodeLine.vue'
 
 interface Props {
   demos: NormalObject
@@ -62,8 +63,7 @@ const formatPathDemos = computed(() => {
 
   Object.keys(props.demos).forEach((key) => {
     demos[
-      key.replace('../../examples/', '')
-        .replace('.vue', '')
+      key.replace('.vue', '')
     ] = props.demos[key]
   })
 
@@ -132,7 +132,7 @@ const onSourceVisibleKeydown = (e: KeyboardEvent) => {
             @click="toggleSourceVisible()"
           >
             <ElIcon :size="16">
-              <i-ri-code-line />
+              <IconCodeLine />
             </ElIcon>
           </button>
         </ElTooltip>
@@ -172,6 +172,18 @@ const onSourceVisibleKeydown = (e: KeyboardEvent) => {
 </template>
 
 <style>
+
+.vunk-shared-demo-container{
+  --border-color: var(--el-border-color);
+}
+.vunk-shared-demo-container button.reset-btn {
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  cursor: pointer;
+}
+
 .vunk-shared-demo-op-btns{
   padding: 0.5rem;
   display: flex;

@@ -26,7 +26,7 @@ export interface DemoContainerPluginSettings {
    * @description
    * 示例代码文件匹配规则
    */
-  globSource: string | ((env: MarkdownEnv & {
+  globSource?: string | ((env: MarkdownEnv & {
     id: string
   }) => string)
 } 
