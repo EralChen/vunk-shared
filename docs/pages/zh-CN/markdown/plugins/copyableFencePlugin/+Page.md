@@ -50,3 +50,8 @@ import 'vitepress/dist/client/theme-default/styles/components/vp-doc.css'
 :::warning
 如需自定义样式，请自行实现 css
 :::
+
+
+## Other
+
+代码段染色参考 [highlight](../../shiki/highlight/+Page.md)

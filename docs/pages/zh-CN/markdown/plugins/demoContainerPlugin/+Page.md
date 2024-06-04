@@ -44,3 +44,7 @@ hello/basic
 
 ```
 
+## Other
+
+代码段染色参考 [highlight](../../shiki/highlight/+Page.md#usage)
+
