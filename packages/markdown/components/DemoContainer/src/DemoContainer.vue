@@ -40,7 +40,6 @@ const tabsSource = computed(() => {
   const jsonStr = decodeURIComponent(props.subsources)
   return JSON.parse(jsonStr)
 })
-console.log('props', tabsSource.value)
 
 const tabsData = computed(() => {
   return [
