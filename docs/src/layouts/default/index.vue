@@ -4,9 +4,12 @@ import { ElScrollbar } from 'element-plus'
 import Navbar from './navbar.vue'
 import Aside from './aside.vue'
 import Toc from './toc.vue'
-import { nextTick, shallowRef } from 'vue'
+import { nextTick, ref, shallowRef } from 'vue'
 import { onContentUpdated } from '#/renderer/page'
 import type { PageContext } from 'vike/types'
+import { ArrowLeft } from '@element-plus/icons-vue'
+import { VkCollapseTransitionHorizontal } from '@vunk/core/components/collapse-transition-horizontal'
+
 
 const scrollbarNode = shallowRef<InstanceType<typeof ElScrollbar>>()
 
@@ -37,6 +40,13 @@ onContentUpdated(() => {
   hooks: ['beforeUnmount'],
 })
 
+
+/* aside 收起 */
+const asideCollapsed = ref(false)
+const asideToggle = () => {
+  asideCollapsed.value = !asideCollapsed.value
+}
+/* end of aside 收起 */
 </script>
 <template>
   <VkDuplex class="layout-default">
@@ -50,9 +60,35 @@ onContentUpdated(() => {
       sk-flex
       class="h-100%"
     >
-      <div class="layout-default-aside-x">
-        <div class="layout-default-aside">
-          <Aside></Aside>
+      <div class="layout-default-aside-x" sk-flex>
+        <VkCollapseTransitionHorizontal>
+          <div
+            v-show="!asideCollapsed" class="layout-default-aside"
+          >
+            <Aside></Aside>
+          </div>
+        </VkCollapseTransitionHorizontal>
+     
+        <div 
+          bg-fill-light
+          border-r-1
+          border-l-1
+          border-t-0
+          border-b-0
+          border-solid
+          border-color-border-base
+          cursor-pointer
+          sk-flex="col-center2"
+          @click="asideToggle"
+        >
+          <ElIcon
+            :class="{
+              'rotate-180': asideCollapsed,
+              'transition-transform': true,
+            }"
+          >
+            <ArrowLeft></ArrowLeft>
+          </ElIcon>
         </div>
       </div>
 
@@ -93,6 +129,12 @@ body, #app, #page-view, #vue-root {
 </style>
 
 <style>
+.layout-default-aside.is-collapsed{
+  /* width: 0; */
+  min-width: 0;
+  overflow: hidden;
+  transition: min-width 0.3s;
+}
 .doc-toc-container{
   width: 300px;
   position: sticky;

@@ -133,8 +133,8 @@ importers:
         specifier: 0.0.0-alpha.73
         version: 0.0.0-alpha.73
       '@vunk/core':
-        specifier: 0.0.0-alpha.118
-        version: 0.0.0-alpha.118
+        specifier: 0.0.0-alpha.121
+        version: 0.0.0-alpha.121
       '@vunk/gsap':
         specifier: 0.0.0-alpha.3
         version: 0.0.0-alpha.3
@@ -1543,8 +1543,8 @@ packages:
   '@vueuse/shared@9.13.0':
     resolution: {integrity: sha512-UrnhU+Cnufu4S6JLCPZnkWh0WwZGUp72ktOF2DFptMlOs3TOdVv8xJN53zhHGARmVOsz5KqOls09+J1NR6sBKw==}
 
-  '@vunk/core@0.0.0-alpha.118':
-    resolution: {integrity: sha512-I6we2gOyKYNTnDxZHmj1X/iqumqKcpS7X6WIYa/NKwlxzSCQoYkVOHCo1UWaEeIbWOUT55Cy+e6vLFy7Lz5tLQ==}
+  '@vunk/core@0.0.0-alpha.121':
+    resolution: {integrity: sha512-7TACDYvXr9WSi8bawTc1zoLgtrze7Iw+BePnBLOTd4SAOAV7Wy9oJMtR+fez+w+hRHk+taOY7drNQnbquxwpcw==}
 
   '@vunk/gsap@0.0.0-alpha.3':
     resolution: {integrity: sha512-UTyP4VmeAoMY+eab/OhFyyXrd21W4zgQuV2px4r/5x8iox187yf3AH42zuI//ub+loVTgE74iu9MQasTJ8NdMw==}
@@ -5607,7 +5607,7 @@ snapshots:
       - '@vue/composition-api'
       - vue
 
-  '@vunk/core@0.0.0-alpha.118': {}
+  '@vunk/core@0.0.0-alpha.121': {}
 
   '@vunk/gsap@0.0.0-alpha.3': {}
 

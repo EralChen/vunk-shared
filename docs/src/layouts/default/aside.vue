@@ -95,8 +95,9 @@ onMounted(() => {
   // listenerToggle.add()
 
   setInterval(() => {
-    if (pathname.value === getLocationpathname()) return
-    pathname.value = window.location.pathname
+    const lPath = getLocationpathname()
+    if (pathname.value === lPath) return
+    pathname.value = lPath
     initOpenMenu()
   }, 400)
 
