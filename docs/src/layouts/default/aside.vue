@@ -5,7 +5,7 @@ import { VkRoutesMenuContent } from '@vunk/skzz/components/routes-menu-content'
 import type { RouteRecordRaw } from 'vue-router'
 import { Ref, computed, nextTick, onMounted, ref, shallowRef } from 'vue'
 import { SkAppIcon } from '@skzz/platform/components/app-icon'
-import { useSharedMenuClick } from '#s/composables/menuClick'
+// import { useSharedMenuClick } from '#s/composables/menuClick'
 import { VkDuplex } from '@vunk/core'
 import { findDeep } from 'deepdash-es/standalone'
 import explorerTreeList from 'virtual:explorer'
@@ -17,7 +17,7 @@ type MenuRaw = RouteRecordRaw & ExplorerTreeNode
 const menuComponent = ref() as Ref<{
   open: (index: string) => void
 }>
-const { listenerToggle } =  useSharedMenuClick()
+// const { listenerToggle } =  useSharedMenuClick()
 const lang = useCrowdinLang()
 const basePath = import.meta.env.BASE_URL + lang
 
@@ -85,12 +85,17 @@ const filterMenu = computed(() => {
 
 
 const pathname = shallowRef('')
+const getLocationpathname = () => {
+  return window.location.pathname.endsWith('/') 
+    ? window.location.pathname.slice(0, -1) 
+    : window.location.pathname
+}
 onMounted(() => {
   // menu 点击事件监听
-  listenerToggle.add()
+  // listenerToggle.add()
 
   setInterval(() => {
-    if (pathname.value === window.location.pathname) return
+    if (pathname.value === getLocationpathname()) return
     pathname.value = window.location.pathname
     initOpenMenu()
   }, 400)
@@ -101,9 +106,7 @@ onMounted(() => {
 
 
 function initOpenMenu () {
-
-  // const testIndex = route.matched.map(item => item.path)
-  const pathname = window.location.pathname
+  const pathname = getLocationpathname()
   findDeep(filterMenu.value, (v, k, _, { parents }) => {
     
     if (k === 'path' && pathname === v) {
@@ -125,6 +128,10 @@ function initOpenMenu () {
 /* end of menu event   */
 
 
+const linkCtrlClick = (e: Event) => {
+  // 阻止事件冒泡
+  e.stopPropagation()
+}
 </script>
 <template>
   <VkDuplex class="h-full">
@@ -149,7 +156,11 @@ function initOpenMenu () {
             :base-path="basePath"
           >
             <template #item="{ href, data }">
-              <a :href="href">
+              <a 
+                :href="href" 
+                class="layout-default-aside-menu-a"
+                @click.ctrl="linkCtrlClick"
+              >
                 <ElIcon>
                   <SkAppIcon 
                     v-if="data.meta?.icon"
@@ -159,7 +170,8 @@ function initOpenMenu () {
               </a>
             </template>
 
-            <template #itemTitle="{ data }">
+            <template #itemTitle="{ data, href }">
+              <a :href="href"></a>
               {{ data.meta?.title }}
             </template>
 
@@ -173,6 +185,15 @@ function initOpenMenu () {
   </VkDuplex>
 </template>
 <style>
+.layout-default-aside-menu-a{
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  color: var(--el-color-primary);
+}
+
 .layout-default-aside-search{
   margin-top: var(--gap-xxs);
 }
