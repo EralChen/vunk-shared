@@ -1,0 +1,1 @@
+import{y as t,o as s,c as o,a as e}from"./chunk-B6ZKNLD8.js";import"./chunk-HCS4kJPh.js";const c={},i={"sk-flex":"","h-400px":""},l=e("div",{"flex-1":"","bg-fill-light":"","sub:gmt-xl":""},[e("div",null,"11"),e("div",null,"12")],-1),n=e("div",{"flex-1":"","bg-primary":""},null,-1),_=[l,n];function r(a,d){return s(),o("div",i,_)}const h=t(c,[["render",r]]);export{h as default};
