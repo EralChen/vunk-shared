@@ -161,8 +161,6 @@ export const demoContainerPlugin = async (
         }
         /* end of tabs add  */
 
-        console.log('tabsSource', tabsSource)
-  
         return `<DemoContainer subsources="${
           encodeURIComponent(JSON.stringify(tabsSource))
         }" :demos="demos" source="${
