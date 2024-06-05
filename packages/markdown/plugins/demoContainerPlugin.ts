@@ -147,9 +147,10 @@ export const demoContainerPlugin = async (
           tabsToken = tokens[tabsTokenIndex + 4]
                     
           if (tabsToken.type === 'inline') {
-            const subsRE = /^subs\s*\[(.+)\]/
+
+            const subsRE = /^subs(\n|.)*\[(.+)\]/
             const m = tabsToken.content.match(subsRE)
-            const content = m && m.length > 1 ? m[1] : ''
+            const content = m && m.length > 1 ? m[2] : ''
           
             content && content.split(',').forEach(item => {
               item = item.trim()
@@ -159,6 +160,8 @@ export const demoContainerPlugin = async (
     
         }
         /* end of tabs add  */
+
+        console.log('tabsSource', tabsSource)
   
         return `<DemoContainer subsources="${
           encodeURIComponent(JSON.stringify(tabsSource))
