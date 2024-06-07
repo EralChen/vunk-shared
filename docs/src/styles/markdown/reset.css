@@ -9,3 +9,7 @@
 .vp-doc .el-table__header, .vp-doc .el-table__body {
   margin: 0;
 }
+
+.vp-doc p {
+  line-height: 1.5;
+}
