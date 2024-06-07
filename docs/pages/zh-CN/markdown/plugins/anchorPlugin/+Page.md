@@ -9,7 +9,7 @@ ref [vitepress](https://github.com/vuejs/vitepress/blob/b2fa9326c727170d127d9509
 + [markdown-it](http://npm.im/markdown-it)
 + [markdown-it-anchor](http://npm.im/markdown-it-anchor)
 
-## Useage
+## Usage
 
 ```ts
 // vite.config.ts

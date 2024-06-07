@@ -1,5 +1,6 @@
 # demoContainerPlugin
 
+添加 `demo` 块，用于展示组件的示例代码。
 
 ## dependencies
 

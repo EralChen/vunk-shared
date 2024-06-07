@@ -13,7 +13,7 @@
 + [vitepress](https://www.npmjs.com/package/vitepress)
 
 
-## Useage
+## Usage
 
 ### vite config
 

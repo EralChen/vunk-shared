@@ -7,7 +7,7 @@
 
 + [element-plus](https://www.npmjs.com/package/element-plus)
 
-## Useage
+## Usage
 
 
 ```md

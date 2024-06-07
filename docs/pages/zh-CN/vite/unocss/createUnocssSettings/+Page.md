@@ -12,7 +12,7 @@
 
 
 
-## Useage
+## Usage
 
 ```ts
 // unocss.config.ts

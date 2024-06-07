@@ -3,7 +3,7 @@
 添加自定义块
 
 
-## Useage
+## Usage
 
 :::tip
 我是TIP！

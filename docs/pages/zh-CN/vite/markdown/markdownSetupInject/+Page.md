@@ -4,7 +4,7 @@
 
 
 
-## Useage
+## Usage
 
 
 ### vite config
