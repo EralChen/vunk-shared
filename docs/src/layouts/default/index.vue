@@ -64,6 +64,9 @@ const asideToggle = () => {
         <VkCollapseTransitionHorizontal>
           <div
             v-show="!asideCollapsed" class="layout-default-aside"
+            :class="{
+              'is-collapsed': asideCollapsed,
+            }"
           >
             <Aside></Aside>
           </div>
@@ -129,12 +132,7 @@ body, #app, #page-view, #vue-root {
 </style>
 
 <style>
-.layout-default-aside.is-collapsed{
-  /* width: 0; */
-  min-width: 0;
-  overflow: hidden;
-  transition: min-width 0.3s;
-}
+
 .doc-toc-container{
   width: 300px;
   position: sticky;
@@ -143,10 +141,11 @@ body, #app, #page-view, #vue-root {
   overflow: auto;
   padding: var(--gap-page);
   background-color: var(--bg-color);
+  margin-left: 14px;
 }
 .doc-content-container{
   flex-grow: 1;
-  padding-right: 64px;
+  /* padding-right: 14px; */
 }
 .layout-default {
   --layout-aside-width: 300px;
@@ -161,8 +160,11 @@ body, #app, #page-view, #vue-root {
   border-bottom: var(--el-border-color) 1px solid;
 }
 .layout-default-aside{
-  min-width: var(--layout-aside-width);
+  /* min-width: var(--layout-aside-width); */
   height: 100%;
+}
+.layout-default-aside.is-collapsed{
+  min-width: 0;
 }
 
 

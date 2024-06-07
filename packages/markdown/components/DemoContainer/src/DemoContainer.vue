@@ -187,7 +187,7 @@ const onSourceVisibleKeydown = (e: KeyboardEvent) => {
 }
 
 .vunk-shared-demo-op-btns{
-  padding: 0.75em 0.5em;
+  padding: 8px;
   display: flex;
   align-items: center;
   justify-content: flex-end;
