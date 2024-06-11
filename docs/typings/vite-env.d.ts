@@ -1,6 +1,6 @@
 
 declare module 'virtual:explorer*' {
-  import { ExplorerTreeNode } from '@lib-env/app-utils'
+  import { ExplorerTreeNode } from '@vunk-shared/types'
   const tree: ExplorerTreeNode[]
   export default tree
 }

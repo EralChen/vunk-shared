@@ -5,13 +5,14 @@ import { VkRoutesMenuContent } from '@vunk/skzz/components/routes-menu-content'
 import type { RouteRecordRaw } from 'vue-router'
 import { Ref, computed, nextTick, onMounted, ref, shallowRef } from 'vue'
 import { SkAppIcon } from '@skzz/platform/components/app-icon'
-// import { useSharedMenuClick } from '#s/composables/menuClick'
 import { VkDuplex } from '@vunk/core'
 import { findDeep } from 'deepdash-es/standalone'
+
 import explorerTreeList from 'virtual:explorer'
+import type { ExplorerTreeNode } from '@vunk-shared/types'
+
 import { toNestedTree } from '@vunk-shared/data'
 
-type ExplorerTreeNode = (typeof explorerTreeList)[0] 
 type MenuRaw = RouteRecordRaw & ExplorerTreeNode
 
 const menuComponent = ref() as Ref<{

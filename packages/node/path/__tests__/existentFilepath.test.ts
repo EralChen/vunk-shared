@@ -4,7 +4,7 @@ import path from 'path'
 import { packagesDir } from '@lib-env/path'
 
 
-test('existsFilepath', () => {
+test('existentFilepath', () => {
   const res = existentFilepath(
     path.resolve(packagesDir, 'browser/isBrowser'),
     ['ts', 'js']
