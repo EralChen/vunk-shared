@@ -34,6 +34,7 @@
 		"@vunk-shared/function": "workspace:*",
 		"@vunk-shared/markdown": "workspace:*",
 		"@vunk-shared/node": "workspace:*",
+		"@vunk-shared/promise": "workspace:*",
 		"@vunk-shared/regexp": "workspace:*",
 		"@vunk-shared/types": "workspace:*",
 		"@vunk-shared/vite": "workspace:*",
