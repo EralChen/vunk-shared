@@ -1,11 +1,15 @@
 import { test } from 'vitest'
-import fs from 'fs'
 import path from 'path'
 import { 
   Project, 
   ObjectLiteralExpression, PropertyAssignment, AsExpression, SyntaxKind, 
   TypeReferenceNode
  } from 'ts-morph'
+ import { 
+  getValueFromObjectLiteralExpression,
+  getTypeFromAsExpression
+} from '@vunk-shared/typescript/morph'
+
 
 
 interface PropsTableColumn {
@@ -15,21 +19,6 @@ interface PropsTableColumn {
   description: string
   link: string
   required: boolean
-}
-
-
-function getTypeFromProperty (
-  obj: ObjectLiteralExpression,
-  field: string = 'type',
-) {
-  const prop = obj.getProperty(field)
-  if (!prop) {
-    return ''
-  }
-  if (prop instanceof PropertyAssignment) {
-    return getType(prop)
-  }
-  return prop.getText()
 }
 
 function getValueFromProperty (
@@ -101,29 +90,40 @@ test('propsContainerPlugin.test', () => {
 
 
 
-  const props = sourceFile.getVariableDeclarationOrThrow('props')
-
-  // 获取 ObjectLiteralExpression
-  const objectExpression = props.getChildrenOfKind(
-    SyntaxKind.ObjectLiteralExpression
-  )[0]
+  const props = sourceFile
+    .getVariableDeclarationOrThrow('props')
+    .getInitializerIfKindOrThrow(SyntaxKind.ObjectLiteralExpression)
 
 
-  if (!objectExpression) {
-    throw new Error('objectExpression not found')
-  }
-
-  const infoList = objectExpression.getProperties().reduce((a, prop) => {
+  const infoList = props.getProperties().reduce((a, prop) => {
 
     if (prop instanceof PropertyAssignment) {
       const name = prop.getName()
+
       const obje =  prop.getInitializerIfKindOrThrow(
         SyntaxKind.ObjectLiteralExpression
       )
 
-      const type = getTypeFromProperty(obje, 'type')
+      const requiredInfo = getValueFromObjectLiteralExpression(obje, 'required')
+      const required = requiredInfo.initializer?.getKindName() === 'TrueKeyword'
 
-      const required = getValueFromProperty(obje, 'required') === 'true'
+      const typeInfo = getValueFromObjectLiteralExpression(obje, 'type')
+
+      let type = typeInfo.value
+
+      if (typeInfo.initializer instanceof AsExpression) {
+        type = getTypeFromAsExpression(
+          typeInfo.initializer, 
+          {
+            typeReferenceTransform(tr) {
+              return tr.getTypeName()
+                .getText() === 'PropType' 
+                  ? tr.getTypeArguments()[0] 
+                  : tr
+            },
+          }
+        ).value
+      }
 
 
 

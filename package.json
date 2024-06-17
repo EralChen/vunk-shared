@@ -37,6 +37,7 @@
 		"@vunk-shared/promise": "workspace:*",
 		"@vunk-shared/regexp": "workspace:*",
 		"@vunk-shared/types": "workspace:*",
+		"@vunk-shared/typescript": "workspace:*",
 		"@vunk-shared/vite": "workspace:*",
 		"@vunk/shared": "workspace:*",
 		"@vueuse/core": "^10.9.0",

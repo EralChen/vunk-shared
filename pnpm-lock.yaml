@@ -41,6 +41,9 @@ importers:
       '@vunk-shared/types':
         specifier: workspace:*
         version: link:packages/types
+      '@vunk-shared/typescript':
+        specifier: workspace:*
+        version: link:packages/typescript
       '@vunk-shared/vite':
         specifier: workspace:*
         version: link:packages/vite

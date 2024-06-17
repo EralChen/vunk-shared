@@ -14,13 +14,13 @@ export function getValueFromObjectLiteralExpression (
   field: string,
 ): {
   initializer: Expression | null,
-  value: string | null,
+  value: string,
 } {
   const prop = obj.getProperty(field)
   if (!prop) {
     return {
       initializer: null,
-      value: null,
+      value: '',
     }
   }
   if (prop instanceof PropertyAssignment) {

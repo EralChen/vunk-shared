@@ -14,8 +14,7 @@ export const props = {
    * @property
    */
   el: {
-    type: Object as PropType<HTMLDivElement
-    >,
+    type: Object as PropType<HTMLDivElement>,
     required: true
   }
 
