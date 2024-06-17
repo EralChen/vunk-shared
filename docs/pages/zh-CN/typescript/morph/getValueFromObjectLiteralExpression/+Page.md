@@ -1,0 +1,19 @@
+# getValueFromObjectLiteralExpression
+
+从 ObjectLiteralExpression 中获取指定属性的值
+
+[AST Viewer](https://ts-ast-viewer.com/#code/JYWwDg9gTgLgBAbzgBShMAVAnmApnAXzgDM0Q4ByANwFdcKAoB3AD0ljgGMIA7AZ3hg0YPnAC8iJnDgAjAIZ9cALknTpMHMrgBlGFGA8A5gBoGauFFwBHGsEsATFXrpnCpqXAD0AKm+u43nAAAgA2BgDWcAAWMDAiSp6e9rhUuCHouFAAdCAQAF7AISFyWdCGSRCcfJ4A6rgyngCCyACSngASGACyADIAIsBUAKIhuCC4PDD+gUHJfJz6YDDAvHAYUfidvQPDo+OTcAYwmcRynPhCEFTAc3B8eJzAciFwl3iwwLiiABQyuFi8exwGBRCCKOAQYjAjYWXCGGjFKBwLY9EZjCbwI4nM74YDwZ58CDRBRwORUOSFOQyUbAol42RYQ48Db6GByHjnACUJGgcBA7OAYARcmWRjg9kGcDS6MmfCy02Cb0yGmmnlcaRUCH8wM0KgA8jIAFa4Tj40SodDYPAAHhROzR+ym5gAfKZzJYbHZcI5gVAXNICExA0A)
+
+
+## Test
+
+:::source
+typescript/morph/\_\_tests\_\_/getValueFromObjectLiteralExpression.test.ts
+:::
+
+
+## Source
+
+:::source
+typescript/morph/getValueFromObjectLiteralExpression
+:::

@@ -161,6 +161,7 @@ const linkCtrlClick = (e: Event) => {
               <a 
                 :href="href" 
                 class="layout-default-aside-menu-a"
+                :title="data.meta?.title"
                 @click.ctrl="linkCtrlClick"
               >
                 <ElIcon>
@@ -172,9 +173,10 @@ const linkCtrlClick = (e: Event) => {
               </a>
             </template>
 
-            <template #itemTitle="{ data, href }">
-              <a :href="href"></a>
-              {{ data.meta?.title }}
+            <template #itemTitle="{ data }">
+              <span 
+                class="layout-default-aside-menu-title"
+              > {{ data.meta?.title }} </span> 
             </template>
 
             <template #menuTitle="{ data }">
@@ -187,6 +189,14 @@ const linkCtrlClick = (e: Event) => {
   </VkDuplex>
 </template>
 <style>
+
+.layout-default-aside-menu-title{
+  /* 超出 省略 */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .layout-default-aside-menu-a{
   position: absolute;
   top: 0;
