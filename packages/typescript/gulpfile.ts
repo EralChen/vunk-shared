@@ -36,6 +36,7 @@ export default series(
         inputFile: item,
         outputFile: getOutputFile(item),
         format: 'esm',
+        external: ['ts-morph'],
       })
     })
 
