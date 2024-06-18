@@ -15,6 +15,10 @@ markdown/plugins/\_\_tests\_\_/propsContainerPlugin.ctx.ts
 ### md 使用
 ```md
 :::props
-test/src/ctx.ts
+markdown/components/DemoContainer/src/ctx.ts
 :::
 ```
+
+:::props
+markdown/components/DemoContainer/src/ctx.ts
+:::

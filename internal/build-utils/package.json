@@ -20,6 +20,6 @@
     "rollup-plugin-css-only": "^4.5.2",
     "rollup-plugin-esbuild": "^6.1.1",
     "rollup-plugin-multi-input": "^1.4.1",
-    "ts-morph": "^22.0.0"
+    "ts-morph": "latest"
   }
 }

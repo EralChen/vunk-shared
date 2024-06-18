@@ -1,12 +1,9 @@
 import MarkdownIt from 'markdown-it'
-import { ContainerPluginWithParams } from './types'
+import { ContainerPluginWithParams } from '../types'
 import container from 'markdown-it-container'
-import fs from 'fs'
 import path from 'path'
 import { existentFilepath } from '@vunk-shared/node/path'
-
-
-
+import { getPropsContainerTableData } from './src/getPropsContainerTableData'
 export interface PropsContainerPluginSettings {
   /**
    * @description
@@ -50,11 +47,32 @@ export function propsContainerPlugin (
           if (!filepath) {
             return ''
           }
-          const source = fs.readFileSync(filepath).toString()
-          
-          // 得到源码 -> ast -> props 描述对象
-      
-          return ``
+
+          // props 描述对象
+          const propsTableData = getPropsContainerTableData({
+            path: filepath,
+          })
+
+          const renderStr = [
+            '|prop|type|default|description|',
+            '|---|---|---|---|',
+            ...propsTableData.map((row) => {
+              let prop = row.prop
+
+              if (row.link) {
+                prop = `[${prop}](${row.link})`
+              }
+              if (row.required) {
+                prop += '*'
+              }
+              row.isProperty && (prop = `:${prop}`)
+              return `|${prop}|${row.type}|${row.default}|${row.description}|`
+            }),
+          ].join('\n')
+        
+  
+          return md.render(renderStr)
+
         } else {
           return ``
         }
@@ -66,4 +84,9 @@ export function propsContainerPlugin (
 
 
 }
+
+
+
+
+
 

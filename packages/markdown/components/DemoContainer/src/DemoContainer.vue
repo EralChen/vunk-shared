@@ -16,19 +16,10 @@ import {
   ElCollapseTransition, 
 } from 'element-plus'
 import IconCodeLine from './IconCodeLine.vue'
+import { props as dProps } from './ctx'
 
-interface Props {
-  demos: NormalObject
-  source: string
-  path: string
-  rawSource: string
-  description?: string
-  subsources: string
-}
-const props = withDefaults(defineProps<Props>(), {
-  subsources: '{}',
-  description: '',
-}) 
+
+const props = defineProps(dProps)
 
 
 

@@ -57,8 +57,9 @@ export const linkPlugin = (
 
 
       /* for vike page +Page */
-      const filePath = env.id
+      const filePath = new URL(url, 'http://a.com').pathname
       const fileBasename = path.basename(filePath, '.md')
+
       const isEntry = fileBasename === '+Page'
       // for vikepage 
       //  ../map-view/+Page.md#mapview-slots 
@@ -68,6 +69,7 @@ export const linkPlugin = (
           .replace('../', './')
           .replace('/+Page', '')
       } 
+      
       /* end of  for vike page +Page */
 
       if (externalUrlRE.test(url)) {
@@ -104,7 +106,8 @@ export const linkPlugin = (
     return self.renderToken(tokens, idx, options)
   }
 
-  function normalizeHref (hrefAttr: [string, string], env: MarkdownEnv) {
+  function normalizeHref (hrefAttr: [string, string], env:
+     MarkdownEnv) {
     let url = hrefAttr[1]
 
     const indexMatch = url.match(indexRE)

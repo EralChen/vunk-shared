@@ -1,12 +1,19 @@
+import { NormalObject } from '@vunk-shared/types'
 import { PropType } from 'vue'
 
 export const props = {
 
   base: {
     type: String,
-    required: true
+    required: true,
+    default: '/',
   },
 
+  obj: {
+    type: Object as PropType<NormalObject>,
+    default: () => ({}),
+  },
+  
 
   /**
    * @link https://developer.mozilla.org/docs/Web/API/HTMLDivElement

@@ -24,11 +24,8 @@ custom-check-tree/index
 
 ## DemoContainer Props
 
-|prop|type|default|descriptions|
-|---|---|---|---|
-|demos*|NormalObject|{}|组件示例合集|
-|path*|string|''|当前组件路径|
-|source*|string|''| `md.render` 后的组件代码 |
-|rawSource|string|''|组件源码|
-|subsources| jsonstring |'{}'|`md.render` 后的其他引用代码|
+:::props
+markdown/components/DemoContainer/src/ctx.ts
+:::
+
 

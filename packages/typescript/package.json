@@ -5,6 +5,7 @@
     "build": "gulp -f gulpfile.ts"
   },
   "dependencies": {
-    "ts-morph": "^22.0.0"
+    "comment-parser": "^1.4.1",
+    "ts-morph": "latest"
   }
 }

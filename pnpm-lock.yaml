@@ -216,7 +216,7 @@ importers:
         specifier: ^1.4.1
         version: 1.4.1
       ts-morph:
-        specifier: ^22.0.0
+        specifier: latest
         version: 22.0.0
 
   internal/eslint-config:
@@ -280,6 +280,9 @@ importers:
       shiki:
         specifier: ^1.6.0
         version: 1.6.1
+      ts-morph:
+        specifier: latest
+        version: 22.0.0
       vitepress:
         specifier: 1.1.4
         version: 1.1.4(@algolia/client-search@4.23.3)(@types/node@18.0.4)(async-validator@4.2.5)(postcss@8.4.38)(sass@1.77.4)(search-insights@2.14.0)(typescript@5.4.5)
@@ -302,8 +305,11 @@ importers:
 
   packages/typescript:
     dependencies:
+      comment-parser:
+        specifier: ^1.4.1
+        version: 1.4.1
       ts-morph:
-        specifier: ^22.0.0
+        specifier: latest
         version: 22.0.0
 
   packages/vite:
@@ -1840,6 +1846,10 @@ packages:
   commander@7.2.0:
     resolution: {integrity: sha512-QrWXB+ZQSVPmIWIhtEO9H+gwHaMGYiF5ChvoJ+K9ZGHG/sVsa6yiesAD1GC/x46sET00Xlwo1u49RVVVzvcSkw==}
     engines: {node: '>= 10'}
+
+  comment-parser@1.4.1:
+    resolution: {integrity: sha512-buhp5kePrmda3vhc5B9t7pUQXAb2Tnd0qgpkIhPhkHXxJpiPJ11H0ZEU0oBpJ2QztSbzG/ZxMj/CHsYJqRHmyg==}
+    engines: {node: '>= 12.0.0'}
 
   commondir@1.0.1:
     resolution: {integrity: sha512-W9pAhw0ja1Edb5GVdIF1mjZw/ASI0AlShXM83UUGe2DVr5TdAPEA1OA8m/g8zWp9x6On7gqufY+FatDbC3MDQg==}
@@ -5943,6 +5953,8 @@ snapshots:
   commander@4.1.1: {}
 
   commander@7.2.0: {}
+
+  comment-parser@1.4.1: {}
 
   commondir@1.0.1: {}
 

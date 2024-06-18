@@ -1,4 +1,5 @@
-import { AsExpression, Expression, ObjectLiteralExpression, PropertyAssignment } from 'ts-morph'
+import { Expression, MethodDeclaration, ObjectLiteralExpression, PropertyAssignment, SyntaxKind } from 'ts-morph'
+import { getValueFromExpression } from './getValueFromExpression'
 
 
 /**
@@ -23,23 +24,48 @@ export function getValueFromObjectLiteralExpression (
       value: '',
     }
   }
+  
   if (prop instanceof PropertyAssignment) {
     const initializer = prop.getInitializer()
-    if (initializer instanceof AsExpression) {
 
-      return {
-        initializer,
-        value: initializer.getExpression().getText() || '',
-      }
-
-    }
     return {
       initializer: initializer ?? null,
-      value: initializer?.getText() || '',
+      value: getValueFromExpression(initializer),
     }
   }
+  
+  if (prop instanceof MethodDeclaration) {
 
+    /* 将  MethodDeclaration 转为 FunctionExpress */
+    const project = obj.getSourceFile().getProject()
+    let source = project.getSourceFile('__vunk_getValueFromObjectLiteralExpression.ts')
 
+    if (!source) {
+      source = project.createSourceFile(
+        '__vunk_getValueFromObjectLiteralExpression.ts',
+        'const data = {}',
+      )
+    }
+
+    const nObj = source
+      .getVariableDeclarationOrThrow('data')
+      .getInitializerIfKindOrThrow(SyntaxKind.ObjectLiteralExpression)
+
+    const functionProp = nObj.addPropertyAssignment({
+      name: prop.getName(),
+      initializer: prop.getFullText()
+        .replace(prop.getName(), 'function'),
+    })
+
+    const data = {
+      initializer: functionProp.getInitializer() ?? null,
+      value: getValueFromExpression(functionProp.getInitializer()),
+    }
+
+    return data
+  
+  }
+  
   return {
     initializer: null,
     value: prop.getText(),
