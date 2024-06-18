@@ -40,6 +40,7 @@ export default series(
           '@shikijs/transformers',
           'shiki',
           /^markdown-it/,
+          'ts-morph',
         ],
         hasVue: true,
       })

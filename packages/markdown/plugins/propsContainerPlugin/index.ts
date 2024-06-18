@@ -1,5 +1,5 @@
 import MarkdownIt from 'markdown-it'
-import { ContainerPluginWithParams } from '../types'
+import type { ContainerPluginWithParams } from '../types'
 import container from 'markdown-it-container'
 import path from 'path'
 import { existentFilepath } from '@vunk-shared/node/path'
