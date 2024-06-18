@@ -36,7 +36,7 @@ export default series(
         inputFile: item,
         outputFile: getOutputFile(item),
         format: 'esm',
-        external: ['ts-morph'],
+        external: ['ts-morph', 'comment-parser'],
       })
     })
 
