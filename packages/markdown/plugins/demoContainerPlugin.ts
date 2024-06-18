@@ -9,6 +9,8 @@ import { relativeOfFile } from '@vunk-shared/node/path'
 import type { MarkdownEnv } from 'vitepress'
 import { isCallable } from '@vunk-shared/function'
 
+import { getMaincontentInContainer, getSubcontentInContainer } from '@vunk-shared/markdown/render'
+
 export interface DemoContainerPluginSettings {
   /**
    * @description
@@ -123,41 +125,27 @@ export const demoContainerPlugin = async (
       const m = tokens[idx].info.trim().match(/^demo\s*(.*)$/)
       if (tokens[idx].nesting === 1 /* means the tag is opening */) {
         const description = m && m.length > 1 ? m[1] : ''
-        const sourceFileToken = tokens[idx + 2]
         let source = ''
-        const sourceFile = sourceFileToken.children?.[0].content ?? ''
-      
-        if (sourceFileToken.type === 'inline') {
+        const sourceFile = getMaincontentInContainer(tokens, idx, 'demo')
+        if (sourceFile) {
           source = readCodeInfo(sourceFile)?.code || ''
         }
         if (!source) throw new Error(`Incorrect source file: ${sourceFile}`)
-  
-  
-    
-        let tabsTokenIndex = idx + 2
-        while (!['blockquote_open', 'container_demo_close'].includes(tokens[tabsTokenIndex].type)) {
-          tabsTokenIndex++
-        }
-        let tabsToken = tokens[tabsTokenIndex]
-        const tabsSource: Record<string, string> = {}
-        if (
-          tabsToken?.type === 'blockquote_open' 
-            && tabsToken.nesting === 1
-        ) {
-          tabsToken = tokens[tabsTokenIndex + 4]
-                    
-          if (tabsToken.type === 'inline') {
 
-            const subsRE = /^subs(\n|.)*\[(.+)\]/
-            const m = tabsToken.content.match(subsRE)
-            const content = m && m.length > 1 ? m[2] : ''
-          
-            content && content.split(',').forEach(item => {
-              item = item.trim()
-              tabsSource[item] = genMdSource(item)
-            })
-          }
-    
+
+
+        /* tabs add  */
+        const tabsSource: Record<string, string> = {}
+        const subcontent = getSubcontentInContainer(tokens, idx, 'demo', 'subs')
+
+        if (subcontent) {
+          const subsRE = /\[(.+)\]/g
+          const m = subcontent.match(subsRE)
+          const content = m && m.length > 1 ? m[1] : ''
+          content && content.split(',').forEach(item => {
+            item = item.trim()
+            tabsSource[item] = genMdSource(item)
+          })
         }
         /* end of tabs add  */
 

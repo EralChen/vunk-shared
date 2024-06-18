@@ -15,10 +15,22 @@ markdown/plugins/\_\_tests\_\_/propsContainerPlugin.ctx.ts
 ### md 使用
 ```md
 :::props
+>>>leading
+|leading|-|-|-|
+>>>
 markdown/components/DemoContainer/src/ctx.ts
+>>>trailing
+|trailing|-|-|-|
+>>>
 :::
 ```
 
 :::props
+>>>leading
+|leading|-|-|-|
+>>>
 markdown/components/DemoContainer/src/ctx.ts
+>>>trailing
+|trailing|-|-|-|
+>>>
 :::

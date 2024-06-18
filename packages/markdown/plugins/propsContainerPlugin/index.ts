@@ -4,6 +4,8 @@ import container from 'markdown-it-container'
 import path from 'path'
 import { existentFilepath } from '@vunk-shared/node/path'
 import { getPropsContainerTableData } from './src/getPropsContainerTableData'
+import { getSubcontentInContainer, getMaincontentInContainer } from '@vunk-shared/markdown/render'
+
 export interface PropsContainerPluginSettings {
   /**
    * @description
@@ -21,6 +23,7 @@ export function propsContainerPlugin (
 
   const klass = 'props'
 
+  const emptyStart = '<!-- '
 
 
   const args = [
@@ -34,10 +37,15 @@ export function propsContainerPlugin (
 
         if (token.nesting === 1) {
 
-          const sourceFileToken = tokens[idx + 2]
-          const sourceFile = sourceFileToken.children?.[0].content ?? ''
+          const leadingStr = getSubcontentInContainer(tokens, idx, klass, 'leading')
+
+          const trailingStr = getSubcontentInContainer(tokens, idx, klass, 'trailing')
+
+          const sourceFile = getMaincontentInContainer(tokens, idx, klass)
+
+          
           if (!sourceFile) {
-            return ''
+            return emptyStart
           }
           // 判断 sourceFile 有没有后缀名
           const filepath = existentFilepath(
@@ -45,7 +53,7 @@ export function propsContainerPlugin (
             extensions,
           )
           if (!filepath) {
-            return ''
+            return emptyStart
           }
 
           // props 描述对象
@@ -56,6 +64,7 @@ export function propsContainerPlugin (
           const renderStr = [
             '|prop|type|default|description|',
             '|---|---|---|---|',
+            `${leadingStr}`,
             ...propsTableData.map((row) => {
               let prop = row.prop
 
@@ -68,13 +77,13 @@ export function propsContainerPlugin (
               row.isProperty && (prop = `:${prop}`)
               return `|${prop}|${row.type}|${row.default}|${row.description}|`
             }),
-          ].join('\n')
+            `${trailingStr}`,
+          ].filter(Boolean).join('\n')
         
   
-          return md.render(renderStr)
-
+          return md.render(renderStr) + emptyStart
         } else {
-          return ``
+          return ` -->\n`
         }
       },
     },
