@@ -37,6 +37,7 @@ export default series(
         outputFile: getOutputFile(item),
         format: 'esm',
         external: [
+          'vite',
           /^unplugin-vue-markdown/,
           /^unocss/,
         ],
