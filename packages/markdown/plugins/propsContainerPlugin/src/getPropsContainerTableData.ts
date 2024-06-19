@@ -119,9 +119,9 @@ export function getPropsContainerTableData (options: {
         prop: name,
         type,
         default: defaultValue,
-        description: commentInfo.default 
-          ?? commentInfo.description 
-          ?? '',
+        description: commentInfo.description  
+          || commentInfo.default 
+          || '',
         link: commentInfo.link ?? '',
         required,
         isProperty: 'property' in commentInfo,

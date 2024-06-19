@@ -47,7 +47,7 @@ export const props = {
   },
 
   /**
-   * 示例描述（md.render）
+   * @description 示例描述（md.render）
    */
   description: {
     type: String,
