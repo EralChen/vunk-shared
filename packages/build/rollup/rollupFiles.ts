@@ -1,6 +1,6 @@
 import { ExternalOption, InputOption, InputPluginOption, OutputOptions, rollup, RollupOptions } from 'rollup'
 
-interface RollupFileSettings {
+interface RollupFilesSettings {
   input: InputOption,
   plugins: InputPluginOption
 
@@ -13,8 +13,8 @@ interface RollupFileSettings {
   outputOptions?: OutputOptions
 }
 
-export async function rollupFile (
-  settings: RollupFileSettings,
+export async function rollupFiles (
+  settings: RollupFilesSettings,
 ) {
 
   const input = settings.input

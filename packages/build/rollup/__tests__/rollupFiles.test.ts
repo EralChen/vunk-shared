@@ -1,5 +1,5 @@
 import { test } from 'vitest'
-import { rollupFile } from '../rollupFile'
+import { rollupFiles } from '../rollupFiles'
 import path from 'path'
 import { nodeResolve } from '@rollup/plugin-node-resolve'
 import { replaceRight } from '@vunk-shared/string'
@@ -14,11 +14,11 @@ const files = [
 const relative = path.resolve(__dirname, './multi')
 
 
-test('rollupFile', {
+test('rollupFiles', {
   timeout: 1000 * 60 * 10,
 }, async () => {
 
-   await rollupFile({
+   await rollupFiles({
     input: files,
     outputDir: path.resolve(__dirname, 'dist/multi'),
     plugins: [
