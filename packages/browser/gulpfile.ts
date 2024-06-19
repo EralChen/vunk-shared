@@ -3,9 +3,10 @@ import path from 'path'
 import glob from 'fast-glob'
 import { distDir } from '@lib-env/path'
 import { taskWithName } from '@lib-env/shared'
-import { filePathIgnore } from '@lib-env/build-constants'
+import { filePathIgnore, libExternal } from '@lib-env/build-constants'
 import { genTypes, rollupFile } from '@lib-env/build-utils'
 
+import { rollupFiles } from '@vunk-shared/build/rollup'
 
 const buildFile = '**/index.ts'
 const baseDirname = 'browser'
@@ -13,7 +14,7 @@ const baseDirname = 'browser'
 const getOutputFile = (filePath: string) => path.resolve(
   distDir, 
   `${baseDirname}/${
-    path
+    path                                    
       .relative(path.resolve(__dirname), filePath)
       .replace('.ts', '.mjs')
   }`,
@@ -31,22 +32,27 @@ export default series(
       ignore: filePathIgnore,
     })
 
-    filePaths.forEach(item => {
-      rollupFile({
-        inputFile: item,
-        outputFile: getOutputFile(item),
-        format: 'esm',
-      })
+    rollupFiles({
+      input: filePaths,
+      outputDir: path.resolve(distDir, baseDirname),
+      external: libExternal,
     })
+
+    // filePaths.forEach(item => {
+    //   rollupFile({
+    //     inputFile: item,
+    //     outputFile: getOutputFile(item),
+    //     format: 'esm',
+    //   })
+    // })
 
   }),
 
-  taskWithName(`gen ${baseDirname} types`, async () => {
-    genTypes({
-      filesRoot: path.resolve(__dirname),
-      
-      outDir: baseDirname,
-    })
-  }),
+  // taskWithName(`gen ${baseDirname} types`, async () => {
+  //   genTypes({
+  //     filesRoot: path.resolve(__dirname),
+  //     outDir: baseDirname,
+  //   })
+  // }),
 
 )

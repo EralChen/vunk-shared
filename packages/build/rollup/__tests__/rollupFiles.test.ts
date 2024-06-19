@@ -1,7 +1,6 @@
 import { test } from 'vitest'
 import { rollupFiles } from '../rollupFiles'
 import path from 'path'
-import { nodeResolve } from '@rollup/plugin-node-resolve'
 import { replaceRight } from '@vunk-shared/string'
 
 
@@ -21,9 +20,6 @@ test('rollupFiles', {
    await rollupFiles({
     input: files,
     outputDir: path.resolve(__dirname, 'dist/multi'),
-    plugins: [
-      nodeResolve(),
-    ],
     outputOptions: {
       
       entryFileNames (info) {

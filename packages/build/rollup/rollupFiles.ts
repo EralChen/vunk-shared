@@ -1,8 +1,13 @@
 import { ExternalOption, InputOption, InputPluginOption, OutputOptions, rollup, RollupOptions } from 'rollup'
+import { createTsPlugins } from '@vunk-shared/build/rollup/plugins'
 
 interface RollupFilesSettings {
   input: InputOption,
-  plugins: InputPluginOption
+
+  /**
+   * @default [...createTsPlugins()]
+   */
+  plugins?: InputPluginOption
 
 
   external?: ExternalOption 
@@ -19,7 +24,9 @@ export async function rollupFiles (
 
   const input = settings.input
   const external = settings.external
-  const plugins = settings.plugins
+  const plugins = settings.plugins ?? [
+    ...createTsPlugins(),
+  ]
 
   const inputConfig = {
     input,
