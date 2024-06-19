@@ -5,7 +5,13 @@
     "build": "gulp -f gulpfile.ts"
   },
   "dependencies": {
+    "@vue/compiler-sfc": "latest",
+    "rollup": "latest",
     "ts-morph": "latest",
     "typescript": "latest"
+   
+  },
+  "devDependencies": {
+    "@arcgis/core": "latest"
   }
 }

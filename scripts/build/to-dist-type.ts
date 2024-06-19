@@ -3,7 +3,6 @@ import { taskWithName } from '@lib-env/shared'
 import fsp from 'fs/promises'
 import fs from 'fs'
 import { distDir, distTypesDir } from '@lib-env/path'
-import { fixDtsPaths } from '@lib-env/build-utils'
 import path from 'path'
 import { readdirAsFlattenedTree } from '@vunk-shared/node/fs'
 import { isEqual } from 'lodash'
@@ -11,11 +10,6 @@ import { LIB_ENTRY_DIRNAME, LIB_ENTRY_FLIENAME } from '@lib-env/build-constants'
 
 
 export default series(
-  taskWithName('fix dts path in distTypesDir', async () => {
-    await fixDtsPaths({
-      filesRoot: distTypesDir,
-    })
-  }),
 
   taskWithName('to-dist-type', async () => {
     const distDirFiles = await fsp.readdir(
@@ -45,6 +39,8 @@ export default series(
         await fsp.cp(packagesTypeDir, distDir, {
           recursive: true,
         })
+
+        continue
       }
 
 

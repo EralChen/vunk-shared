@@ -36,7 +36,7 @@ export default series(
         inputFile: item,
         outputFile: getOutputFile(item),
         format: 'esm',
-        external: ['ts-morph'],
+        external: ['ts-morph', 'fast-glob', 'typescript', '@vue/compiler-sfc'],
       })
     })
 
@@ -45,7 +45,6 @@ export default series(
   taskWithName(`gen ${baseDirname} types`, async () => {
     genTypes({
       filesRoot: path.resolve(__dirname),
-      source: buildFile,
       outDir: baseDirname,
     })
   }),

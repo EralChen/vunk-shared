@@ -1,4 +1,4 @@
-import {series} from 'gulp'
+import { series } from 'gulp'
 import path from 'path'
 import glob from 'fast-glob'
 import { distDir } from '@lib-env/path'
@@ -8,7 +8,7 @@ import { genTypes, rollupFile } from '@lib-env/build-utils'
 
 
 const buildFile = '**/index.ts'
-const baseDirname = 'promise'
+const baseDirname = 'string'
 
 const getOutputFile = (filePath: string) => path.resolve(
   distDir, 

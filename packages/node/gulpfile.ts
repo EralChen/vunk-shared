@@ -44,7 +44,7 @@ export default series(
   taskWithName(`gen ${baseDirname} types`, async () => {
     genTypes({
       filesRoot: path.resolve(__dirname),
-      source: buildFile,
+      
       outDir: baseDirname,
     })
   }),
