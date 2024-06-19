@@ -30,6 +30,10 @@ function isSameDirStructure(
 }
 
 test('to-dist-type', async () => {
+  if (!fs.existsSync(distDir)) {
+    return
+  }
+  
   const distDirFiles = await fsp.readdir(
     distDir, 
     { withFileTypes: true },

@@ -1,5 +1,12 @@
+/**
+ * 合并 import 语句
+ * @example 
+ * mergeImport(`import { a } from 'a'; import { b } from 'a'; import { c } from 'a';`) //  `import { a, b, c } from 'a'`
+ * @param str 
+ * @returns 
+ */
 export function mergeImport (str: string) {
-  const matchAll = str.matchAll(/import\s*{(.+)}\s*from\s['|"](?<name>.+)['|"]/g)
+  const matchAll = str.matchAll(/import\s*{(.+)}\s*from\s['|"](?<name>.+)['|"];?/g)
   const matchArr =  [...matchAll]
   const matchMap = matchArr.reduce((a, c) => {
     if (c.groups?.name) {

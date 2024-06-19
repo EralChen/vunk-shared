@@ -1,0 +1,11 @@
+{
+  "name": "@vunk-shared/build",
+  "private": true,
+  "scripts": {
+    "build": "gulp -f gulpfile.ts"
+  },
+  "dependencies": {
+    "ts-morph": "latest",
+    "typescript": "latest"
+  }
+}

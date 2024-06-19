@@ -64,8 +64,6 @@ test("getCalledValueFromExpression.test", () => {
     if (initializer) {
       const calledValue = getCalledValueFromExpression(initializer)
 
-      console.log(calledValue)
-
     
     }
   }

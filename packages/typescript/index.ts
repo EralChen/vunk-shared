@@ -1,1 +1,1 @@
-export * from '@vunk-shared/typescript/morph'
+export * from '@vunk-shared/typescript/plain'
