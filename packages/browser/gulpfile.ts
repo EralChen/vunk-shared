@@ -7,7 +7,7 @@ import { filePathIgnore } from '@lib-env/build-constants'
 import { genTypes, rollupFiles } from '@lib-env/build-utils'
 
 const buildFile = '**/index.ts'
-const baseDirname = 'browser'
+const baseDirname = __dirname.split(path.sep).pop() as string
 const external = []
 
 const filePaths = globSync(buildFile, {

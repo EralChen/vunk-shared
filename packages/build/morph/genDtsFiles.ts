@@ -3,7 +3,7 @@ import { compileScript, parse } from '@vue/compiler-sfc'
 import { glob, Pattern } from 'fast-glob'
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs'
 import path from 'path'
-import { CompilerOptions, ModuleResolutionKind, OutputFile, Project, ScriptTarget, SourceFile } from 'ts-morph'
+import { CompilerOptions, ModuleResolutionKind, OutputFile, Project, ProjectOptions, ScriptTarget, SourceFile } from 'ts-morph'
 import { JsxEmit } from 'typescript'
 
 
@@ -22,6 +22,8 @@ export interface GenDtsFilesSettings {
    * }
    */
   compilerOptions: CompilerOptions
+
+  projectOptions?: ProjectOptions
 
 
   globCwd?: string
@@ -78,11 +80,15 @@ export async function genDtsFiles (settings: GenDtsFilesSettings) {
       skipLibCheck: true,
       skipDefaultLibCheck: true,
       baseUrl: workRoot,
-
+    
+    
       ...compilerOptions,
     },
+    
     tsConfigFilePath,
+    
     skipAddingFilesFromTsConfig: true,
+    ...settings.projectOptions,
   })
 
   const filePaths = await glob(globSource, {

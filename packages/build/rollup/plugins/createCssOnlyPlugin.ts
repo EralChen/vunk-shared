@@ -29,7 +29,7 @@ export function createCssOnlyPlugin (
   const filter = createFilter(include, settings.exclude)
   const styles: Record<string, string> = {}
   const createCssSource = (ids: string[]) => ids
-    .map(id => styles[id])
+    .map(id => styles[id].trim())
     .filter(Boolean)
     .join('\n')
 
@@ -115,7 +115,7 @@ export function createCssOnlyPlugin (
 
               entryFileName = path.join(dirname, fileName)
 
-              this.emitFile({ 
+              css && this.emitFile({ 
                 type: 'asset',
                 source: css + '\n', 
                 fileName: entryFileName,

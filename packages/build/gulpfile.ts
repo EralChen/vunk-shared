@@ -5,6 +5,8 @@ import { distDir } from '@lib-env/path'
 import { taskWithName } from '@lib-env/shared'
 import { filePathIgnore } from '@lib-env/build-constants'
 import { genTypes, rollupFiles } from '@lib-env/build-utils'
+import { nodeResolve } from '@rollup/plugin-node-resolve'
+import { esbuildPlugin } from './rollup/plugins'
 
 const buildFile = '**/index.ts'
 const baseDirname = __dirname.split(path.sep).pop() as string
@@ -33,6 +35,10 @@ export default parallel(
       input: filePaths,
       outputDir: path.resolve(distDir, baseDirname),
       external,
+      plugins: [
+        nodeResolve(),
+        esbuildPlugin,
+      ],
     })
   }),
   taskWithName(`gen ${baseDirname} types`, async () => {

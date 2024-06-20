@@ -1,66 +1,46 @@
-import {series} from 'gulp'
+import { parallel } from 'gulp'
 import path from 'path'
-import glob from 'fast-glob'
+import { globSync } from 'fast-glob'
 import { distDir } from '@lib-env/path'
 import { taskWithName } from '@lib-env/shared'
 import { filePathIgnore } from '@lib-env/build-constants'
-import { genTypes, rollupFile } from '@lib-env/build-utils'
-
+import { genTypes, rollupFiles } from '@lib-env/build-utils'
+import { createTsPlugins, createVuePlugins } from '@vunk-shared/build/rollup/plugins'
 
 const buildFile = '**/index.ts'
-const baseDirname = 'markdown'
+const baseDirname = __dirname.split(path.sep).pop() as string
+const external = [
+  '@shikijs/transformers',
+  'shiki',
+  /^markdown-it/,
+  'ts-morph',
+  'fast-glob',
+]
 
-const getOutputFile = (filePath: string) => path.resolve(
-  distDir, 
-  `${baseDirname}/${
-    path
-      .relative(path.resolve(__dirname), filePath)
-      .replace('.ts', '.mjs')
-  }`,
-)
+const filePaths = globSync(buildFile, {
+  cwd: path.resolve(__dirname, './'),
+  onlyFiles: true,
+  absolute: true,
+  ignore: filePathIgnore,
+})
 
-
-export default series(
-
+export default parallel(
   taskWithName(`bundle ${baseDirname}`, async () => {
-
-    const filePaths = await glob(buildFile, {
-      cwd: path.resolve(__dirname, './'),
-      onlyFiles: true,
-      absolute: true,
-      ignore: filePathIgnore,
+    await rollupFiles({
+      input: filePaths,
+      outputDir: path.resolve(distDir, baseDirname),
+      external,
+      plugins: [
+        ...createTsPlugins(),
+        ...createVuePlugins(),
+      ],
     })
-
-    filePaths.forEach(item => {
-      rollupFile({
-        inputFile: item,
-        outputFile: getOutputFile(item),
-        format: 'esm',
-        external: [
-          '@shikijs/transformers',
-          'shiki',
-          /^markdown-it/,
-          'ts-morph',
-        ],
-        hasVue: true,
-      })
-    })
-
   }),
-
   taskWithName(`gen ${baseDirname} types`, async () => {
-    genTypes({
+    await genTypes({
       filesRoot: path.resolve(__dirname),
-      
       outDir: baseDirname,
     })
-
-    genTypes({
-      filesRoot: path.resolve(__dirname),
-      source: 'components/*.vue',
-      outDir: baseDirname,
-    })
-
   }),
-
 )
+

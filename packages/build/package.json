@@ -9,9 +9,5 @@
     "rollup": "latest",
     "ts-morph": "latest",
     "typescript": "latest"
-   
-  },
-  "devDependencies": {
-    "@arcgis/core": "latest"
   }
 }
