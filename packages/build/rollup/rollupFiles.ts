@@ -20,7 +20,11 @@ interface RollupFilesSettings {
  
   outputFile?: string
 
-
+  /**
+   * 多个输出文件时，可以通过这个字段来指定输出文件的后缀名
+   * @default '.js'
+   */
+  outputExtname?: string
   outputDir?: string
   outputOptions?: OutputOptions
 }
@@ -34,6 +38,13 @@ export async function rollupFiles (
   const plugins = settings.plugins ?? [
     ...createTsPlugins(),
   ]
+  let outputExtname = settings.outputExtname ?? '.js'
+  if (!outputExtname.startsWith('.')) {
+    outputExtname = '.' + outputExtname
+  }
+
+  const outputDir = settings.outputDir
+  const outputFile = settings.outputFile
 
 
   const inputConfig = {
@@ -52,11 +63,11 @@ export async function rollupFiles (
     computedOutputOptions.entryFileNames = function (chunkInfo) {
       const currentPath = chunkInfo.facadeModuleId
       if (!currentPath) {
-        return chunkInfo.name + '.js'
+        return chunkInfo.name + outputExtname
       }
       const relativePath = path.relative(commonBase, currentPath)
       const ext = path.extname(relativePath)
-      const name = replaceRight(relativePath, ext, '.js')
+      const name = replaceRight(relativePath, ext, outputExtname)
       return name
     }
   }
@@ -66,8 +77,8 @@ export async function rollupFiles (
 
   const outputOptions = {
     format: 'esm',
-    file: settings.outputFile,
-    dir: settings.outputDir,
+    file: outputFile,
+    dir: outputDir,
     ...computedOutputOptions,
     ...settings.outputOptions,
   } as OutputOptions

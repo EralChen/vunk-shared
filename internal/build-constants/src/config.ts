@@ -15,6 +15,6 @@ export const filePathIgnore = [
   'package.json',
   'node_modules',
   '**/README.md',
-  '**/__tests__/**.ts',
+  '**/__tests__/**',
 ]
 
