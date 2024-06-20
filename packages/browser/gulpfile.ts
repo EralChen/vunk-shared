@@ -4,8 +4,6 @@ import glob from 'fast-glob'
 import { distDir } from '@lib-env/path'
 import { taskWithName } from '@lib-env/shared'
 import { filePathIgnore, libExternal } from '@lib-env/build-constants'
-import { genTypes, rollupFile } from '@lib-env/build-utils'
-
 import { rollupFiles } from '@vunk-shared/build/rollup'
 
 const buildFile = '**/index.ts'

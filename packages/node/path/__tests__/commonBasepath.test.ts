@@ -25,8 +25,8 @@ test('commonBasepath', () => {
     commonBasepath([])
   ).toBe('')
 
-    expect(
-      commonBasepath(['a/b/c', 'e/f/g', 'i/j/k'])
-    ).toBe('')
+  expect(
+    commonBasepath(['a/b/c', 'e/f/g', 'i/j/k'])
+  ).toBe('')
 
 })
