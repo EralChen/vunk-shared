@@ -8,7 +8,9 @@ import { fixPath } from '@lib-env/build-utils'
 
 const testable = false
 
-test('genDtsFiles', async () => {
+test('genDtsFiles', {
+  timeout: 1000 * 60 * 10,
+}, async () => {
    
   if (!testable) {
     return
@@ -29,6 +31,4 @@ test('genDtsFiles', async () => {
 
   })
 
-}, {
-  timeout: 1000 * 60 * 10,
 })
