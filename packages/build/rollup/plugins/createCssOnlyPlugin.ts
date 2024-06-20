@@ -4,7 +4,7 @@ import path from 'path'
 import type { GetModuleInfo, OutputAsset, OutputChunk, Plugin  } from 'rollup'
 
 
-export interface CssOnlyPluginSettings {
+export interface CreateCssOnlyPluginSettings {
   include?: FilterPattern
   exclude?: FilterPattern
 
@@ -23,7 +23,7 @@ export interface CssOnlyPluginSettings {
  * @returns 
  */
 export function createCssOnlyPlugin (
-  settings: CssOnlyPluginSettings,
+  settings: CreateCssOnlyPluginSettings,
 ): Plugin {
   const include = settings.include || ['**/*.css']
   const filter = createFilter(include, settings.exclude)
@@ -140,17 +140,8 @@ export function createCssOnlyPlugin (
       if (multiple) return
       
       // Combine all stylesheets, respecting import order
-      const css = Array.from(ids)
-        .map(id => styles[id])
-        .filter(Boolean)
-        .join('\n')
-
-
-  
-      
+      const css = createCssSource(Array.from(ids))
       // Emit styles to file
-
-
       this.emitFile({ 
         type: 'asset',
         source: css + '\n', 

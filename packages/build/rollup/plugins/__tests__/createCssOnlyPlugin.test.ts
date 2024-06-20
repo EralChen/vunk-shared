@@ -1,12 +1,12 @@
 import { test } from 'vitest'
 import path from 'path'
-import { createTsPlugins, createVuePlugins, cssOnlyPlugin } from '../index'
+import { createTsPlugins, createCssOnlyPlugin } from '../index'
 import { rollupFiles } from '../../rollupFiles'
 
 
 
 
-test('cssOnlyPlugin', {
+test('createCssOnlyPlugin', {
   timeout: 1000 * 60 * 10,
 }, async () => {
 
@@ -15,7 +15,9 @@ test('cssOnlyPlugin', {
     outputDir: path.resolve(__dirname, 'dist/css'),
     plugins: [
       ...createTsPlugins(),
-      cssOnlyPlugin
+      createCssOnlyPlugin({
+        fileName: 'styles.css'
+      })
     ]
    })
 })
