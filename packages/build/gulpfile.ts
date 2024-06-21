@@ -7,6 +7,7 @@ import { filePathIgnore } from '@lib-env/build-constants'
 import { genTypes, rollupFiles } from '@lib-env/build-utils'
 import { nodeResolve } from '@rollup/plugin-node-resolve'
 import { esbuildPlugin } from './rollup/plugins'
+import commonjs from '@rollup/plugin-commonjs'
 
 const buildFile = '**/index.ts'
 const baseDirname = __dirname.split(path.sep).pop() as string
@@ -38,6 +39,7 @@ export default parallel(
       plugins: [
         nodeResolve(),
         esbuildPlugin,
+        commonjs(),
       ],
     })
   }),
