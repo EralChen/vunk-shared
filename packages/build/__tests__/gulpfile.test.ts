@@ -41,7 +41,7 @@ const buildFile = '**/index.ts'
 const baseDirname = 'build'
 
 const external = [
-  'ts-morph', 'fast-glob', 
+  'ts-morph', 
   'typescript', '@vue/compiler-sfc',
   'rollup', 
 

@@ -12,7 +12,7 @@ const buildFile = '**/index.ts'
 const baseDirname = __dirname.split(path.sep).pop() as string
 
 const external = [
-  'ts-morph', 'fast-glob', 
+  'ts-morph', 
   'typescript', '@vue/compiler-sfc',
   'rollup', 
 

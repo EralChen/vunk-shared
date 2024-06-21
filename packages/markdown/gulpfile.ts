@@ -14,7 +14,6 @@ const external = [
   'shiki',
   /^markdown-it/,
   'ts-morph',
-  'fast-glob',
 ]
 
 const filePaths = globSync(buildFile, {
