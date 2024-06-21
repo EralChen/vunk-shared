@@ -1,15 +1,18 @@
 <script lang="ts" setup>
 import VpThemeToggler from '#/vitepress/components/navbar/vp-theme-toggler.vue'
-
+const base = import.meta.env.VITE_BASE_URL
 </script>
 <template>
   <div
     sk-flex="row-between-center"
     class="h-full layout-default-navbar"
   >
-    <div class="font-600 gplr-l gptb-s text-primary">
+    <a
+      class="font-600 gplr-l gptb-s text-primary"
+      :href="base"
+    >
       @vunk/shared
-    </div>
+    </a>
     <VpThemeToggler></VpThemeToggler>
   </div>
 </template>

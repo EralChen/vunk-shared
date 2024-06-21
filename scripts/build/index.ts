@@ -2,6 +2,7 @@ import { series } from 'gulp'
 import { run, taskWithName } from '@lib-env/shared'
 import clearDist from './clear-dist'
 import toDistType from './to-dist-type'
+import copyFiles from './copy-files'
 
 export default series(
 
@@ -11,4 +12,7 @@ export default series(
   taskWithName('buildPackages', async () => run('pnpm run --filter "./packages/**" --parallel build')),
   
   toDistType,
+  
+  copyFiles,
+
 )

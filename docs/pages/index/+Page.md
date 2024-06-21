@@ -3,9 +3,6 @@
 一个包罗万象的 JS 工具库
 
 
-在线文档 eralchen.github.io/vunk-shared
-
-
 ## 安装
 
 
@@ -19,6 +16,8 @@ pnpm install @vunk/shared
 
 您只需按需导入即可，无需担心包体积过大的问题。
 :::
+
+
 
 ## 使用示例
 
@@ -36,7 +35,7 @@ setTimeout(() => {
 
 对于每个函数的用法，请参考单个函数对应的文档。如:
 
-[genDtsFiles](https://eralchen.github.io/vunk-shared/zh-CN/build/morph/genDtsFiles)
+[genDtsFiles](../zh-CN/build/morph/genDtsFiles/+Page.md)
 
-[toNestedTree](https://eralchen.github.io/vunk-shared/zh-CN/data/tree/toNestedTree)
+[toNestedTree](../zh-CN/data/tree/toNestedTree/+Page.md)
 

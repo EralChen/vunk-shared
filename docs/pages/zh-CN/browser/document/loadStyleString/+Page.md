@@ -1,4 +1,4 @@
-# loadStypeString
+# loadStyleString
 
 `loadStyleString` 方法用于加载一段 CSS 字符串。
 
