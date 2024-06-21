@@ -3,13 +3,5 @@
   "private": true,
   "scripts": {
     "build": "gulp -f gulpfile.ts"
-  },
-  "peerDependencies": {
-    "unocss": "^0.60.3"
-  },
-  "dependencies": {
-    "mdast-util-from-markdown": "^2.0.1",
-    "mdast-util-to-markdown": "^2.1.0",
-    "unocss-preset-vunk": "^1.0.4"
   }
 }
