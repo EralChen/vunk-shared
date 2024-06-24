@@ -1,6 +1,3 @@
-/// <reference types="vike-vue/dist/types" />
-/// <reference types="vike-vue/dist/+config" />
-
 import { ApiReturnType } from '@vunk/core'
 import { rCrowdinFilesAsReflect, CrowdinFileLang } from '../renderer/crowdin'
 

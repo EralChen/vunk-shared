@@ -13,9 +13,7 @@
     "@vunk/skzz": "0.0.0-alpha.111",
     "deepdash-es": "^5.3.9",
     "gsap": "^3.12.5",
-    "prism-theme-vars": "^0.2.4",
-    "vike": "0.4.171",
-    "vike-vue": "^0.6.5"
+    "prism-theme-vars": "^0.2.4"
   },
   "devDependencies": {
     "@iconify-json/ri": "^1.1.20",

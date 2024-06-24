@@ -7,7 +7,6 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
-    IRiCodeLine: typeof import('~icons/ri/code-line')['default']
     MenuLink: typeof import('./src/components/MenuLink/index.vue')['default']
     PageX: typeof import('./src/components/PageX/index.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']

@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { useCrowdinLang } from '#s/composables/crowdin'
+// import { useCrowdinLang } from '#s/composables/crowdin'
 import { ElMenu } from 'element-plus'
 import { VkRoutesMenuContent } from '@vunk/skzz/components/routes-menu-content'
 import type { RouteRecordRaw } from 'vue-router'
@@ -12,6 +12,7 @@ import explorerTreeList from 'virtual:explorer'
 import type { ExplorerTreeNode } from '@vunk-shared/types'
 
 import { toNestedTree } from '@vunk-shared/data'
+import { useLang } from '@vunk-shared/vike'
 
 type MenuRaw = RouteRecordRaw & ExplorerTreeNode
 
@@ -19,7 +20,7 @@ const menuComponent = ref() as Ref<{
   open: (index: string) => void
 }>
 // const { listenerToggle } =  useSharedMenuClick()
-const lang = useCrowdinLang()
+const lang = useLang()
 const basePath = import.meta.env.BASE_URL + lang
 
 

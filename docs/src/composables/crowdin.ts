@@ -1,4 +1,4 @@
-import { CrowdinFilePath } from '#r/crowdin'
+import { CrowdinFilePath } from '#/crowdin'
 import { usePageContext } from 'vike-vue/usePageContext'
 
 export {

@@ -61,7 +61,7 @@ function setCurrentLinkByScroll () {
   }
 
   if (isBottom) {
-    currentLink.value = props.headers[props.headers.length - 1].link
+    currentLink.value = props.headers[props.headers.length - 1]?.link
     return
   }
 

@@ -1,11 +1,10 @@
 
-import { PageContext } from 'vike/types'
 import { onUnmounted } from 'vue'
-export let contentUpdatedCallbacks: {
-  callback: ContentUpdatedCallback
-  hook: ContentUpdatedCallbackHook
-}[] = []
-
+import { 
+  type ContentUpdatedCallback, 
+  type ContentUpdatedCallbackHook, 
+  contentUpdatedCallbacks,
+} from '@vunk-shared/vike/vue/hooks/contentUpdatedCallbacks'
 
 /**
  * Register callback that is called every time the markdown content is updated
@@ -25,12 +24,17 @@ export function onContentUpdated (
     })
   })
   onUnmounted(() => {
-    contentUpdatedCallbacks = contentUpdatedCallbacks
-      .filter((obj) => obj.callback !== fn)
+    contentUpdatedCallbacks.forEach((obj, index) => {
+      if (obj.callback === fn) {
+        contentUpdatedCallbacks.splice(index, 1)
+      }
+    })
   })
 }
 
 
-export type ContentUpdatedCallbackHook = 'mounted' | 'updated' | 'unmounted' | 'beforeUnmount'
 
-export type ContentUpdatedCallback = (pageContext: PageContext) => void
+export {
+  ContentUpdatedCallback, 
+  ContentUpdatedCallbackHook, 
+}
