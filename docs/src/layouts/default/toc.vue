@@ -7,7 +7,6 @@ const headers = shallowRef<MenuItem[]>([])
 
 
 onContentUpdated(() => {
-  console.log('toc.vue onContentUpdated')
   headers.value = getHeaders(2)
 }, {
   hooks: ['mounted', 'updated'],

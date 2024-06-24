@@ -16,7 +16,6 @@ let app: App | undefined
 let changePage: ChangePage | undefined
 const onRenderClient: OnRenderClientAsync = async (pageContext): ReturnType<OnRenderClientAsync> => {
 
-  console.log('onRenderClient')
   if (!app) {
     // First rendering/hydration
 

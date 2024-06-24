@@ -65,7 +65,7 @@ async function createVueApp (pageContext: PageContext, ssr: boolean, mainCompone
     objectReplace(dataReactive, data)
     objectReplace(pageContextReactive, pageContext)
     mainComponentRef.value = pageContext.config[mainComponentName]
-    console.log('layoutRef.value', mainComponentRef.value)
+
     layoutRef.value = pageContext.config.Layout || []
     await nextTick()
     returned = true
