@@ -24,6 +24,11 @@ const onRenderHtml: OnRenderHtmlAsync = async (pageContext): ReturnType<OnRender
   const fromHtmlRenderer: PageContext['fromHtmlRenderer'] = {}
 
   if (!!pageContext.Page) {
+    
+    await callCumulativeHooks(
+      pageContext.config.onBeforeRenderHtml,
+      pageContext,
+    )
     // SSR is enabled
     const { app } = await createVueApp(pageContext, true, 'Page')
     objectAssign(pageContext, { app })

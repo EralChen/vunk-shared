@@ -1,4 +1,4 @@
-import { CrowdinFileLangOptions } from '#/crowdin'
+import { CrowdinFileLangOptions } from './crowdin'
 import { PageContext } from 'vike/types'
 
 export default lang

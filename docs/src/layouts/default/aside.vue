@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-// import { useCrowdinLang } from '#s/composables/crowdin'
+
 import { ElMenu } from 'element-plus'
 import { VkRoutesMenuContent } from '@vunk/skzz/components/routes-menu-content'
 import type { RouteRecordRaw } from 'vue-router'
@@ -19,7 +19,6 @@ type MenuRaw = RouteRecordRaw & ExplorerTreeNode
 const menuComponent = ref() as Ref<{
   open: (index: string) => void
 }>
-// const { listenerToggle } =  useSharedMenuClick()
 const lang = useLang()
 const basePath = import.meta.env.BASE_URL + lang
 
