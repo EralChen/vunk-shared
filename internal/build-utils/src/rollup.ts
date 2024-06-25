@@ -27,7 +27,8 @@ export const rollupFiles = async (
 
     outputOptions: {
       paths: fixPath,
+      chunkFileNames: '[name].mjs',
     },
-    
+
   })
 }
