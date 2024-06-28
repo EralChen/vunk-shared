@@ -1,6 +1,6 @@
 import { libExternal } from '@lib-env/build-constants'
 import { rollupFiles as baseRollupFiles } from '@vunk-shared/build/rollup'
-import { InputOption, InputPluginOption } from 'rollup'
+import { InputOption, InputPluginOption, OutputOptions } from 'rollup'
 import { fixPath } from './alias'
 
 
@@ -10,8 +10,13 @@ export const rollupFiles = async (
     external: (string|RegExp)[],
     outputDir: string,
     plugins?: InputPluginOption
+    outputOptions?: OutputOptions,
+
+    outputExtname?: string,
   },
 ) => {
+
+  const outputExtname = settings.outputExtname ?? '.mjs'
 
   const external = settings.external ?? []
 
@@ -23,11 +28,12 @@ export const rollupFiles = async (
     ],
     outputDir: settings.outputDir,
     plugins: settings.plugins,
-    outputExtname: '.mjs',
+    outputExtname,
 
     outputOptions: {
       paths: fixPath,
-      chunkFileNames: '[name].mjs',
+      chunkFileNames: `[name]${outputExtname}`,
+      ...settings.outputOptions,
     },
 
   })

@@ -4,20 +4,11 @@ import path from 'path'
 import { entryPackage, distDir } from '@lib-env/path'
 import { run, taskWithName } from '@lib-env/shared'
 import { readJsonSync, writeJsonSync, readdirAsFlattenedTree } from '@vunk-shared/node/fs'
+import { replaceRight } from '@vunk-shared/string'
+import { existsSync } from 'fs'
 
 export default series(
-  // taskWithName('update:vision', async () => {
 
-  //   const fileObj = readJsonSync(entryPackage) as { version: string; module: string }
-  //   // 默认小版本+1
-  //   const versionList = fileObj.version.split('.')
-  //   const sVersion = versionList.at(-1)
-  //   if (sVersion) {
-  //     versionList[versionList.length - 1] = +sVersion + 1 + ''
-  //   }
-  //   fileObj.version = versionList.join('.')
-  //   writeJsonSync(entryPackage, fileObj, 2)
-  // }),
 
   taskWithName('destPkg', async () => {
     const distPkgFile = path.resolve(distDir, './package.json')
@@ -31,7 +22,7 @@ export default series(
       module: string, 
       main: string,
       exports: Record<string, {
-        import: string,
+        import?: string,
         types?: string,
         require?: string,
       }>
@@ -51,13 +42,21 @@ export default series(
 
 
     modelEntries.forEach(item => {
+
+      const cjsPath = replaceRight(item.id, '.mjs', '.cjs')
+
       let relativePath = path.relative(distDir, item.pid).replace(/\\/g, '/')
 
       relativePath = './' + relativePath
+      
 
       jsonObj.exports[relativePath] = {
         import: `${relativePath}` + `/${item.filename}`,
         types: `${relativePath}` + `/${item.filename.replace('.mjs', '.d.ts')}`,
+      }
+
+      if (existsSync(cjsPath)) {
+        jsonObj.exports[relativePath].require = `${relativePath}` + `/${item.filename.replace('.mjs', '.cjs')}`
       }
 
     })
@@ -76,7 +75,8 @@ export default series(
         import: relativeFile,
       }
     })
-    
+
+
     writeJsonSync(distPkgFile, jsonObj, 2)
   }),
   
