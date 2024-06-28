@@ -22,7 +22,7 @@ jobs:
       run: npm run docs:build
       env:
         DOC_ENV: production
-        NODE_OPTIONS: --max-old-space-size=4096
+        NODE_OPTIONS: --max-old-space-size=8192
 
     - name: Deploy
       uses: JamesIves/github-pages-deploy-action@v4.3.4
