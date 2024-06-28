@@ -32,16 +32,34 @@ const filePaths = globSync(buildFile, {
 
 export default parallel(
   taskWithName(`bundle ${baseDirname}`, async () => {
-    await rollupFiles({
-      input: filePaths,
-      outputDir: path.resolve(distDir, baseDirname),
-      external,
-      plugins: [
-        nodeResolve(),
-        esbuildPlugin,
-        commonjs(),
-      ],
-    })
+
+    const plugins = [
+      nodeResolve(),
+      esbuildPlugin,
+      commonjs(),
+    ]
+
+    await Promise.all([
+      rollupFiles({
+        input: filePaths,
+        outputDir: path.resolve(distDir, baseDirname),
+        external,
+        plugins,
+      }),
+
+      rollupFiles({
+        input: filePaths,
+        outputDir: path.resolve(distDir, baseDirname),
+        external,
+        plugins,
+        
+        outputExtname: '.cjs',
+        outputOptions: {
+          format: 'cjs',
+        },
+      }),
+    ])
+     
   }),
   taskWithName(`gen ${baseDirname} types`, async () => {
     await genTypes({
