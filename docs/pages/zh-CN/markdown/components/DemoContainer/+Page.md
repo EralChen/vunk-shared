@@ -13,13 +13,23 @@
 ```md
 
 :::demo
-custom-check-tree/index
+DemoContainer/basic/index
 >>>subs
-[custom-check-tree/a, custom-check-tree/b]
+[custom-check-tree/data]
 >>>
 :::
 
 ```
+
+:::demo
+DemoContainer/basic/index
+>>>subs
+[DemoContainer/basic/data]
+>>>
+:::
+
+
+
 
 
 ## DemoContainer Props
