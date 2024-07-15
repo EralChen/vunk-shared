@@ -63,6 +63,9 @@ export const demoContainerPlugin = async (
     'add_demos_script', 
     (state) => {
       const currentMdPath: string = state.env.id
+      || state.env.realPath // for vitepress
+
+
       if (!currentMdPath) return
       if (state.env.__vunk_noMarkdownSetupInject) return
 
