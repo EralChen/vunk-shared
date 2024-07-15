@@ -41,7 +41,9 @@ export function copyableFencePlugin (md: MarkdownIt) {
     'normalize', 
     'add_copy_code_script', 
     (state) => {
-      const currentMdPath: string = state.env.id
+      const currentMdPath: string = state.env.id 
+      || state.env.realPath // for vitepress
+      
       if (state.env.__vunk_noMarkdownSetupInject) return
 
       if (!currentMdPath) return
