@@ -61,6 +61,7 @@ export function markdownSetupInject (
           ...leadingCode,
           ...trailingCode,
           '</script>',
+          '', // 末尾空行
         ].join('\n')
 
         return setupCode + code
@@ -76,18 +77,27 @@ export function markdownSetupInject (
 
       setupHtml = setupHtml.replace(scriptSetupRE, (_, attr1, attr2, code) => {
         const attr = `${attr1} ${attr2}`.trim()
-        return [
+        const codeArr =  [
           `<script setup ${attr}>`,
           ...leadingCode,
           code,
           ...trailingCode,
           '</script>',
-        ].filter(Boolean).join('\n')
+        ].filter(Boolean)
+
+        // 末尾空行
+        codeArr.push('')
+
+        return codeArr.join('\n')
       })
 
       setupNode.value = setupHtml
 
-      if (start === undefined || end === undefined) return code
+      if (start === undefined || end === undefined) {
+        // eslint-disable-next-line no-console
+        console.warn('setupNode position is undefined')
+        return code
+      }
 
       return code.slice(0, start) + setupHtml + code.slice(end)
     },
