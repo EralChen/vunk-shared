@@ -21,6 +21,11 @@ export function relativeOfFile (
   // 附加文件名
   relativePath = path.join(relativePath, path.basename(toFile))
 
+  // 如果路径不以 '.' 开头，则添加 './'
+  if (!relativePath.startsWith('.') && !path.isAbsolute(relativePath)) {
+    relativePath = '.' + path.sep + relativePath
+  }
+  
   return relativePath
 }
 

@@ -17,10 +17,14 @@ jobs:
         npm install -g pnpm
         pnpm install
 
+    - name: Set Swap Space
+      uses: pierotofy/set-swap-space@master
+      with:
+        swap-size-gb: 10
+
     - name: Build
       run: npm run build
       env:
-        DOC_ENV: production
         NODE_OPTIONS: --max-old-space-size=4096
 
     - name: Gen npmrc
@@ -33,4 +37,6 @@ jobs:
 
     - name: Cleanup
       run: rm -rf dist
-      
+    
+    # 设置作业的最大运行时间为 30 分钟
+    timeout-minutes: 30

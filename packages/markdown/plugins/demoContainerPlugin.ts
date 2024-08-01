@@ -63,6 +63,9 @@ export const demoContainerPlugin = async (
     'add_demos_script', 
     (state) => {
       const currentMdPath: string = state.env.id
+      || state.env.realPath // for vitepress
+
+
       if (!currentMdPath) return
       if (state.env.__vunk_noMarkdownSetupInject) return
 
@@ -139,9 +142,10 @@ export const demoContainerPlugin = async (
         const subcontent = getSubcontentInContainer(tokens, idx, 'demo', 'subs')
 
         if (subcontent) {
-          const subsRE = /\[(.+)\]/g
-          const m = subcontent.match(subsRE)
-          const content = m && m.length > 1 ? m[1] : ''
+          const subsRE = /\[(.*?)\]/g
+          const m = subcontent.matchAll(subsRE)
+          const content = m.next().value?.[1] || ''
+          
           content && content.split(',').forEach(item => {
             item = item.trim()
             tabsSource[item] = genMdSource(item)

@@ -16,7 +16,7 @@ test('markdownSetupInject', async () => {
 
   const nCode: string = plugin.transform(code, 'toNestedTree/+Page.md')
 
-  nCode
+
 
 
 })

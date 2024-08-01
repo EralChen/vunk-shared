@@ -58,6 +58,10 @@ export const createMarkdownPlugin = async (
     },
   
     markdownItSetup (markdownIt) {
+
+      // 用户自定义
+      settings.markdownItSetup?.(markdownIt)
+            
   
       // customBlocks
       customBlocks.forEach((block) => {
@@ -99,8 +103,7 @@ export const createMarkdownPlugin = async (
       // props container
       markdownIt.use(propsContainerPlugin, propsContainerPluginSettings)
   
-      // 用户自定义
-      settings.markdownItSetup?.(markdownIt)
+
   
     },
   
