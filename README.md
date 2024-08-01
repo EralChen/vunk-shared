@@ -3,7 +3,7 @@
 一个包罗万象的 JS 工具库
 
 
-在线文档 eralchen.github.io/vunk-shared
+在线文档 https://eralchen.github.io/vunk-shared
 
 
 ## 安装
