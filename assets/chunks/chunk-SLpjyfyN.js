@@ -1,0 +1,1 @@
+import{d as o,o as r,c as n,t as a,b as c}from"./chunk-DIfZ16W1.js";import"./chunk-CJMEDYvw.js";function l(e){return getComputedStyle(document.documentElement).getPropertyValue(e).trim()}const i=o({__name:"basic",setup(e){const t=l("--el-color-primary");return(m,p)=>(r(),n("div",null,"--el-color-primary: "+a(c(t)),1))}});export{i as default};
