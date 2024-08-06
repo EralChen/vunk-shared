@@ -262,6 +262,8 @@ importers:
 
   internal/shared: {}
 
+  packages/array: {}
+
   packages/browser: {}
 
   packages/build:
@@ -284,6 +286,8 @@ importers:
   packages/data: {}
 
   packages/entry: {}
+
+  packages/enum: {}
 
   packages/function: {}
 
