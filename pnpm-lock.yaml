@@ -23,6 +23,9 @@ importers:
       '@vunk-shared/class':
         specifier: workspace:*
         version: link:packages/class
+      '@vunk-shared/css':
+        specifier: workspace:*
+        version: link:packages/css
       '@vunk-shared/data':
         specifier: workspace:*
         version: link:packages/data
