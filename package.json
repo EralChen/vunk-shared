@@ -33,6 +33,7 @@
 		"@vunk-shared/browser": "workspace:*",
 		"@vunk-shared/build": "workspace:*",
 		"@vunk-shared/class": "workspace:*",
+		"@vunk-shared/css": "workspace:*",
 		"@vunk-shared/data": "workspace:*",
 		"@vunk-shared/function": "workspace:*",
 		"@vunk-shared/markdown": "workspace:*",

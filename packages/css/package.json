@@ -1,0 +1,13 @@
+{
+  "name": "@vunk-shared/css",
+  "private": true,
+  "scripts": {
+    "build": "gulp -f gulpfile.ts"
+  },
+  "devDependencies": {
+    "@types/chroma-js": "^2.1.4"
+  },
+  "dependencies": {
+    "chroma-js": "^2.4.2"
+  }
+}
