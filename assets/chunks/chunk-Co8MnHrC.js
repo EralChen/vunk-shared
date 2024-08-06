@@ -1,0 +1,1 @@
+import{d as t,o as e,c as a,t as n,b as o}from"./chunk-Bp_y_35g.js";import"./chunk-CJMEDYvw.js";const r="data",d=t({__name:"index",setup(s){return(c,p)=>(e(),a("div",null,n(o(r)),1))}});export{d as default};
