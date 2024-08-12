@@ -1,8 +1,19 @@
 <script lang="ts" setup>
-import { fileToGeojson } from '@vunk-shared/gis/browser/fileToGeojson'
+import { fileToGeojson, gdalConfig } from '@vunk-shared/gis/browser/gdal'
 import { ref, shallowRef } from 'vue'
 import type { FeatureCollection } from 'geojson'
 import { VkJsonEditor } from '@vunk/skzz/components/json-editor'
+import workerUrl from 'gdal3.js/dist/package/gdal3.js?url'
+import dataUrl from 'gdal3.js/dist/package/gdal3WebAssembly.data?url'
+import wasmUrl from 'gdal3.js/dist/package/gdal3WebAssembly.wasm?url'
+
+/* can set it in main.ts */
+gdalConfig.paths = {
+  data: dataUrl,
+  wasm: wasmUrl,
+  js: workerUrl,
+}
+
 
 const geojson = shallowRef<FeatureCollection>()
 const dialog = ref(false)
