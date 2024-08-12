@@ -36,6 +36,7 @@
 		"@vunk-shared/css": "workspace:*",
 		"@vunk-shared/data": "workspace:*",
 		"@vunk-shared/function": "workspace:*",
+		"@vunk-shared/gis": "workspace:*",
 		"@vunk-shared/markdown": "workspace:*",
 		"@vunk-shared/node": "workspace:*",
 		"@vunk-shared/object": "workspace:*",
