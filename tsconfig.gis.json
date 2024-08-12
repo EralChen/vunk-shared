@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "types": [
+      "geojson",
+      "shapefile", 
+      "terraformer__arcgis",
+    ],
+  }
+}
+

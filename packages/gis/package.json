@@ -5,10 +5,13 @@
     "build": "gulp -f gulpfile.ts"
   },
   "devDependencies": {
+    "@arcgis/core": "^4.30.9",
     "@types/geojson": "^7946.0.14",
-    "@types/shapefile": "^0.6.4"
+    "@types/shapefile": "^0.6.4",
+    "@types/terraformer__arcgis": "^2.0.5"
   },
   "dependencies": {
+    "@terraformer/arcgis": "^2.1.2",
     "gdal3.js": "^2.8.1",
     "shapefile": "^0.6.6"
   }
