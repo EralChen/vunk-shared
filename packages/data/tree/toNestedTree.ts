@@ -40,7 +40,7 @@ export function toNestedTree <T extends FlattenedTreeNode> (data: T[]) {
 
 
   for (const [, item] of map) { // 遍历 map
-    const parent = map.get(item.pid)
+    const parent = map.get(item.pid || '')
     // 储存顶级item
     if (!parent) {
       res.push(item)
