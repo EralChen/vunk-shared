@@ -14,6 +14,6 @@
  */
 export interface FlattenedTreeNode {
   id: string
-  pid: string
+  pid?: string
 }
 
