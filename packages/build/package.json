@@ -7,7 +7,6 @@
   "dependencies": {
     "@vue/compiler-sfc": "latest",
     "rollup": "latest",
-    "sass": "^1.77.8",
     "ts-morph": "latest",
     "typescript": "latest"
   }
