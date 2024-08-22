@@ -68,6 +68,8 @@ export function propsContainerPlugin (
             ...propsTableData.map((row) => {
               let prop = row.prop
 
+              row.type = row.type.replaceAll('|', '\\|')
+
               if (row.link) {
                 prop = `[${prop}](${row.link})`
               }
