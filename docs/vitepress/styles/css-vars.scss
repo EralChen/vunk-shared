@@ -48,6 +48,8 @@
     --vp-sidebar-width-small: 290px;
   }
 
+
+  & {
   // sidebar
   --vp-sidebar-width-mobile: 320px;
   --vp-sidebar-width-small: 266px;
@@ -78,7 +80,9 @@
 
   // link
   --link-active-bg-color: rgba(var(--el-color-primary-rgb), 0.1);
+  }
 }
+
 
 .dark {
   --bg-color-rgb: 0, 0, 0;
