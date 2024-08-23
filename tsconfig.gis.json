@@ -1,10 +1,14 @@
 {
   "compilerOptions": {
+    "composite": true,
     "types": [
       "geojson",
       "shapefile", 
       "terraformer__arcgis",
     ],
-  }
+  },
+  "include": [
+    "packages/gis/**/*",
+  ]
 }
 

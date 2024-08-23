@@ -1,6 +1,6 @@
 # bubbleSort
 
-比较两个数组的差异
+跳过 undefined 的冒泡排序
 
 
 ## Test

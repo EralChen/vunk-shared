@@ -21,6 +21,8 @@ const external = [
   /^@vitejs\//,
   'rollup-plugin-esbuild',
 
+  'sass',
+
 ]
 
 const filePaths = globSync(buildFile, {

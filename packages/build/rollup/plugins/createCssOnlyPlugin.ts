@@ -1,7 +1,9 @@
 import { createFilter, FilterPattern } from '@rollup/pluginutils'
 import { isCallable } from '@vunk-shared/function'
 import path from 'path'
-import type { GetModuleInfo, OutputAsset, OutputChunk, Plugin  } from 'rollup'
+import type { GetModuleInfo, OutputAsset, OutputChunk, Plugin } from 'rollup'
+import { compileString } from 'sass'
+
 
 
 export interface CreateCssOnlyPluginSettings {
@@ -25,7 +27,11 @@ export interface CreateCssOnlyPluginSettings {
 export function createCssOnlyPlugin (
   settings: CreateCssOnlyPluginSettings,
 ): Plugin {
-  const include = settings.include || ['**/*.css']
+  const include = settings.include || [
+    '**/*.css',
+    '**/*.scss',
+    '**/*.sass',
+  ]
   const filter = createFilter(include, settings.exclude)
   const styles: Record<string, string> = {}
   const createCssSource = (ids: string[]) => ids
@@ -81,6 +87,12 @@ export function createCssOnlyPlugin (
       if (!filter(id)) {
         return
       }
+
+      if (id.endsWith('.scss') || id.endsWith('.sass')) {
+        code = compileString(code).css
+      }
+
+
   
       // Keep track of every stylesheet
       // Check if it changed since last render
