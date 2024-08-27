@@ -4,3 +4,5 @@ export * from './NestedTreeNode'
 
 export * from './LinkedNode'
 export * from './LinkedNodeInfo'
+
+export * from './Media'
