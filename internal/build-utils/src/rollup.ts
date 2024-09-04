@@ -1,6 +1,6 @@
 import { libExternal } from '@lib-env/build-constants'
 import { rollupFiles as baseRollupFiles } from '@vunk-shared/build/rollup'
-import { InputOption, InputPluginOption, OutputOptions } from 'rollup'
+import { InputOption, InputPluginOption, OutputOptions, RollupOutput } from 'rollup'
 import { fixPath } from './alias'
 
 
@@ -14,7 +14,7 @@ export const rollupFiles = async (
 
     outputExtname?: string,
   },
-) => {
+): Promise<RollupOutput> => {
 
   const outputExtname = settings.outputExtname ?? '.mjs'
 

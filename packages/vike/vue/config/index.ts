@@ -1,6 +1,5 @@
 import vikeVue from 'vike-vue/config'
 import { Config } from 'vike/types'
-import { OnBeforeRenderHtml } from './types'
 
 export default {
   name: 'vike-vue-plus',
@@ -16,7 +15,7 @@ export default {
     : 'import:@vunk-shared/vike/vue/onRenderHtml:onRenderHtml',
 
 
-  passToClient: vikeVue.passToClient,
+  passToClient: vikeVue.config.passToClient,
 
   // https://vike.dev/clientRouting
   clientRouting: true,
@@ -24,26 +23,11 @@ export default {
 
   // https://vike.dev/meta
   meta: {
-    ...vikeVue.meta,
+    ...vikeVue.config.meta,
     onBeforeRenderHtml: {
       env: { server: true, client: false },
       cumulative: true,
     },
   },
 } satisfies Config
-
-
-// We purposely define the ConfigVikeVue interface in this file: that way we ensure it's always applied whenever the user `import vikeVue from 'vike-vue/config'`
-// https://vike.dev/pageContext#typescript
-declare global {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
-  namespace Vike {
-    interface Config {
-      onBeforeRenderHtml?: OnBeforeRenderHtml
-    }
-    interface ConfigResolved {
-      onBeforeRenderHtml?: OnBeforeRenderHtml[]
-    }
-  }
-}
 
