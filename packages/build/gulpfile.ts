@@ -36,7 +36,9 @@ export default parallel(
   taskWithName(`bundle ${baseDirname}`, async () => {
 
     const plugins = [
-      nodeResolve(),
+      nodeResolve({
+        preferBuiltins: true,
+      }),
       esbuildPlugin,
       commonjs(),
     ]

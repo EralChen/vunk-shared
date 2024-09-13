@@ -24,7 +24,7 @@
 		"unocss": "latest",
 		"vike": "latest",
     "vike-vue": "latest",
-		"vite": "^5.1.6",
+		"vite": "^5.4.5",
 		"vite-plugin-vue-devtools": "^7.0.27",
 		"vitest": "^1.6.0"
 	},

@@ -15,7 +15,7 @@ export default {
     : 'import:@vunk-shared/vike/vue/onRenderHtml:onRenderHtml',
 
 
-  passToClient: vikeVue.config.passToClient,
+  passToClient: vikeVue.passToClient,
 
   // https://vike.dev/clientRouting
   clientRouting: true,
@@ -23,7 +23,7 @@ export default {
 
   // https://vike.dev/meta
   meta: {
-    ...vikeVue.config.meta,
+    ...vikeVue.meta,
     onBeforeRenderHtml: {
       env: { server: true, client: false },
       cumulative: true,
