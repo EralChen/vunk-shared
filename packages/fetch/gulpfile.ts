@@ -46,6 +46,17 @@ export default parallel(
 
       ],
     })
+
+    await rollupFiles({
+      input: filePaths,
+      outputDir: path.resolve(distDir, baseDirname),
+      external,
+      outputExtname: '.cjs',
+      outputOptions: {
+        format: 'cjs',
+      },
+    })
+
   }),
   taskWithName(`gen ${baseDirname} types`, async () => {
     await genTypes({
