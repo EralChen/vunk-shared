@@ -18,6 +18,7 @@ import {
 } from '@vunk-shared/markdown/shiki'
 import type { ReturnVoid } from '@vunk-shared/types'
 import type MarkdownIt from 'markdown-it'
+import type {} from 'vitepress'
 
 
 const customBlocks = [

@@ -182,7 +182,7 @@ export const demoContainerPlugin = async (
   function readCodeInfo (
     filename: string,
   ) {
-    const suffix = [ 'vue', 'ts' ]
+    const suffix = [ 'vue', 'ts', 'js', 'cjs' ]
     const fileIndex = suffix
       .map(sfx => path.resolve(demoRoot, `${filename}.${sfx}`))
       .findIndex(item => fs.existsSync(item))

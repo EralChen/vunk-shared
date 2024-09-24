@@ -109,6 +109,7 @@ export default defineConfig(async ({ mode }) => {
         demoContainerPluginSettings: {
           root: path.resolve(appRoot, './examples'),
           codeSourceTransform: fixPath,
+          
         },
         sourceContainerPluginSettings: {
           root: path.resolve(workRoot, './packages'),

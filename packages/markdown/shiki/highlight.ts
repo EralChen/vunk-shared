@@ -64,6 +64,7 @@ export async function highlight (
   const {
     defaultHighlightLang: defaultLang = '',
     codeTransformers: userTransformers = [],
+    
   } = options
 
   const highlighter = await getHighlighter({
@@ -71,8 +72,14 @@ export async function highlight (
       typeof theme === 'object' && 'light' in theme && 'dark' in theme
         ? [theme.light, theme.dark]
         : [theme],
-    langs: [...Object.keys(bundledLanguages), ...(options.languages || [])],
-    langAlias: options.languageAlias,
+    langs: [
+      ...Object.keys(bundledLanguages),
+      ...(options.languages || []),
+    ],
+    langAlias: {
+      'cjs': 'javascript',
+      ...options.languageAlias,
+    },
   })
 
   await options?.shikiSetup?.(highlighter)

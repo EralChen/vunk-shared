@@ -1,6 +1,8 @@
 
 import { stringify } from 'qs'
 import { AnyFunc, Func, ReturnVoid } from '@vunk/core'
+import { createParser, EventSourceParseCallback } from 'eventsource-parser'
+import { noop } from '@vunk-shared/function'
 
 export class RestFetch {
   baseURL: RestFetchConstructorOptions['baseURL']
@@ -97,8 +99,8 @@ export class RestFetch {
             }
             const ns = fileName.split(`'`)
             if (ns.length > 1) {
-  
-              const [charset, lang, ...names] = ns
+              // ['utf-8', 'en', 'filename']
+              const [charset, , ...names] = ns
               if (['utf-8'].includes(charset.toLocaleLowerCase())){
                 fileName = names.join(`'`)
               }
@@ -125,6 +127,34 @@ export class RestFetch {
 
   }
 
+  async reader (
+    readerOpts: {
+      url: string
+      onmessage: EventSourceParseCallback
+      abortController?: AbortController
+    }, 
+    requestOptions?: Partial<RestFetchRequestOptions>, 
+    requestInit?: RequestInit,
+  ) {
+    const onmessage = readerOpts.onmessage ?? noop
+    const reader: ReadableStreamDefaultReader<Uint8Array> = await this.response({
+      url: readerOpts.url,
+      method: 'POST',
+      responseThen: res => res.body?.getReader(),
+      abortController: readerOpts.abortController,
+      ...requestOptions,
+    }, requestInit)
+    const decoder = new TextDecoder('utf-8')
+    const parser = createParser(onmessage)
+    if (!reader) return
+    while (true) {
+      const { done, value } = await reader.read()
+      if (done) break
+      parser.feed(decoder.decode(value))
+    }
+  }
+
+  
   private initFetch (
     options: RestFetchRequestOptions, 
     init?: RequestInit,
@@ -457,3 +487,6 @@ export interface RestFetchRequest {
     requestInit?: RequestInit
   ): Promise<any>
 }
+
+
+export type RestFetchReaderOnmessage = EventSourceParseCallback
