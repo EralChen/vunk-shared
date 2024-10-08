@@ -3,24 +3,36 @@
 export { getHeadSetting }
 
 import { isCallable } from '@vunk-shared/function'
+import { ConfigFromHookResolved } from 'vike-vue/dist/types/Config'
+import { PageContextInternal } from 'vike-vue/dist/types/PageContext'
 import type { PageContext } from 'vike/types'
+import { includes } from '@vunk-shared/array'
+// import { configsCumulative } from 'vike-vue/config'
+export const configsCumulative = ['Head', 'bodyAttributes', 'htmlAttributes'] as const
 
-function getHeadSetting (
-  headSetting: 'title' | 'favicon' | 'lang',
-  pageContext: PageContext,
-): undefined | null | string {
-  const config = pageContext.configEntries[headSetting]?.[0]
-  if (!config) return undefined
-  const val = config.configValue
-  if (typeof val === 'string') return val
-  if (!val) return null
-  if (isCallable(val)) {
-    const valStr = val(pageContext)
-    if (typeof valStr! !== 'string') {
-      throw new Error(config.configDefinedAt + ' should return a string')
-    }
-    return valStr
+export type ConfigsCumulative = (typeof configsCumulative)[number]
+
+
+// We use `any` instead of doing proper validation in order to save KBs sent to the client-side.
+
+function getHeadSetting<T> (
+  configName: keyof ConfigFromHookResolved,
+  pageContext: PageContext & PageContextInternal,
+): undefined | T {
+  // Set by useConfig()
+  const valFromUseConfig = pageContext._configFromHook?.[configName]
+  // Set by +configName.js
+  const valFromConfig = pageContext.config[configName]
+
+  const getCallable = (val: unknown) => (isCallable(val) ? val(pageContext) : val)
+  if (!includes(configsCumulative, configName)) {
+    if (valFromUseConfig !== undefined) return valFromUseConfig as any
+    return getCallable(valFromConfig) as any
   } else {
-    throw new Error(config.configDefinedAt + ' should be a string or a function returning a string')
+    return [
+      //
+      ...((valFromConfig as any) ?? []).map(getCallable),
+      ...((valFromUseConfig as any) ?? []),
+    ] as any
   }
 }

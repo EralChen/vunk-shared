@@ -139,6 +139,14 @@ export default defineConfig(async ({ mode }) => {
       },
 
     },
+
+    css: { // https://www.cnblogs.com/crispyChicken/p/18420010
+      preprocessorOptions: {
+        scss: {
+          api: 'modern',
+        },
+      },
+    },
   }
   return config
 })

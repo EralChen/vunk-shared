@@ -1,25 +1,37 @@
 /* eslint-disable no-console */
+ 
 // ref: https://github.com/vikejs/vike-vue/blob/main/packages/vike-vue/src/renderer/createVueApp.ts
 export { createVueApp }
 export type { ChangePage }
 
-import { type App, createApp, createSSRApp, h, nextTick, shallowRef, shallowReactive } from 'vue'
+import { type App, createApp, createSSRApp, h, nextTick, shallowRef, shallowReactive, Component, Fragment } from 'vue'
 import type { PageContext } from 'vike/types'
 import { setPageContext } from 'vike-vue/usePageContext'
 import { callCumulativeHooks } from '../plain/src/callCumulativeHooks'
 import { isPlainObject, objectAssign } from '@vunk-shared/object'
 import { setData } from 'vike-vue/useData'
 import { contentUpdatedCallbacks, type ContentUpdatedCallbackHook } from '@vunk-shared/vike/vue/hooks/contentUpdatedCallbacks'
+import type { PageContextInternal } from 'vike-vue/dist/types/PageContext'
 
 
 type ChangePage = (pageContext: PageContext) => Promise<void>
-async function createVueApp (pageContext: PageContext, ssr: boolean, mainComponentName: 'Head' | 'Page') {
+async function createVueApp (
+  pageContext: PageContext & PageContextInternal, 
+  ssr: boolean, 
+  entryComponentName: 'Head' | 'Page',
+) {
 
   const runCbs = (hook: ContentUpdatedCallbackHook) => {
     contentUpdatedCallbacks
       .filter((obj) => obj.hook === hook)
       .forEach((obj) => obj.callback(pageContext))
   }
+
+  /**
+   * @description 添加全局钩子
+   * @example
+   * const EntryComponent = () => h(entryComponentRef.value, propsWithHooks) 
+   */
   const propsWithHooks = {
     onVnodeMounted: () => runCbs('mounted'),
     onVnodeUpdated: () => runCbs('updated'),
@@ -27,27 +39,52 @@ async function createVueApp (pageContext: PageContext, ssr: boolean, mainCompone
     onVnodeBeforeUnmount: () => runCbs('beforeUnmount'),
   }
 
-  const mainComponentRef = shallowRef(pageContext.config[mainComponentName])
-  const layoutRef = shallowRef(pageContext.config.Layout || [])
+  let onChangePage: undefined | ((pageContext: PageContext) => void)
+  let RootComponent: Component | (() => ReturnType<typeof h>)
 
-  const MainComponent = () => h(mainComponentRef.value, propsWithHooks)
-
-  let RootComponent = MainComponent
   // Wrap <Page> with <Layout>
-  if (mainComponentName === 'Page') {
+  if (entryComponentName === 'Page') {
+    const entryComponentRef = shallowRef(pageContext.config[entryComponentName])
+    const layoutRef = shallowRef(pageContext.config.Layout || [])
+    onChangePage = (pageContext: PageContext) => {
+      entryComponentRef.value = pageContext.config[entryComponentName]
+      layoutRef.value = pageContext.config.Layout || []
+    }
+    const EntryComponent = () => h(entryComponentRef.value, propsWithHooks)
     RootComponent = () => {
-      let RootComp = MainComponent
+      let RootComp = EntryComponent
       layoutRef.value.forEach((layout) => {
         const Comp = RootComp
-  
         RootComp = () => h(layout, null, Comp)
       })
       return RootComp()
+    }
+  } else {
+    RootComponent = () => {
+      const HeadElements = [
+        // Added by +Head
+        ...(pageContext.config.Head ?? []),
+        // Added by useConfig()
+        ...(pageContext._configFromHook?.Head ?? []),
+      ].map((HeadComponent) => h(HeadComponent))
+      return h(Fragment, null, HeadElements)
     }
   }
 
   const app: App = ssr ? createSSRApp(RootComponent) : createApp(RootComponent)
   objectAssign(pageContext, { app })
+  const { onCreateApp } = pageContext.config
+  await callCumulativeHooks(onCreateApp, pageContext)
+
+  const data = pageContext.data ?? {}
+  assertDataIsObject(data)
+
+  // TODO/breaking-change: use shallowRef() instead of shallowReactive()
+  // - Remove workaround https://github.com/vikejs/vike-vue/blob/89ca09ed18ffa1c0401851a506f505813a7dece7/packages/vike-vue/src/integration/onRenderClient.ts#L18-L21
+  const dataReactive = shallowReactive(data)
+  const pageContextReactive = shallowReactive(pageContext)
+  setPageContext(app, pageContextReactive)
+  setData(app, dataReactive)
 
   // changePage() is called upon navigation, see +onRenderClient.ts
   const changePage: ChangePage = async (pageContext: PageContext) => {
@@ -64,23 +101,12 @@ async function createVueApp (pageContext: PageContext, ssr: boolean, mainCompone
     assertDataIsObject(data)
     objectReplace(dataReactive, data)
     objectReplace(pageContextReactive, pageContext)
-    mainComponentRef.value = pageContext.config[mainComponentName]
-
-    layoutRef.value = pageContext.config.Layout || []
+    onChangePage?.(pageContext)
     await nextTick()
     returned = true
     if (err) throw err
   }
 
-  const data = pageContext.data ?? {}
-  assertDataIsObject(data)
-  const dataReactive = shallowReactive(data)
-  const pageContextReactive = shallowReactive(pageContext)
-  setPageContext(app, pageContextReactive)
-  setData(app, dataReactive)
-
-  const { onCreateApp } = pageContext.config
-  await callCumulativeHooks(onCreateApp, pageContext)
   return { app, changePage }
 }
 

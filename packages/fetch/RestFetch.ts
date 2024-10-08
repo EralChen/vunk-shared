@@ -1,6 +1,6 @@
 
 import { stringify } from 'qs'
-import { AnyFunc, Func, ReturnVoid } from '@vunk/core'
+import { AnyFunc, ReturnVoid } from '@vunk/shared'
 import { createParser, EventSourceParseCallback } from 'eventsource-parser'
 import { noop } from '@vunk-shared/function'
 
@@ -339,7 +339,7 @@ export interface RestFetchConstructorOptions {
    * 响应拦截
    * @default res => res.json()
    */
-  responseThen?: Func<Response, any>;
+  responseThen?: (res: Response) => any;
   /**
    * 响应拦截, 发生在 responseThen 之后
    * @default res => res
@@ -403,7 +403,7 @@ export interface RestFetchRequestOptions {
    * 响应拦截
    * 会覆盖 RestFetchConstructorOptions 的 responseThen
    */
-  responseThen?: Func<Response, any>;
+  responseThen?: (res: Response) => any;
 
   /**
    * 自定义 AbortController
