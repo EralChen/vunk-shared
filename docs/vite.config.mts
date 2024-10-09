@@ -89,6 +89,7 @@ export default defineConfig(async ({ mode }) => {
           '**/gulpfile.ts',
           '**/types.ts',
           'entry',
+          'win32',
         ],
       }),
 

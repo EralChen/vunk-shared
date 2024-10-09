@@ -1,3 +1,5 @@
+// ref: https://github.com/vikejs/vike-vue/blob/main/packages/vike-vue/src/%2Bconfig.ts
+
 import { Config } from 'vike/types'
 import { ssrEffect } from '../../plain/src/ssrEffect'
 

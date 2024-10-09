@@ -20,6 +20,7 @@ const menuComponent = ref() as Ref<{
   open: (index: string) => void
 }>
 const lang = useLang()
+console.log(lang)
 const basePath = import.meta.env.BASE_URL + lang
 
 
