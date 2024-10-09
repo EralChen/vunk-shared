@@ -7,6 +7,7 @@ import { VkFloatBlock } from '@vunk/gsap'
 import { useReloaded, useUpdating } from '@vunk/core/composables'
 import { throttle } from 'lodash-es'
 import { sleep } from '@vunk/core/shared/utils-promise'
+import VkClientOnly from '@vunk/core/components/client-only'
 
 
 const props = defineProps({
@@ -102,22 +103,24 @@ function setCurrentLinkByScroll () {
         >
           Table of Contents for current page
         </span>
-        <VkCheckLogicProvider v-model="currentLink">
-          <div class="vp-doc-outline-x">
-            <VPDocOutlineItem
-              :headers="headers"
-              :root="true"
-              @link-click="linkClick"
-            />
+        <VkClientOnly>
+          <VkCheckLogicProvider v-model="currentLink">
+            <div class="vp-doc-outline-x">
+              <VPDocOutlineItem
+                :headers="headers"
+                :root="true"
+                @link-click="linkClick"
+              />
 
-            <VkFloatBlock 
-              v-if="reloaded"
-              :scale="0.8"
-              :type="'column'"
-              :item-class="'outline-link'"
-            ></VkFloatBlock>
-          </div>
-        </VkCheckLogicProvider>
+              <VkFloatBlock 
+                v-if="reloaded"
+                :scale="0.8"
+                :type="'column'"
+                :item-class="'outline-link'"
+              ></VkFloatBlock>
+            </div>
+          </VkCheckLogicProvider>
+        </VkClientOnly>
       </nav>
     </div>
   </div>

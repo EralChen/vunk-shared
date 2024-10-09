@@ -1,0 +1,15 @@
+{
+  "name": "@vunk-shared/fetch",
+  "private": true,
+  "scripts": {
+    "build": "gulp -f gulpfile.ts"
+  },
+  "dependencies": {
+    "eventsource-parser": "^2.0.1",
+    "qs": "^6.13.0",
+    "util": "^0.12.5"
+  },
+  "devDependencies": {
+    "@types/qs": "^6.9.15"
+  }
+}

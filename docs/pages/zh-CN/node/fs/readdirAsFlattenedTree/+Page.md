@@ -4,7 +4,14 @@
 
 
 ## Source
-
 :::source
 node/fs/readdirAsFlattenedTree
 :::
+
+## Usage
+
+```typescript
+111
+```
+
+

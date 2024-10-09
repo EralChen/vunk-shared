@@ -1,5 +1,5 @@
 import ElmentPlus from 'element-plus'
-import type { OnCreateAppAsync } from 'vike-vue'
+import type { OnCreateAppAsync } from 'vike-vue/types'
 import 'uno.css'
 import '#/src/styles'
 

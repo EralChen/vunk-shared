@@ -1,0 +1,11 @@
+{
+  "name": "@vunk-shared/win32",
+  "private": true,
+  "scripts": {
+    "build": "gulp -f gulpfile.ts"
+  },
+  "dependencies": {
+    "@waiting/shared-core": "^23.21.0",
+    "win32-api": "^26.0.2"
+  }
+}

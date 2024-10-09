@@ -1,0 +1,5 @@
+export * from './user32dll'
+export * from './lpEnumFuncSpec'
+export * from './GetWindowTextW'
+export * from './EnumWindows'
+export * from './GetWindowRect'

@@ -89,6 +89,7 @@ export default defineConfig(async ({ mode }) => {
           '**/gulpfile.ts',
           '**/types.ts',
           'entry',
+          'win32',
         ],
       }),
 
@@ -109,6 +110,7 @@ export default defineConfig(async ({ mode }) => {
         demoContainerPluginSettings: {
           root: path.resolve(appRoot, './examples'),
           codeSourceTransform: fixPath,
+          
         },
         sourceContainerPluginSettings: {
           root: path.resolve(workRoot, './packages'),
@@ -137,6 +139,14 @@ export default defineConfig(async ({ mode }) => {
         },
       },
 
+    },
+
+    css: { // https://www.cnblogs.com/crispyChicken/p/18420010
+      preprocessorOptions: {
+        scss: {
+          api: 'modern',
+        },
+      },
     },
   }
   return config

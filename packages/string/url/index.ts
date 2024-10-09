@@ -1,3 +1,5 @@
 export * from './cleanUrl'
 export * from './stripBase'
 export * from './withTrailingSlash'
+export * from './withoutTrailingSlash'
+export * from './resolveFullPath'

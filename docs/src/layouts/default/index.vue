@@ -126,7 +126,7 @@ html{
   height: 100%;
 }
 body, #app, #page-view, #vue-root {
-  height: inherit;
+  height: 100%;
 }
 
 </style>
