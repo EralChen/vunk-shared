@@ -20,7 +20,6 @@ const menuComponent = ref() as Ref<{
   open: (index: string) => void
 }>
 const lang = useLang()
-console.log(lang)
 const basePath = import.meta.env.BASE_URL + lang
 
 
@@ -139,13 +138,13 @@ const linkCtrlClick = (e: Event) => {
 <template>
   <VkDuplex class="h-full">
     <template #one>
-      <ElInput
+      <!-- <ElInput
         v-model="filterTitle"
         :form="''"
         :size="'large'"
         class="layout-default-aside-search"
         :placeholder="'搜索组件'"
-      ></ElInput>
+      ></ElInput> -->
     </template>
     <template #two>
       <ElScrollbar>
