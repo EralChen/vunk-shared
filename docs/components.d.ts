@@ -7,6 +7,7 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
+    AlgoliaSearchBox: typeof import('./src/components/AlgoliaSearchBox.vue')['default']
     MenuLink: typeof import('./src/components/MenuLink/index.vue')['default']
     PageX: typeof import('./src/components/PageX/index.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']

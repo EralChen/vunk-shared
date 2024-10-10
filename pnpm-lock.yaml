@@ -165,6 +165,9 @@ importers:
 
   docs:
     dependencies:
+      '@docsearch/js':
+        specifier: ^3.6.2
+        version: 3.6.2(@algolia/client-search@4.24.0)(search-insights@2.17.2)
       '@skzz/platform':
         specifier: 0.0.0-alpha.73
         version: 0.0.0-alpha.73
