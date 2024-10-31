@@ -12,7 +12,9 @@ const onmessage: RestFetchReaderOnmessage = (e) => {
   } 
   console.log(e) 
 }
-read()
+read().then(() => {
+  console.log('read end')
+})
 function read () {
   return rTestStream(onmessage)
 }

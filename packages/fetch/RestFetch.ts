@@ -137,6 +137,7 @@ export class RestFetch {
     requestInit?: RequestInit,
   ) {
     const onmessage = readerOpts.onmessage ?? noop
+
     const reader: ReadableStreamDefaultReader<Uint8Array> = await this.response({
       url: readerOpts.url,
       method: 'POST',
@@ -152,6 +153,7 @@ export class RestFetch {
       if (done) break
       parser.feed(decoder.decode(value))
     }
+
   }
 
   
