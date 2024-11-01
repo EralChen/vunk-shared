@@ -1,6 +1,6 @@
 # includes
 
-比较两个数组的差异
+Array.prototype.includes()
 
 
 ## Source
