@@ -1,4 +1,4 @@
-# arcgisToGeoJSON
+# geojsonToArcGIS
 
 Fork from [@terraformer/arcgis](https://github.com/terraformer-js/terraformer/blob/main/packages/arcgis/README.md)
 

@@ -6,3 +6,4 @@ export * from './LinkedNode'
 export * from './LinkedNodeInfo'
 
 export * from './Media'
+export * from './Refreshable'
