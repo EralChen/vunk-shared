@@ -41,7 +41,7 @@ onMounted(() => {
 const currentCrowname = computed(() => {
   if (!pathname.value)
     return
-  const current = pathname.value.replace(basePath, '')
+  const current = pathname.value.replace(basePath.value, '')
   const name = current.split('/').filter(Boolean).shift()
   return name
 })
