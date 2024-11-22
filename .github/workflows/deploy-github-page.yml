@@ -20,6 +20,13 @@ jobs:
         npm install -g pnpm
         pnpm install
       shell: pwsh # 使用 PowerShell
+      
+    - name: Install MSYS2 and rsync
+      run: |
+        choco install msys2 -y
+        refreshenv
+        pacman --noconfirm -S rsync
+      shell: cmd
 
     # 构建
     - name: Build
@@ -38,6 +45,8 @@ jobs:
     - name: Copy LICENSE
       run: Copy-Item -Path .\LICENSE -Destination .\docs\dist\client -Force
       shell: pwsh
+
+
 
     # 部署到 GitHub Pages
     - name: Deploy
