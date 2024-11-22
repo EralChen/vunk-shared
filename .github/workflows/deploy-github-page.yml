@@ -20,13 +20,7 @@ jobs:
         npm install -g pnpm
         pnpm install
       shell: pwsh # 使用 PowerShell
-      
-    - name: Install MSYS2 and rsync
-      run: |
-        choco install msys2 -y
-        refreshenv
-        pacman --noconfirm -S rsync
-      shell: cmd
+
 
     # 构建
     - name: Build
@@ -58,6 +52,8 @@ jobs:
         commit-message: website deploy
         repository-name: EralChen/vunk-shared
         force: true
+        clean: false
+        
 
     # 清理构建产物
     - name: Cleanup
