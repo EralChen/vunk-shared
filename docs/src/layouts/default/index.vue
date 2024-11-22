@@ -59,7 +59,7 @@ function searchCollapsedToggle () {
 
     <div
       sk-flex
-      class="h-100% relative"
+      class="h-100% relative overflow-hidden"
     >
       <div class="layout-default-aside-x bg-bg-base" sk-flex>
         <VkCollapseTransitionHorizontal>
