@@ -18,7 +18,7 @@ jobs:
         pnpm install
 
     - name: Build
-      run: npm run docs:build
+      run: cd docs && npm run build
       timeout-minutes: 30
       env:
         NODE_OPTIONS: --max-old-space-size=8192
