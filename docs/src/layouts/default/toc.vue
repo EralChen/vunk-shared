@@ -6,11 +6,13 @@ import { onContentUpdated } from '@vunk-shared/vike/vue/hooks'
 const headers = shallowRef<MenuItem[]>([])
 
 
+
 onContentUpdated(() => {
   headers.value = getHeaders(2)
 }, {
   hooks: ['mounted', 'updated'],
 })
+
 
 
 

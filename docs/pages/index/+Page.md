@@ -35,7 +35,7 @@ setTimeout(() => {
 
 对于每个函数的用法，请参考单个函数对应的文档。如:
 
-[genDtsFiles](../zh-CN/build/morph/genDtsFiles/+Page.md)
+[genDtsFiles](../zh-CN/component/build/morph/genDtsFiles/+Page.md)
 
-[toNestedTree](../zh-CN/data/tree/toNestedTree/+Page.md)
+[toNestedTree](../zh-CN/component/data/tree/toNestedTree/+Page.md)
 

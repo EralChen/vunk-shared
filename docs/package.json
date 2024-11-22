@@ -1,5 +1,5 @@
 {
-  "name": "@vunk-shared/docs",
+  "name": "@skzz-template/docs",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -7,11 +7,9 @@
     "preview": "vite build && vite preview"
   },
   "dependencies": {
-    "@docsearch/js": "^3.6.2",
-    "@skzz/platform": "0.0.0-alpha.73",
-    "@vunk/core": "1.2.1",
+    "@vunk/core": "^1.2.1",
     "@vunk/gsap": "0.0.0-alpha.3",
-    "@vunk/skzz": "0.0.0-alpha.111",
+    "@vunk/plus": "^0.2.0",
     "deepdash-es": "^5.3.9",
     "gsap": "^3.12.5",
     "prism-theme-vars": "^0.2.4"
@@ -20,11 +18,12 @@
     "@iconify-json/ri": "^1.1.20",
     "@mdit-vue/shared": "^2.0.0",
     "markdown-it-anchor": "^8.6.7",
+    "markdown-it-container": "^4.0.0",
     "unplugin-icons": "^0.18.1",
     "unplugin-vue-components": "^0.26.0",
     "unplugin-vue-markdown": "^0.26.2",
     "vite-plugin-inspect": "^0.8.3",
     "vitepress": "^1.1.4",
-    "vue-router": "^4.3.2"
+    "vue-router": "^4.4.5"
   }
 }

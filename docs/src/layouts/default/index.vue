@@ -1,15 +1,16 @@
 <script lang="ts" setup>
-import { VkDuplex } from '@vunk/core'
-import { ElScrollbar } from 'element-plus'
-import Navbar from './navbar.vue'
-import Aside from './aside.vue'
-import Toc from './toc.vue'
-import { nextTick, ref, shallowRef } from 'vue'
-import { onContentUpdated } from '@vunk-shared/vike/vue/hooks'
 import type { PageContext } from 'vike/types'
-import { ArrowLeft } from '@element-plus/icons-vue'
+import IconExpand from '#s/components/icon-expand/index.vue'
+import IconFold from '#s/components/icon-fold/index.vue'
+import IconSearch from '#s/components/icon-search/index.vue'
+import { VkDuplex } from '@vunk/core'
 import { VkCollapseTransitionHorizontal } from '@vunk/core/components/collapse-transition-horizontal'
-
+import { onContentUpdated } from '@vunk-shared/vike/vue/hooks'
+import { ElScrollbar } from 'element-plus'
+import { nextTick, ref, shallowRef } from 'vue'
+import Aside from './aside.vue'
+import Navbar from './navbar.vue'
+import Toc from './toc.vue'
 
 const scrollbarNode = shallowRef<InstanceType<typeof ElScrollbar>>()
 
@@ -29,7 +30,6 @@ onContentUpdated((ctx: PageContext) => {
       currentScrollTopCache[currentPath.value] ?? 0,
     )
   })
-
 }, {
   hooks: ['mounted'],
 })
@@ -40,14 +40,15 @@ onContentUpdated(() => {
   hooks: ['beforeUnmount'],
 })
 
-
-/* aside 收起 */
+/* Collapsed */
 const asideCollapsed = ref(false)
-const asideToggle = () => {
-  asideCollapsed.value = !asideCollapsed.value
+const searchCollapsed = ref(true)
+function searchCollapsedToggle () {
+  searchCollapsed.value = !searchCollapsed.value
 }
-/* end of aside 收起 */
+/* endof Collapsed */
 </script>
+
 <template>
   <VkDuplex class="layout-default">
     <template #one>
@@ -58,9 +59,9 @@ const asideToggle = () => {
 
     <div
       sk-flex
-      class="h-100%"
+      class="h-100% relative"
     >
-      <div class="layout-default-aside-x" sk-flex>
+      <div class="layout-default-aside-x bg-bg-base" sk-flex>
         <VkCollapseTransitionHorizontal>
           <div
             v-show="!asideCollapsed" class="layout-default-aside"
@@ -68,34 +69,27 @@ const asideToggle = () => {
               'is-collapsed': asideCollapsed,
             }"
           >
-            <Aside></Aside>
+            <div
+              class="page-agent-main-top-options"
+              sk-flex="row-between-center"
+              mlr-m
+              mt-m
+            >
+              <IconFold
+                @click="asideCollapsed = true"
+              ></IconFold>
+
+              <IconSearch
+                @click="searchCollapsedToggle"
+              ></IconSearch>
+            </div>
+
+            <Aside :search="!searchCollapsed" mt-m></Aside>
           </div>
         </VkCollapseTransitionHorizontal>
-     
-        <div 
-          bg-fill-light
-          border-r-1
-          border-l-1
-          border-t-0
-          border-b-0
-          border-solid
-          border-color-border-base
-          cursor-pointer
-          sk-flex="col-center2"
-          @click="asideToggle"
-        >
-          <ElIcon
-            :class="{
-              'rotate-180': asideCollapsed,
-              'transition-transform': true,
-            }"
-          >
-            <ArrowLeft></ArrowLeft>
-          </ElIcon>
-        </div>
       </div>
 
-      <VkDuplex 
+      <VkDuplex
         class="flex-1 overflow-hidden"
       >
         <ElScrollbar
@@ -103,6 +97,12 @@ const asideToggle = () => {
           ref="scrollbarNode"
         >
           <main class="page-content">
+            <div v-show="asideCollapsed" position-absolute pt-m pl-m>
+              <IconExpand
+                @click="asideCollapsed = false"
+              ></IconExpand>
+            </div>
+
             <div class="doc-content-wrapper">
               <div
                 id="VPContent"
@@ -113,7 +113,7 @@ const asideToggle = () => {
               <div class="doc-toc-container">
                 <Toc></Toc>
               </div>
-            </div>     
+            </div>
           </main>
         </ElScrollbar>
       </VkDuplex>
@@ -125,14 +125,12 @@ const asideToggle = () => {
 html{
   height: 100%;
 }
-body, #app, #page-view, #vue-root {
-  height: 100%;
+body, #app, #page-view {
+  height: inherit;
 }
-
 </style>
 
 <style>
-
 .doc-toc-container{
   width: 300px;
   position: sticky;
@@ -141,11 +139,9 @@ body, #app, #page-view, #vue-root {
   overflow: auto;
   padding: var(--gap-page);
   background-color: var(--bg-color);
-  margin-left: 14px;
 }
 .doc-content-container{
   flex-grow: 1;
-  /* padding-right: 14px; */
 }
 .layout-default {
   --layout-aside-width: 300px;
@@ -163,13 +159,11 @@ body, #app, #page-view, #vue-root {
   /* min-width: var(--layout-aside-width); */
   height: 100%;
 }
+
 .layout-default-aside.is-collapsed{
   min-width: 0;
 }
-
-
 </style>
-
 
 <style>
 .layout-default-aside-x,
@@ -179,5 +173,13 @@ body, #app, #page-view, #vue-root {
 
 .layout-default-main {
   width: 100%;
+}
+
+/* 手机尺寸下 */
+@media screen and (max-width: 768px){
+  .layout-default-aside-x{
+    position: absolute;
+    z-index: 5;
+  }
 }
 </style>

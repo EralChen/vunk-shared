@@ -1,14 +1,14 @@
 <script setup lang="ts">
-import { PropType, Ref, onMounted, onUnmounted, ref, shallowRef } from 'vue'
-import { MenuItem, getAbsoluteTop } from '../composables/outline'
-import VPDocOutlineItem from './VPDocOutlineItem.vue'
+import type { PropType, Ref } from 'vue'
+import type { MenuItem } from '../composables/outline'
 import { VkCheckLogicProvider } from '@vunk/core'
-import { VkFloatBlock } from '@vunk/gsap'
 import { useReloaded, useUpdating } from '@vunk/core/composables'
-import { throttle } from 'lodash-es'
 import { sleep } from '@vunk/core/shared/utils-promise'
-import VkClientOnly from '@vunk/core/components/client-only'
-
+import { VkFloatBlock } from '@vunk/gsap'
+import { throttle } from 'lodash-es'
+import { onMounted, onUnmounted, ref, shallowRef } from 'vue'
+import { getAbsoluteTop } from '../composables/outline'
+import VPDocOutlineItem from './VPDocOutlineItem.vue'
 
 const props = defineProps({
   headers: {
@@ -25,7 +25,6 @@ const container = ref()
 const currentLink = ref('')
 const updatingLinkByClick = useUpdating(() => sleep(1000))
 
-
 // scrollbar > scrollwrap > scrollview
 const scrollviewNode = shallowRef() as Ref<HTMLElement>
 
@@ -39,18 +38,19 @@ onMounted(() => {
   })
 })
 
-const linkClick = (link: string) => {
-  currentLink.value = link  
+function linkClick (link: string) {
+  currentLink.value = link
   updatingLinkByClick.value = true
 }
 
-
 function setCurrentLinkByScroll () {
-  if (updatingLinkByClick.value) return
+  if (updatingLinkByClick.value)
+    return
   const scrollview = scrollviewNode.value
   const scrollwrap = scrollview.parentElement as HTMLDivElement
   const scrollbar = scrollwrap.parentElement as HTMLDivElement
-  if (!scrollbar) return
+  if (!scrollbar)
+    return
 
   const scrollY = scrollwrap.scrollTop
 
@@ -62,18 +62,16 @@ function setCurrentLinkByScroll () {
   }
 
   if (isBottom) {
-    currentLink.value = props.headers[props.headers.length - 1]?.link
+    currentLink.value = props.headers[props.headers.length - 1].link
     return
   }
 
-
-  const linkTops = props.headers.map(item => {
+  const linkTops = props.headers.map((item) => {
     return {
       link: item.link,
       top: getAbsoluteTop(item.element, scrollbar),
     }
-  }).filter(({ top }) => !Number.isNaN(top))
-    .sort((a, b) => a.top - b.top)
+  }).filter(({ top }) => !Number.isNaN(top)).sort((a, b) => a.top - b.top)
 
   // find the last header above the top of scrollwrap
   for (const { link, top } of linkTops) {
@@ -82,17 +80,14 @@ function setCurrentLinkByScroll () {
       return
     }
   }
-
 }
-
-
 </script>
 
 <template>
   <div
     ref="container"
-    class="VPDocAsideOutline"
-    :class="{ 'has-outline': true }"
+    class="VPDocAsideOutline has-outline"
+
     role="navigation"
   >
     <div class="content">
@@ -103,24 +98,22 @@ function setCurrentLinkByScroll () {
         >
           Table of Contents for current page
         </span>
-        <VkClientOnly>
-          <VkCheckLogicProvider v-model="currentLink">
-            <div class="vp-doc-outline-x">
-              <VPDocOutlineItem
-                :headers="headers"
-                :root="true"
-                @link-click="linkClick"
-              />
+        <VkCheckLogicProvider v-model="currentLink">
+          <div class="vp-doc-outline-x">
+            <VPDocOutlineItem
+              :headers="headers"
+              :root="true"
+              @link-click="linkClick"
+            />
 
-              <VkFloatBlock 
-                v-if="reloaded"
-                :scale="0.8"
-                :type="'column'"
-                :item-class="'outline-link'"
-              ></VkFloatBlock>
-            </div>
-          </VkCheckLogicProvider>
-        </VkClientOnly>
+            <VkFloatBlock
+              v-if="reloaded"
+              :scale="0.8"
+              type="column"
+              item-class="outline-link"
+            ></VkFloatBlock>
+          </div>
+        </VkCheckLogicProvider>
       </nav>
     </div>
   </div>
@@ -129,7 +122,6 @@ function setCurrentLinkByScroll () {
 <style scoped>
 .vp-doc-outline-x{
   position: relative;
-  padding-left: 16px;
    --vk-float-block-color: var(--el-color-primary);
 }
 .VPDocAsideOutline {
@@ -142,8 +134,7 @@ function setCurrentLinkByScroll () {
 
 .content {
   position: relative;
-  border-left: 1px solid var(--vp-c-divider);
-  /* padding-left: 16px; */
+  margin-left: 16px;
   font-size: 13px;
   font-weight: 500;
 }

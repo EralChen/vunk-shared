@@ -1,5 +1,10 @@
+
+/// <reference types="vike-vue/dist/+config" />
+
 import { ApiReturnType } from '@vunk/core'
-import { rCrowdinFilesAsReflect, CrowdinFileLang } from '../renderer/crowdin'
+import { rCrowdinFilesAsReflect } from '../renderer/crowdin'
+import { CrowdinFileLang } from '#/shared';
+
 
 declare global {
   namespace Vike {

@@ -36,7 +36,7 @@ setTimeout(() => {
 
 对于每个函数的用法，请参考单个函数对应的文档。如:
 
-[genDtsFiles](https://eralchen.github.io/vunk-shared/zh-CN/build/morph/genDtsFiles)
+[genDtsFiles](https://eralchen.github.io/vunk-shared/zh-CN/component/build/morph/genDtsFiles)
 
-[toNestedTree](https://eralchen.github.io/vunk-shared/zh-CN/data/tree/toNestedTree)
+[toNestedTree](https://eralchen.github.io/vunk-shared/zh-CN/component/data/tree/toNestedTree)
 
