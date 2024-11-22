@@ -7,8 +7,14 @@ import { resolveFullPath } from '@vunk-shared/string/url'
 import { computed, onMounted, shallowRef } from 'vue'
 import { RouteRecordRaw } from 'vue-router'
 
-const navCrow = useCrowdinFile(CrowdinFilePath.nav) as CrowdinFile<NavRaw[]>
-const basePath = import.meta.env.BASE_URL + navCrow.lang
+const navCrow: CrowdinFile<NavRaw[]> = useCrowdinFile(CrowdinFilePath.nav) ?? {
+  source: [],
+  lang: 'zh-CN',
+}
+
+const basePath = computed(() => {
+  return import.meta.env.BASE_URL + navCrow.lang 
+})
 
 const menuData = computed(() => {
   return navCrow.source.map((row) => {
@@ -35,7 +41,7 @@ onMounted(() => {
 const currentCrowname = computed(() => {
   if (!pathname.value)
     return
-  const current = pathname.value.replace(basePath, '')
+  const current = pathname.value.replace(basePath.value, '')
   const name = current.split('/').filter(Boolean).shift()
   return name
 })

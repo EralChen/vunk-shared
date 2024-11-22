@@ -12,7 +12,7 @@ export enum CrowdinFilePath {
 }
 
 export interface CrowdinFile<
-  S extends NormalObject = NormalObject,
+  S = any,
 > {
   lang: string
   path: string
