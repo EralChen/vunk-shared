@@ -1,13 +1,15 @@
 {
   "name": "@lib-env/build-utils",
   "private": true,
-  "types": "./dist/index.d.ts",
+  "type": "module",
   "exports": {
     ".": {
       "import": "./dist/index.mjs",
       "require": "./dist/index.cjs"
     }
   },
+  "main": "./dist/index.cjs",
+  "files": ["dist"],
   "scripts": {
     "build": "unbuild",
     "dev": "pnpm run stub",
