@@ -1,6 +1,8 @@
 import type { AliasOptions, UserConfig } from 'vite'
 import path from 'node:path'
-import { fixPath } from '@lib-env/build-utils'
+// import { fixPath } from '@lib-env/build-utils'
+
+
 
 import { packagesDir, workRoot } from '@lib-env/path'
 import vue from '@vitejs/plugin-vue'
@@ -18,6 +20,9 @@ import vike from 'vike/plugin'
 import { defineConfig, loadEnv } from 'vite'
 import Inspect from 'vite-plugin-inspect'
 import { appRoot, srcRoot } from './path.config'
+import { LIB_ALIAS, LIB_NAME } from '@lib-env/build-constants'
+
+export const fixPath = (id: string) => id.replaceAll(`${LIB_ALIAS}`, LIB_NAME)
 
 const alias: AliasOptions = [
   {
