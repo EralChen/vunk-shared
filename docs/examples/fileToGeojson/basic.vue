@@ -2,7 +2,6 @@
 import { fileToGeojson, gdalConfig } from '@vunk-shared/gis/browser/gdal'
 import { ref, shallowRef } from 'vue'
 import type { FeatureCollection } from 'geojson'
-import { VkJsonEditor } from '@vunk/skzz/components/json-editor'
 import workerUrl from 'gdal3.js/dist/package/gdal3.js?url'
 import dataUrl from 'gdal3.js/dist/package/gdal3WebAssembly.data?url'
 import wasmUrl from 'gdal3.js/dist/package/gdal3WebAssembly.wasm?url'
@@ -46,10 +45,7 @@ const handleFile = (e: Event) => {
 
   <el-dialog v-model="dialog">
     <div h-450px>
-      <VkJsonEditor
-        class="h-full"
-        :model-value="geojson"
-      ></VkJsonEditor>
+      {{  geojson }}
     </div>
   </el-dialog>
 </template>

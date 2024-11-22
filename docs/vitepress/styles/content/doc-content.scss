@@ -4,7 +4,7 @@
 .doc-content-wrapper {
   --vp-content-width: 800px;
 
-  padding: 32px 16px 96px;
+  padding: 48px 36px 48px 48px;
 
   .doc-content-container {
     .doc-content {
@@ -17,10 +17,10 @@
   }
 
   @include respond-to('md') {
-    padding: 48px 32px 42px;
+    padding: 48px;
   }
   @include respond-to('lg') {
-    padding: 64px 32px 42px;
+    padding: 64px 64px 42px;
   }
   @include respond-to('xxl') {
     padding: 64px 0 42px 64px;

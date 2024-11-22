@@ -7,10 +7,17 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
-    AlgoliaSearchBox: typeof import('./src/components/AlgoliaSearchBox.vue')['default']
+    AlgoliaSearchBox: typeof import('./src/components/AlgoliaSearchBox/index.vue')['default']
+    Core: typeof import('./src/components/routes-menu-content/src/item/core/index.vue')['default']
+    IconExpand: typeof import('./src/components/icon-expand/index.vue')['default']
+    IconFold: typeof import('./src/components/icon-fold/index.vue')['default']
+    IconSearch: typeof import('./src/components/icon-search/index.vue')['default']
+    IRiCodeLine: typeof import('~icons/ri/code-line')['default']
+    Item: typeof import('./src/components/routes-menu-content/src/item/index.vue')['default']
     MenuLink: typeof import('./src/components/MenuLink/index.vue')['default']
     PageX: typeof import('./src/components/PageX/index.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+    Src: typeof import('./src/components/routes-menu-content/src/index.vue')['default']
   }
 }
