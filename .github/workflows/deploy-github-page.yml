@@ -7,30 +7,39 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    # 使用 Windows 环境
+    runs-on: windows-latest
 
     steps:
+    # 检出代码
     - uses: actions/checkout@v4
 
+    # 安装依赖
     - name: Install dependencies
-      run: | 
+      run: |
         npm install -g pnpm
         pnpm install
+      shell: pwsh # 使用 PowerShell
 
+    # 构建
     - name: Build
-      run: cd docs && npm run build
+      run: npm run docs:build
       timeout-minutes: 30
       env:
         NODE_OPTIONS: --max-old-space-size=8192
-    
+      shell: pwsh
 
-    - name: copy readme
-      run: cp ./README.md ./docs/dist/client
+    # 复制 README
+    - name: Copy README
+      run: Copy-Item -Path .\README.md -Destination .\docs\dist\client -Force
+      shell: pwsh
 
-    - name: copy LICENSE
-      run: cp ./LICENSE ./docs/dist/client
+    # 复制 LICENSE
+    - name: Copy LICENSE
+      run: Copy-Item -Path .\LICENSE -Destination .\docs\dist\client -Force
+      shell: pwsh
 
-
+    # 部署到 GitHub Pages
     - name: Deploy
       uses: JamesIves/github-pages-deploy-action@v4.3.4
       with:
@@ -40,8 +49,8 @@ jobs:
         commit-message: website deploy
         repository-name: EralChen/vunk-shared
         force: true
-        
 
+    # 清理构建产物
     - name: Cleanup
-      run: rm -rf docs/dist
- 
+      run: Remove-Item -Recurse -Force .\docs\dist
+      shell: pwsh
