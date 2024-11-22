@@ -11,5 +11,10 @@ export default eslint({
     '@stylistic/indent': ['error', 2],
     '@stylistic/space-before-function-paren': ['error', 'always'],
   },
-  ignores: ['node_modules', 'dist', '*.md'],
+  ignores: [
+    'node_modules', 
+    'dist', 
+    '*.md' , 
+    'docs/vite.config.mts'
+  ],
 })
