@@ -86,6 +86,9 @@ export default defineConfig(async ({ mode }) => {
       
       vike({
         prerender: true,
+        redirects: {
+          '/': '/zh-CN/guide/introduction',
+        }
       }),
 
       vue({
