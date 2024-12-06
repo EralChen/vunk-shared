@@ -1,6 +1,6 @@
 import { fromMarkdown } from 'mdast-util-from-markdown'
 import { scriptSetupRE } from '@vunk-shared/regexp/vue'
-import type { Html } from 'mdast-util-from-markdown/lib'
+import type { Html } from 'mdast'
 
 
 export interface MarkdownSetupInjectSettings {
