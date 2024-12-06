@@ -6,7 +6,6 @@ import {
   externalUrlRE,
 } from '@vunk-shared/regexp'
 import { MarkdownEnv } from 'vitepress'
-import path from 'path'
 import { isBrowser } from '@vunk-shared/browser'
 
 
@@ -63,7 +62,8 @@ export const linkPlugin = (
 
       /* for vike page +Page */
       const filePath = new URL(url, 'http://a.com').pathname
-      const fileBasename = path.basename(filePath, '.md')
+      const fileBasename = filePath.split('/').pop()
+        ?.replace('.md', '') || ''
 
       const isEntry = fileBasename === '+Page'
       // for vikepage 
