@@ -1,12 +1,17 @@
 
 
 import type MarkdownIt from 'markdown-it'
-import { URL } from 'url'
+import { URL as nodeURL } from 'url'
 import {
   externalUrlRE,
 } from '@vunk-shared/regexp'
 import { MarkdownEnv } from 'vitepress'
 import path from 'path'
+import { isBrowser } from '@vunk-shared/browser'
+
+
+const URL = isBrowser ? window.URL : nodeURL
+
 
 const indexRE = /(^|.*\/)index.md(#?.*)$/i
 
