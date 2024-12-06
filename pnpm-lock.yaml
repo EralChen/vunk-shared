@@ -382,10 +382,10 @@ importers:
   packages/vite:
     dependencies:
       mdast-util-from-markdown:
-        specifier: ^2.0.1
+        specifier: ^2.0.2
         version: 2.0.2
       mdast-util-to-markdown:
-        specifier: ^2.1.0
+        specifier: ^2.1.2
         version: 2.1.2
       unocss-preset-vunk:
         specifier: ^1.0.4
