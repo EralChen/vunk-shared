@@ -108,7 +108,7 @@ export default defineConfig(async ({ mode }) => {
           root: path.resolve(workRoot, 'packages'),
         },
         propsContainerPluginSettings: {
-          root: path.resolve(workRoot, 'packages/components'),
+          root: path.resolve(workRoot, 'packages'),
         },
       }),
 

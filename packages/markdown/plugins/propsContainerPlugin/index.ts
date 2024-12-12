@@ -24,6 +24,7 @@ export function propsContainerPlugin (
   const klass = 'props'
 
   const emptyStart = '<!-- '
+  const emptyEnd = ' -->\n'
 
 
   const args = [
@@ -68,7 +69,11 @@ export function propsContainerPlugin (
             ...propsTableData.map((row) => {
               let prop = row.prop
 
-              row.type = row.type.replaceAll('|', '\\|')
+              row.type = row.type
+                .replaceAll('|', '\\|')
+                .replaceAll('<', '&lt;')
+                .replaceAll('>', '&gt;')
+
 
               if (row.link) {
                 prop = `[${prop}](${row.link})`
@@ -85,7 +90,7 @@ export function propsContainerPlugin (
   
           return md.render(renderStr) + emptyStart
         } else {
-          return ` -->\n`
+          return emptyEnd
         }
       },
     },

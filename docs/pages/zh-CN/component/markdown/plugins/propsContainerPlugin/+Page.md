@@ -28,9 +28,11 @@ markdown/components/DemoContainer/src/ctx.ts
 :::props
 >>>leading
 |leading|-|-|-|
+|leading2|-|-|-|
 >>>
 markdown/components/DemoContainer/src/ctx.ts
 >>>trailing
 |trailing|-|-|-|
+|trailing2|-|-|-|
 >>>
 :::

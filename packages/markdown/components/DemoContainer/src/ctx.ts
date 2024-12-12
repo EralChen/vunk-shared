@@ -1,4 +1,6 @@
-
+import { NormalObject } from "@vunk-shared/types";
+import { PropType } from "vue";
+import { Func } from '@vunk/core'
 
 export const props = {
   /**
@@ -53,4 +55,9 @@ export const props = {
     type: String,
     default: '',
   },
+
+  callback: {
+    type: Function as PropType<Func<NormalObject>>,
+    default: undefined
+  }
 }

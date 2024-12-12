@@ -53,7 +53,7 @@ export function getSubcontentInContainer (
     subToken = tokens[subTokenIndex + 4]
 
     if (subToken.type === 'inline') {
-      const subsRE = new RegExp(`^${label}(.*)\n(.+)`)
+      const subsRE = new RegExp(`^${label}(.*)\n([\\s\\S]+)`, 'm')
       const m = subToken.content.match(subsRE)
       const content = m && m.length > 2 ? m[2] : ''
       if (content) { 
