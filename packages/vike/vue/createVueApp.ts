@@ -4,7 +4,7 @@
 export { createVueApp }
 export type { ChangePage }
 
-import { type App, createApp, createSSRApp, h, nextTick, shallowRef, shallowReactive, Component, Fragment } from 'vue'
+import { type App, createApp, createSSRApp, h, nextTick, shallowRef, shallowReactive, Component, Fragment, VNode } from 'vue'
 import type { PageContext } from 'vike/types'
 import { setPageContext } from 'vike-vue/usePageContext'
 import { callCumulativeHooks } from '../plain/src/callCumulativeHooks'
@@ -62,10 +62,15 @@ async function createVueApp (
   } else {
     RootComponent = () => {
 
-      console.log('RootComponent', pageContext.config.Head)
+      let Head:VNode[] = []
+      if (pageContext.config.Head) {
+        Head = Array.isArray(pageContext.config.Head) 
+          ? pageContext.config.Head 
+          : [pageContext.config.Head];
+      }
       const HeadElements = [
         // Added by +Head
-        ...(pageContext.config.Head ?? []),
+        ...Head,
         // Added by useConfig()
         ...(pageContext._configFromHook?.Head ?? []),
       ].map((HeadComponent) => h(HeadComponent))
