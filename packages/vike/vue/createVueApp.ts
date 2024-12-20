@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
  
-// ref: https://github.com/vikejs/vike-vue/blob/main/packages/vike-vue/src/renderer/createVueApp.ts
+// ref: https://github.com/vikejs/vike-vue/blob/main/packages/vike-vue/src/integration/createVueApp.ts
 export { createVueApp }
 export type { ChangePage }
 
@@ -61,6 +61,8 @@ async function createVueApp (
     }
   } else {
     RootComponent = () => {
+
+      console.log('RootComponent', pageContext.config.Head)
       const HeadElements = [
         // Added by +Head
         ...(pageContext.config.Head ?? []),

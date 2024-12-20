@@ -1,6 +1,6 @@
 {
   "name": "@vunk/shared",
-  "version": "0.5.43",
+  "version": "0.5.44",
   "description": "",
   "main": "index.ts",
   "scripts": {

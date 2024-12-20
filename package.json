@@ -21,9 +21,9 @@
 		"tsx": "^4.19.2",
 		"unbuild": "^2.0.0",
 		"unocss": "latest",
-		"vike": "^0.4.204",
-		"vike-vue": "^0.8.5",
-		"vite": "^5.4.11",
+		"vike": "^0.4.210",
+		"vike-vue": "^0.8.6",
+		"vite": "^6.0.4",
 		"vite-plugin-external": "^4.3.1",
 		"vite-plugin-vue-devtools": "^7.6.4",
 		"vitest": "^2.1.5"

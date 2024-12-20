@@ -1,18 +1,17 @@
-/* eslint-disable no-console */
 // https://vike.dev/onRenderHtml
 export { onRenderHtml }
 
-import { renderToNodeStream, renderToString, renderToWebStream, type SSRContext } from 'vue/server-renderer'
 import { dangerouslySkipEscape, escapeInject } from 'vike/server'
-import { getHeadSetting } from '../../plain/src/getHeadSetting'
 import type { OnRenderHtmlAsync, PageContextServer } from 'vike/types'
-import { createVueApp } from '../createVueApp'
 import { App } from 'vue'
 import { callCumulativeHooks } from '../../plain/src/callCumulativeHooks'
 import type { PageContextInternal } from 'vike-vue/dist/types/PageContext'
 import { TagAttributes } from 'vike-vue/dist/utils/getTagAttributesString'
 import { getTagAttributesString } from '../../plain/src/getTagAttributesString'
 import { assert } from '../../plain/src/assert'
+import { type SSRContext, renderToNodeStream, renderToString, renderToWebStream } from 'vue/server-renderer'
+import { getHeadSetting } from '../../plain/src/getHeadSetting'
+import { createVueApp } from '../createVueApp'
 
 const onRenderHtml: OnRenderHtmlAsync = async (
   pageContext: PageContextServer & PageContextInternal,
@@ -53,7 +52,7 @@ const onRenderHtml: OnRenderHtmlAsync = async (
 }
 
 export type PageHtmlStream = ReturnType<typeof renderToNodeStream> | ReturnType<typeof renderToWebStream>
-async function getPageHtml (pageContext: PageContextServer) {
+async function getPageHtml(pageContext: PageContextServer) {
   let pageHtml: ReturnType<typeof dangerouslySkipEscape> | PageHtmlStream | string = ''
   pageContext.ssrContext = {}
   const fromHtmlRenderer: PageContextServer['fromHtmlRenderer'] = {}
@@ -72,7 +71,7 @@ async function getPageHtml (pageContext: PageContextServer) {
   //   - https://github.com/vikejs/vike-vue/issues/141
   await callCumulativeHooks(pageContext.config.onBeforeRenderHtml, pageContext)
 
-  if (!!pageContext.Page) {
+  if (pageContext.Page) {
     assert(app)
 
     if (!pageContext.config.stream) {
@@ -98,7 +97,7 @@ async function getPageHtml (pageContext: PageContextServer) {
   return { pageHtml, fromHtmlRenderer }
 }
 
-async function getHeadHtml (pageContext: PageContextServer & PageContextInternal) {
+async function getHeadHtml(pageContext: PageContextServer & PageContextInternal) {
   pageContext._headAlreadySetWrapper = { val: true }
 
   const title = getHeadSetting<string | null>('title', pageContext)
@@ -131,7 +130,7 @@ async function getHeadHtml (pageContext: PageContextServer & PageContextInternal
   return headHtml
 }
 
-async function getBodyHtmlBoundary (pageContext: PageContextServer) {
+async function getBodyHtmlBoundary(pageContext: PageContextServer) {
   const bodyHtmlBegin = dangerouslySkipEscape(
     (await callCumulativeHooks(pageContext.config.bodyHtmlBegin, pageContext)).join(''),
   )
@@ -144,7 +143,7 @@ async function getBodyHtmlBoundary (pageContext: PageContextServer) {
   return { bodyHtmlBegin, bodyHtmlEnd }
 }
 
-function getTagAttributes (pageContext: PageContextServer) {
+function getTagAttributes(pageContext: PageContextServer) {
   let lang = getHeadSetting<string | null>('lang', pageContext)
   // Don't set `lang` to its default value if it's `null` (so that users can set it to `null` in order to remove the default value)
   if (lang === undefined) lang = 'en'
@@ -157,13 +156,13 @@ function getTagAttributes (pageContext: PageContextServer) {
 
   return { htmlAttributesString, bodyAttributesString }
 }
-function mergeTagAttributesList (tagAttributesList: TagAttributes[] = []) {
+function mergeTagAttributesList(tagAttributesList: TagAttributes[] = []) {
   const tagAttributes: TagAttributes = {}
   tagAttributesList.forEach((tagAttrs) => Object.assign(tagAttributes, tagAttrs))
   return tagAttributes
 }
 
-async function renderToStringWithErrorHandling (app: App, ctx?: SSRContext) {
+async function renderToStringWithErrorHandling(app: App, ctx?: SSRContext) {
   let returned = false
   let err: unknown
   // Workaround: Vue's renderToString() swallows errors in production https://github.com/vuejs/core/issues/7876
@@ -181,7 +180,7 @@ async function renderToStringWithErrorHandling (app: App, ctx?: SSRContext) {
   return appHtml
 }
 
-function renderToNodeStreamWithErrorHandling (app: App, ctx?: SSRContext) {
+function renderToNodeStreamWithErrorHandling(app: App, ctx?: SSRContext) {
   let returned = false
   let err: unknown
   app.config.errorHandler = (err_) => {
@@ -197,7 +196,7 @@ function renderToNodeStreamWithErrorHandling (app: App, ctx?: SSRContext) {
   return appHtml
 }
 
-function renderToWebStreamWithErrorHandling (app: App, ctx?: SSRContext) {
+function renderToWebStreamWithErrorHandling(app: App, ctx?: SSRContext) {
   let returned = false
   let err: unknown
   app.config.errorHandler = (err_) => {
@@ -214,7 +213,7 @@ function renderToWebStreamWithErrorHandling (app: App, ctx?: SSRContext) {
 }
 
 export type Viewport = 'responsive' | number | null
-function getViewportTag (viewport: Viewport | undefined): string {
+function getViewportTag(viewport: Viewport | undefined): string {
   if (viewport === 'responsive' || viewport === undefined) {
     // `user-scalable=no` isn't recommended anymore:
     //   - https://stackoverflow.com/questions/22354435/to-user-scalable-no-or-not-to-user-scalable-no/22544312#comment120949420_22544312
