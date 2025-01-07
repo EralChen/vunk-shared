@@ -4,11 +4,13 @@ import {
   Project, 
   ObjectLiteralExpression, PropertyAssignment, AsExpression, SyntaxKind, 
   TypeReferenceNode
+  
  } from 'ts-morph'
  import { 
   getValueFromObjectLiteralExpression,
   getTypeFromAsExpression,
-  parseCommentFromRanges
+  parseCommentFromRanges,
+  emptyObjectLiteralExpression
 } from '@vunk-shared/typescript/morph'
 import { getCalledValueFromExpression } from '@vunk-shared/typescript/morph/getCalledValueFromExpression'
 import { NormalObject } from '@vunk-shared/types'
@@ -45,9 +47,19 @@ test('propsContainerPlugin.test', () => {
   const infoList = props.getProperties().reduce((a, prop) => {
     if (prop instanceof PropertyAssignment) {
       const name = prop.getName()
-      const obje =  prop.getInitializerIfKindOrThrow(
+      let obje =  prop.getInitializerIfKind(
         SyntaxKind.ObjectLiteralExpression
-      )
+      ) ?? emptyObjectLiteralExpression
+
+      if (!obje) { // key: null 的情况 obje 初始化为 {}
+        obje = project
+          .createSourceFile('temp.ts', 'const a = {}')
+          .getVariableDeclarationOrThrow('a')
+          .getInitializerIfKindOrThrow(
+            SyntaxKind.ObjectLiteralExpression
+          )
+      }
+     
 
       const requiredInfo = getValueFromObjectLiteralExpression(obje, 'required')
       const required = requiredInfo.initializer?.getKindName() === 'TrueKeyword'
@@ -96,6 +108,8 @@ test('propsContainerPlugin.test', () => {
     }
     return a
   }, [] as PropsTableColumn[])
+
+  console.log(infoList)
 
 
 

@@ -23,6 +23,10 @@ export const props = {
   el: {
     type: Object as PropType<HTMLDivElement>,
     required: true
-  }
+  },
+
+  testClass: null,
+
+  modelClass: null
 
 }
