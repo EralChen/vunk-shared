@@ -98,7 +98,10 @@ function genRoutes (
 /* menu event */
 onMounted(() => {
   pathname.value = window.location.pathname
-  initOpenMenu()
+  setTimeout(() => {
+    initOpenMenu()
+  }, 400)
+
 })
 function initOpenMenu () {
   // const testIndex = route.matched.map(item => item.path)
