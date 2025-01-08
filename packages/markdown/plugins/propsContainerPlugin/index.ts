@@ -14,6 +14,15 @@ export interface PropsContainerPluginSettings {
   root: string
 }
 
+
+const encodeMarkdownTd = (str: string) => {
+  return str
+    .replaceAll('|', '\\|')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('\n', '<br/>')
+}
+
 export function propsContainerPlugin (
   md: MarkdownIt,
   options?: PropsContainerPluginSettings,
@@ -69,10 +78,8 @@ export function propsContainerPlugin (
             ...propsTableData.map((row) => {
               let prop = row.prop
 
-              row.type = row.type
-                .replaceAll('|', '\\|')
-                .replaceAll('<', '&lt;')
-                .replaceAll('>', '&gt;')
+              row.type = encodeMarkdownTd(row.type)
+                
 
 
               if (row.link) {
@@ -81,7 +88,11 @@ export function propsContainerPlugin (
               if (row.required) {
                 prop += '*'
               }
-              row.isProperty && (prop = `:${prop}`)
+              row.isMember && (prop = `:${prop}`)
+
+              row.description = encodeMarkdownTd(row.description)
+              row.default = encodeMarkdownTd(row.default)
+
               return `|${prop}|${row.type}|${row.default}|${row.description}|`
             }),
             `${trailingStr}`,

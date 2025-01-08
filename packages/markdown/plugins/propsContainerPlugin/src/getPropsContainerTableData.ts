@@ -26,7 +26,7 @@ export interface PropsContainerTableRow {
   /**
    * 是否是双向绑定属性
    */
-  isProperty: boolean
+  isMember: boolean
 
   /**
    * 描述
@@ -120,13 +120,11 @@ export function getPropsContainerTableData (options: {
       a.push({
         prop: name,
         type,
-        default: defaultValue,
-        description: commentInfo.description  
-          || commentInfo.default 
-          || '',
+        default: commentInfo.default || defaultValue,
+        description: commentInfo.description || '',
         link: commentInfo.link ?? '',
         required,
-        isProperty: 'property' in commentInfo,
+        isMember: 'member' in commentInfo,
       
       
       })

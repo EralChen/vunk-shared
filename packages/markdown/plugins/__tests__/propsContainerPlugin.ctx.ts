@@ -18,7 +18,7 @@ export const props = {
   /**
    * @link https://developer.mozilla.org/docs/Web/API/HTMLDivElement
    * @description The HTMLDivElement interface provides special properties (beyond those of the regular HTMLElement interface it also has available to it by inheritance) for manipulating div elements.
-   * @property
+   * @member
    */
   el: {
     type: Object as PropType<HTMLDivElement>,
@@ -27,6 +27,19 @@ export const props = {
 
   testClass: null,
 
-  modelClass: null
+  modelClass: null,
+
+
+
+  readApi: {
+    type: Function,
+    default: (() => {
+      return {
+        rows: [],
+        total: 0,
+      }
+    }),
+  }
+   
 
 }

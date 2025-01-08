@@ -14,21 +14,8 @@ import {
 } from '@vunk-shared/typescript/morph'
 import { getCalledValueFromExpression } from '@vunk-shared/typescript/morph/getCalledValueFromExpression'
 import { NormalObject } from '@vunk-shared/types'
+import { PropsContainerTableRow } from '../propsContainerPlugin/src/getPropsContainerTableData'
 
-
-
-interface PropsTableColumn {
-  prop: string
-
-  type: string
-  default: string
-  required: boolean
-
-  isProperty: boolean
-
-  description: string
-  link: string
-}
 
 
 
@@ -47,22 +34,14 @@ test('propsContainerPlugin.test', () => {
   const infoList = props.getProperties().reduce((a, prop) => {
     if (prop instanceof PropertyAssignment) {
       const name = prop.getName()
-      let obje =  prop.getInitializerIfKind(
-        SyntaxKind.ObjectLiteralExpression
-      ) ?? emptyObjectLiteralExpression
+      const obje =  prop.getInitializerIfKind(
+        SyntaxKind.ObjectLiteralExpression,
+      )  ?? emptyObjectLiteralExpression
 
-      if (!obje) { // key: null 的情况 obje 初始化为 {}
-        obje = project
-          .createSourceFile('temp.ts', 'const a = {}')
-          .getVariableDeclarationOrThrow('a')
-          .getInitializerIfKindOrThrow(
-            SyntaxKind.ObjectLiteralExpression
-          )
-      }
-     
 
       const requiredInfo = getValueFromObjectLiteralExpression(obje, 'required')
-      const required = requiredInfo.initializer?.getKindName() === 'TrueKeyword'
+      const required = requiredInfo.value === 'true'
+
 
 
       const typeInfo = getValueFromObjectLiteralExpression(obje, 'type')
@@ -71,13 +50,13 @@ test('propsContainerPlugin.test', () => {
         type = getTypeFromAsExpression(
           typeInfo.initializer, 
           {
-            typeReferenceTransform(tr) {
+            typeReferenceTransform (tr) {
               return tr.getTypeName()
                 .getText() === 'PropType' 
-                  ? tr.getTypeArguments()[0] 
-                  : tr
+                ? tr.getTypeArguments()[0] 
+                : tr
             },
-          }
+          },
         ).value
       }
 
@@ -88,7 +67,7 @@ test('propsContainerPlugin.test', () => {
       }
 
       const commentInfo = parseCommentFromRanges(
-        prop.getLeadingCommentRanges()
+        prop.getLeadingCommentRanges(),
       ).reduce((a, item) => {
         for (const key in item) {
           a[key] = item[key]
@@ -99,15 +78,16 @@ test('propsContainerPlugin.test', () => {
       a.push({
         prop: name,
         type,
-        default: defaultValue,
-        description: commentInfo.description ?? '',
+        default: commentInfo.default || defaultValue,
+        description: commentInfo.description || '',
         link: commentInfo.link ?? '',
         required,
-        isProperty: 'property' in commentInfo,
+        isMember: 'member' in commentInfo,
       })
     }
     return a
-  }, [] as PropsTableColumn[])
+  }, [] as PropsContainerTableRow[])
+  
 
   console.log(infoList)
 

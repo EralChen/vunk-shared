@@ -39,7 +39,7 @@ export const props = {
   },
 
   /**
-   * jsonstring 
+   * @description jsonstring 
    *  - key: filepath 相对 demoRoot 的路径
    *  - value: 对应的 md.render 后的文件代码
    */
