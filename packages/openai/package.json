@@ -1,0 +1,10 @@
+{
+  "name": "@vunk-shared/openai",
+  "private": true,
+  "scripts": {
+    "build": "gulp -f gulpfile.ts"
+  },
+  "dependencies": {
+    "openai": "^4.83.0"
+  }
+}
