@@ -1,12 +1,12 @@
 {
   "name": "@vunk/shared",
-  "version": "0.5.49",
+  "version": "0.5.50",
   "description": "",
+  "author": "",
+  "license": "MIT",
+  "keywords": [],
   "main": "index.ts",
   "scripts": {
     "build": "gulp -f gulpfile.ts"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "MIT"
+  }
 }
