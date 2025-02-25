@@ -4,9 +4,6 @@
   "scripts": {
     "build": "gulp -f gulpfile.ts"
   },
-  "devDependencies": {
-    "@types/markdown-it-container": "^2.0.9"
-  },
   "dependencies": {
     "@shikijs/core": "^1.6.0",
     "@shikijs/transformers": "^1.6.0",
@@ -16,5 +13,8 @@
     "shiki": "^1.6.0",
     "ts-morph": "latest",
     "vitepress": "1.1.4"
+  },
+  "devDependencies": {
+    "@types/markdown-it-container": "^2.0.9"
   }
 }
