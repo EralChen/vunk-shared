@@ -1,69 +1,50 @@
 <script lang="ts" setup>
-import type { FormInstance, FormRules } from 'element-plus'
-import { createKnowledgeStartPrompt } from '@vunk-shared/openai/prompt'
-import { ElMessage } from 'element-plus'
+import type { __VkfForm } from '@vunk/form'
+import { createKnowledgeStartPrompt } from '@vunk-shared/ai/prompt'
+import { setData } from '@vunk/core'
+import { VkfForm } from '@vunk/form'
 import { ref } from 'vue'
 
-const formRef = ref<FormInstance>()
-const loading = ref(false)
 const result = ref('')
 
 const formData = ref({
-  subject: '',
-  weeks: 1,
+  subject: 'Javascript 的 LangGraph',
+  weeks: 3,
 })
 
-const rules: FormRules = {
-  subject: [{ required: true, message: '请输入学科', trigger: 'blur' }],
-  weeks: [{ required: true, message: '请输入周数', trigger: 'blur' }],
-}
+const formItems: __VkfForm.FormItem[] = [
+  {
+    templateType: 'VkfInput',
+    label: '学科',
+    prop: 'subject',
+  },
+  {
+    templateType: 'VkfInputNumber',
+    label: '周数',
+    prop: 'weeks',
+    min: 1,
+    max: 52,
+  },
+]
 
-async function handleSubmit (form: FormInstance | undefined) {
-  if (!form)
-    return
-
-  try {
-    await form.validate()
-    loading.value = true
-    const prompt = createKnowledgeStartPrompt(formData.value)
-    result.value = prompt
-  }
-  catch {
-    ElMessage.error('表单验证失败')
-  }
-  finally {
-    loading.value = false
-  }
+async function handleSubmit () {
+  const prompt = createKnowledgeStartPrompt(formData.value)
+  result.value = prompt
 }
 </script>
 
 <template>
-  <el-form
-    ref="formRef"
-    :model="formData"
-    :rules="rules"
-    label-width="120px"
-    class="form"
+  <VkfForm
+    :form-items="formItems"
+    :data="formData"
+    @set-data="setData(formData, $event)"
   >
-    <el-form-item label="学科" prop="subject">
-      <el-input v-model="formData.subject" placeholder="请输入学科，如：JavaScript" />
-    </el-form-item>
-
-    <el-form-item label="周数" prop="weeks">
-      <el-input-number
-        v-model="formData.weeks"
-        :min="1"
-        :max="52"
-        placeholder="请输入周数"
-      />
-    </el-form-item>
-
     <el-form-item>
-      <el-button type="primary" :loading="loading" @click="handleSubmit(formRef)">
+      <el-button type="primary" @click="handleSubmit">
         生成提示词
       </el-button>
     </el-form-item>
-  </el-form>
+  </VkfForm>
 
   <div v-if="result" class="result">
     <h3>生成的提示词：</h3>
@@ -72,15 +53,6 @@ async function handleSubmit (form: FormInstance | undefined) {
 </template>
 
 <style scoped>
-.form {
-  max-width: 600px;
-  margin-bottom: 20px;
-}
-
-.result {
-  margin-top: 20px;
-}
-
 .result pre {
   white-space: pre-wrap;
   background: #f5f7fa;

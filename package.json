@@ -18,6 +18,7 @@
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.1",
     "@vueuse/core": "^11.3.0",
+		"@vunk-shared/ai": "workspace:*",
     "@vunk-shared/browser": "workspace:*",
     "@vunk-shared/build": "workspace:*",
     "@vunk-shared/class": "workspace:*",
@@ -29,7 +30,6 @@
     "@vunk-shared/markdown": "workspace:*",
     "@vunk-shared/node": "workspace:*",
     "@vunk-shared/object": "workspace:*",
-    "@vunk-shared/openai": "workspace:*",
     "@vunk-shared/promise": "workspace:*",
     "@vunk-shared/regexp": "workspace:*",
     "@vunk-shared/string": "workspace:*",

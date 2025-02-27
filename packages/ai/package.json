@@ -1,5 +1,5 @@
 {
-  "name": "@vunk-shared/openai",
+  "name": "@vunk-shared/ai",
   "private": true,
   "scripts": {
     "build": "gulp -f gulpfile.ts"

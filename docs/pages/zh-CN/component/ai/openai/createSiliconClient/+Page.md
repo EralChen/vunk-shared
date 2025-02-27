@@ -3,7 +3,7 @@
 ## Source
 
 :::source
-openai/createSiliconClient.ts
+ai/openai/createSiliconClient.ts
 :::
 
 ## Example

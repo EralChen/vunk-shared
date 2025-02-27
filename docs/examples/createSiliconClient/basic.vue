@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { createSiliconClient } from '@vunk-shared/openai'
-import { BubbleList, Sender, useXAgent, useXChat } from 'ant-design-x-vue'
+import { createSiliconClient } from '@vunk-shared/ai/openai'
+import { Sender, useXAgent, useXChat } from 'ant-design-x-vue'
 import { ref } from 'vue'
 
 const client = createSiliconClient({

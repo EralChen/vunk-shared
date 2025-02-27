@@ -5,7 +5,7 @@ ref: [XStream](https://github.com/ant-design/x/blob/main/components/x-stream/ind
 ## Source
 
 :::source
-openai/XStream
+ai/openai/XStream
 :::
 
 ## mock 可读流示例

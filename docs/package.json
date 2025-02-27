@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "@vunk/core": "^1.2.1",
+    "@vunk/form": "^2.5.5",
     "@vunk/gsap": "0.0.0-alpha.3",
     "@vunk/plus": "^0.2.0",
     "ant-design-vue": "^4.2.6",

@@ -1,140 +1,94 @@
 <script lang="ts" setup>
 import type { FirstParameter } from '@vunk-shared/types'
-import type { FormInstance, FormRules } from 'element-plus'
-import { Delete } from '@element-plus/icons-vue'
-import { createProjectStartPrompt } from '@vunk-shared/openai/prompt'
-import { ElMessage } from 'element-plus'
+import type { __VkfButton, __VkfSelect } from '@vunk/form'
+import { createProjectStartPrompt } from '@vunk-shared/ai/prompt'
+import { setData } from '@vunk/core'
+import { VkfForm, VkfFormItemRendererTemplate } from '@vunk/form'
+import { VkfInputCollection } from '@vunk/form/components/input-collection'
 import { ref } from 'vue'
 
 type Row = FirstParameter<typeof createProjectStartPrompt>
 
-const formRef = ref<FormInstance>()
-const loading = ref(false)
 const result = ref('')
-
 const formData = ref({
-  projectName: '',
-  keywords: [''],
+  projectName: '3D 打砖块',
+  keywords: ['Unity'],
   userSkills: [{
-    skill: '',
-    level: '入门',
+    skill: 'TypeScript',
+    level: '高级',
   }],
 } as Row)
+const formItems = [
+  {
+    templateType: 'VkfInput',
+    label: '项目名称',
+    prop: 'projectName',
+  },
+  {
+    templateType: 'VkfSelect',
+    label: '关键词',
+    prop: 'keywords',
+    multiple: true,
+    filterable: true,
+    allowCreate: true,
+  } as __VkfSelect.Source,
+  {
+    templateType: 'VkfInputCollection',
+    label: '用户技能',
+    prop: 'userSkills',
+    columns: [
+      {
+        templateType: 'VkfInput',
+        label: '技能',
+        prop: 'skill',
+      },
+      {
+        templateType: 'VkfSelect',
+        label: '熟练度',
+        prop: 'level',
+        options: [
+          { label: '入门', value: '入门' },
+          { label: '熟练', value: '熟练' },
+          { label: '专家', value: '专家' },
+        ],
+      },
+    ],
+  },
 
-const rules = ref<FormRules>({
-  'projectName': [
-    { required: true, message: '请输入项目名称', trigger: 'blur' },
-  ],
-  'keywords': [
-    { required: true, message: '请至少添加一个关键词', trigger: 'blur' },
-  ],
-  'keywords.0': [
-    { required: true, message: '关键词不能为空', trigger: 'blur' },
-  ],
-  'userSkills': [
-    { required: true, message: '请至少添加一个技能', trigger: 'blur' },
-  ],
-  'userSkills.0.skill': [
-    { required: true, message: '技能名称不能为空', trigger: 'blur' },
-  ],
-})
+  {
+    templateType: 'VkfButton',
+    buttonLabel: '生成提示词',
+    onClick: handleSubmit,
+    type: 'primary',
+  } as __VkfButton.Source,
+]
 
-function addKeyword () {
-  formData.value.keywords.push('')
-}
-
-function removeKeyword (index: number) {
-  formData.value.keywords.splice(index, 1)
-}
-
-function addSkill () {
-  formData.value.userSkills.push({
-    skill: '',
-    level: '入门',
-  })
-}
-
-function removeSkill (index: number) {
-  formData.value.userSkills.splice(index, 1)
-}
-
-async function handleSubmit (form: FormInstance | undefined) {
-  if (!form)
-    return
-
-  try {
-    await form.validate()
-    loading.value = true
-    const prompt = createProjectStartPrompt(formData.value)
-    result.value = prompt
-  }
-  catch {
-    ElMessage.error('表单验证失败')
-  }
-  finally {
-    loading.value = false
-  }
+async function handleSubmit () {
+  const prompt = createProjectStartPrompt(formData.value)
+  result.value = prompt
 }
 </script>
 
 <template>
-  <el-form
-    ref="formRef"
-    :model="formData"
-    :rules="rules"
-    label-width="120px"
-    class="form"
+  <VkfForm
+    :data="formData"
+    :form-items="formItems"
+    @set-data="setData(formData, $event)"
   >
-    <el-form-item label="项目名称" prop="projectName">
-      <el-input v-model="formData.projectName" placeholder="请输入项目名称" />
-    </el-form-item>
-
-    <el-form-item label="关键词">
-      <div v-for="(keyword, index) in formData.keywords" :key="index" class="keyword-item">
-        <el-form-item :prop="`keywords.${index}`" :rules="rules['keywords.0']">
-          <el-input v-model="formData.keywords[index]" placeholder="请输入关键词">
-            <template #append>
-              <el-button :disabled="formData.keywords.length === 1" @click="removeKeyword(index)">
-                <el-icon><Delete /></el-icon>
-              </el-button>
-            </template>
-          </el-input>
-        </el-form-item>
-      </div>
-      <el-button @click="addKeyword">
-        添加关键词
-      </el-button>
-    </el-form-item>
-
-    <el-form-item label="技能水平">
-      <div v-for="(skill, index) in formData.userSkills" :key="index" class="skill-item">
-        <div class="skill-inputs">
-          <el-form-item :prop="`userSkills.${index}.skill`" :rules="rules['userSkills.0.skill']" class="skill-name">
-            <el-input v-model="skill.skill" placeholder="请输入技能名称" />
-          </el-form-item>
-          <el-form-item :prop="`userSkills.${index}.level`" class="skill-level">
-            <el-select v-model="skill.level">
-              <el-option label="入门" value="入门" />
-              <el-option label="中级" value="中级" />
-              <el-option label="高级" value="高级" />
-            </el-select>
-          </el-form-item>
-          <el-button :disabled="formData.userSkills.length === 1" @click="removeSkill(index)">
-            <el-icon><Delete /></el-icon>
-          </el-button>
-        </div>
-      </div>
-      <el-button @click="addSkill">
-        添加技能
-      </el-button>
-    </el-form-item>
-
-    <el-form-item>
-      <el-button type="primary" :loading="loading" @click="handleSubmit(formRef)">
-        生成提示词
-      </el-button>
-    </el-form-item>
-  </el-form>
+    <template #rendererTemplate>
+      <VkfFormItemRendererTemplate
+        type="VkfInputCollection"
+      >
+        <template #default="{ props, value, input }">
+          <VkfInputCollection
+            :model-value="value"
+            v-bind="props"
+            @update:model-value="input"
+          ></VkfInputCollection>
+        </template>
+      </VkfFormItemRendererTemplate>
+    </template>
+  </VkfForm>
 
   <div v-if="result" class="result">
     <h3>生成的提示词：</h3>
@@ -143,43 +97,10 @@ async function handleSubmit (form: FormInstance | undefined) {
 </template>
 
 <style scoped>
-.form {
-  max-width: 600px;
-  margin-bottom: 20px;
-}
-
-.result {
-  margin-top: 20px;
-}
-
 .result pre {
   white-space: pre-wrap;
   background: #f5f7fa;
   padding: 15px;
   border-radius: 4px;
-}
-
-.keyword-item {
-  margin-bottom: 10px;
-}
-
-.skill-item {
-  margin-bottom: 10px;
-}
-
-.skill-inputs {
-  display: flex;
-  gap: 10px;
-  align-items: flex-start;
-}
-
-.skill-name {
-  flex: 2;
-  margin-bottom: 0;
-}
-
-.skill-level {
-  flex: 1;
-  margin-bottom: 0;
 }
 </style>
