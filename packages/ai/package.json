@@ -5,6 +5,8 @@
     "build": "gulp -f gulpfile.ts"
   },
   "dependencies": {
-    "openai": "^4.83.0"
+    "hmacsha1": "^1.0.0",
+    "openai": "^4.83.0",
+    "string-random": "^0.1.3"
   }
 }
