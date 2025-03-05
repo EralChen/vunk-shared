@@ -1,11 +1,17 @@
 <script lang="ts" setup>
-import { createSiliconClient } from '@vunk-shared/openai'
-import { BubbleList, Sender, useXAgent, useXChat } from 'ant-design-x-vue'
-import { ref } from 'vue'
+import { createSiliconClient } from '@vunk-shared/ai/openai'
+import { VkfInput } from '@vunk/form'
+import { Sender, useXAgent, useXChat } from 'ant-design-x-vue'
+import { ref, watchEffect } from 'vue'
 
+const apikey = ref('')
 const client = createSiliconClient({
   apiKey: '',
   dangerouslyAllowBrowser: true,
+})
+
+watchEffect(() => {
+  client.apiKey = apikey.value
 })
 
 const inputText = ref('')
@@ -48,6 +54,12 @@ function submit (message: string) {
   <pre>
     {{ messages }}
   </pre>
+
+  <VkfInput
+    v-model="apikey"
+    label="Your API Key"
+  >
+  </VkfInput>
 
   <Sender
     v-model:value="inputText"
