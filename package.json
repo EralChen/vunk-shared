@@ -18,7 +18,7 @@
   "dependencies": {
     "@element-plus/icons-vue": "^2.3.1",
     "@vueuse/core": "^11.3.0",
-		"@vunk-shared/ai": "workspace:*",
+    "@vunk-shared/ai": "workspace:*",
     "@vunk-shared/browser": "workspace:*",
     "@vunk-shared/build": "workspace:*",
     "@vunk-shared/class": "workspace:*",
@@ -55,6 +55,7 @@
     "@vue/compiler-sfc": "^3.5.13",
     "eslint": "^9.15.0",
     "eslint-plugin-oxlint": "^0.15.10",
+    "express": "^4.21.2",
     "fast-glob": "^3.3.2",
     "gulp": "^5.0.0",
     "gulp-concat": "^2.6.1",
