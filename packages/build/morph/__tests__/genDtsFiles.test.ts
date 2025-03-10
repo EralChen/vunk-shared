@@ -1,17 +1,14 @@
-
-import { test } from 'vitest'
-import { genDtsFiles } from '../genDtsFiles'
-import { packagesDir, workRoot } from '@lib-env/path'
-import path from 'path'
+import path from 'node:path'
 import { fixPath } from '@lib-env/build-utils'
-
+import { packagesDir, workRoot } from '@lib-env/path'
+import { it } from 'vitest'
+import { genDtsFiles } from '../genDtsFiles'
 
 const testable = false
 
-test('genDtsFiles', {
+it('genDtsFiles', {
   timeout: 1000 * 60 * 10,
 }, async () => {
-   
   if (!testable) {
     return
   }
@@ -30,5 +27,4 @@ test('genDtsFiles', {
     globCwd: path.resolve(packagesDir, 'markdown'),
 
   })
-
 })

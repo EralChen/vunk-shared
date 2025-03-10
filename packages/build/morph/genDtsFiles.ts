@@ -1,11 +1,11 @@
-/* eslint-disable no-console */
+import type { Pattern } from 'fast-glob'
+import type { CompilerOptions, OutputFile, ProjectOptions, SourceFile } from 'ts-morph'
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs'
+import path from 'node:path'
 import { compileScript, parse } from '@vue/compiler-sfc'
-import { glob, Pattern } from 'fast-glob'
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs'
-import path from 'path'
-import { CompilerOptions, ModuleResolutionKind, OutputFile, Project, ProjectOptions, ScriptTarget, SourceFile } from 'ts-morph'
+import { glob } from 'fast-glob'
+import { ModuleResolutionKind, Project, ScriptTarget } from 'ts-morph'
 import { JsxEmit } from 'typescript'
-
 
 export interface GenDtsFilesSettings {
 
@@ -25,7 +25,6 @@ export interface GenDtsFilesSettings {
 
   projectOptions?: ProjectOptions
 
-
   globCwd?: string
   globSource: Pattern | Pattern[]
   globIgnore?: string[]
@@ -34,21 +33,19 @@ export interface GenDtsFilesSettings {
 
   transform?: (code: string) => string
 
-
   projectEmit?: boolean
 
 }
 
 export async function genDtsFiles (settings: GenDtsFilesSettings) {
-
   const workRoot = settings.root
-  
+
   const compilerOptions = settings.compilerOptions
 
   const defaultTsConfigFilePath = path.resolve(workRoot, 'tsconfig.json')
   const tsConfigFilePath = settings.tsConfigFilePath ?? (
-    existsSync(defaultTsConfigFilePath) 
-      ? defaultTsConfigFilePath 
+    existsSync(defaultTsConfigFilePath)
+      ? defaultTsConfigFilePath
       : undefined
   )
 
@@ -56,11 +53,14 @@ export async function genDtsFiles (settings: GenDtsFilesSettings) {
   const globCwd = settings.globCwd ?? workRoot
 
   const globIgnore = settings.globIgnore ?? [
-    'gulpfile.ts', 'package.json', 'node_modules', '**/README.md', '**/__tests__',
+    'gulpfile.ts',
+    'package.json',
+    'node_modules',
+    '**/README.md',
+    '**/__tests__',
   ]
 
   const transform = settings.transform ?? (code => code)
-
 
   const projectEmit = settings.projectEmit
 
@@ -80,13 +80,12 @@ export async function genDtsFiles (settings: GenDtsFilesSettings) {
       skipLibCheck: true,
       skipDefaultLibCheck: true,
       baseUrl: workRoot,
-    
-    
+
       ...compilerOptions,
     },
-    
+
     tsConfigFilePath,
-    
+
     skipAddingFilesFromTsConfig: true,
     ...settings.projectOptions,
   })
@@ -103,11 +102,8 @@ export async function genDtsFiles (settings: GenDtsFilesSettings) {
     path.resolve(workRoot, 'typings', './**/*{.d.ts,.ts}'),
   )
 
-
-
   const sourceFiles: SourceFile[] = []
   for (const file of filePaths) {
-
     // 处理.vue文件成.ts文件
     if (file.endsWith('.vue')) {
       const content = readFileSync(file, 'utf-8')
@@ -134,8 +130,6 @@ export async function genDtsFiles (settings: GenDtsFilesSettings) {
       const sourceFile = project.addSourceFileAtPath(file)
       sourceFiles.push(sourceFile)
     }
-
-
   }
 
   const diagnostics = project.getPreEmitDiagnostics()
@@ -154,7 +148,6 @@ export async function genDtsFiles (settings: GenDtsFilesSettings) {
     })
   }
 
-
   const outputFiles: OutputFile[] = []
   for (const sourceFile of sourceFiles) {
     const relativePath = path.relative(workRoot, sourceFile.getFilePath())
@@ -168,9 +161,7 @@ export async function genDtsFiles (settings: GenDtsFilesSettings) {
     }
 
     outputFiles.push(...emitFiles)
-  }  
-
-
+  }
 
   for (const outputFile of outputFiles) {
     const filepath = outputFile.getFilePath()
@@ -184,8 +175,5 @@ export async function genDtsFiles (settings: GenDtsFilesSettings) {
       transform(outputFile.getText()),
       'utf8',
     )
-
   }
-
-
 }
