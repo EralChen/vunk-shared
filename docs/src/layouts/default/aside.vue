@@ -6,7 +6,7 @@ import AlgoliaSearchBox from '#s/components/AlgoliaSearchBox/index.vue'
 import { VkRoutesMenuContent } from '#s/components/routes-menu-content'
 import { CrowdinFilePath, useCrowdinFile } from '#s/composables/crowdin'
 import { useExplorerRoutes } from '#s/composables/explorer'
-import { withoutTrailingSlash } from '@vunk-shared/string'
+import { resolveFullPath, withoutTrailingSlash } from '@vunk-shared/string'
 import { VkDuplex } from '@vunk/core'
 import { findDeep } from 'deepdash-es/standalone'
 import { ElMenu } from 'element-plus'
@@ -65,7 +65,7 @@ const menu = computed(() => {
   )
 
   if (currentCrowname.value === 'component') {
-    routes.push(...explorerRoutes)
+    routes.push(...genRoutes(explorerRoutes, menuBase.value))
   }
 
   return routes
@@ -75,7 +75,7 @@ function genRoutes (
   parentPath = basePath,
 ): RouteRecordRaw[] {
   return menus.map((menu) => {
-    const path = parentPath + (menu.link ?? '')
+    const path = resolveFullPath(menu.link ?? '', parentPath)
     const meta: NonNullable<RouteRecordRaw['meta']> = {
       title: menu.text,
       alwaysShow: true,
@@ -108,14 +108,8 @@ function initOpenMenu () {
   const pathname = window.location.pathname
 
   findDeep(menu.value, (v: RouteRecordRaw, k, _, { parents }) => {
-    let thePath = v.path
-
-    if (!thePath.startsWith('/')) {
-      const menuParentsPath = parents?.map(p => p.value.path).filter(Boolean).reverse() ?? []
-      thePath = [menuBase.value, ...menuParentsPath, v.path].join('/')
-    }
-
-    if (withoutTrailingSlash(thePath) === withoutTrailingSlash(pathname)) {
+    if (withoutTrailingSlash(pathname) === v.path) {
+      // console.log(parents)
       // 从后往前[非自身]找到第一个有 subMenuIndex 的父级
       if (!parents)
         return true
@@ -132,9 +126,7 @@ function initOpenMenu () {
 
       return true
     }
-  }, {
-    childrenPath: ['children'],
-  })
+  }, { childrenPath: ['children'] })
 }
 /* end of menu event   */
 </script>
