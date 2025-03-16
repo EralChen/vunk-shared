@@ -6,4 +6,6 @@ export * from './getValueFromObjectLiteralExpression'
 
 export * from './parseCommentFromRanges'
 
+export * from './emptyObjectLiteralExpression'
+
 

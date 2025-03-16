@@ -34,6 +34,14 @@ const alias: AliasOptions = [
   {
     find: '#',
     replacement: path.resolve(appRoot),
+  },
+  {
+    find: '@vunk/shared/function',
+    replacement: path.resolve(packagesDir, 'function'),
+  },
+  {
+    find: '@vunk/shared/object',
+    replacement: path.resolve(packagesDir, 'object'),
   }
 ]
 
@@ -59,6 +67,7 @@ export default defineConfig(async ({ mode }) => {
         '@skzz/platform/**',
         'esri/**',
         '@vunk/gsap/**',
+        '@vunk/form/**',
       ],
 
     },
@@ -108,7 +117,7 @@ export default defineConfig(async ({ mode }) => {
           root: path.resolve(workRoot, 'packages'),
         },
         propsContainerPluginSettings: {
-          root: path.resolve(workRoot, 'packages/components'),
+          root: path.resolve(workRoot, 'packages'),
         },
       }),
 

@@ -1,15 +1,15 @@
+import type { TransformerCompactLineOption } from '@shikijs/transformers'
 import type { ShikiTransformer } from 'shiki'
-import { bundledLanguages, getHighlighter, isSpecialLang } from 'shiki'
+import type { Logger } from 'vite'
+import type { MarkdownOptions, ThemeOptions } from 'vitepress'
 import {
   transformerCompactLineOptions,
   transformerNotationDiff,
   transformerNotationErrorLevel,
   transformerNotationFocus,
   transformerNotationHighlight,
-  type TransformerCompactLineOption,
 } from '@shikijs/transformers'
-import type { Logger } from 'vite'
-import type { MarkdownOptions, ThemeOptions } from 'vitepress'
+import { bundledLanguages, getSingletonHighlighter, isSpecialLang } from 'shiki'
 
 function generateRandomString (length: number) {
   const characters = 'abcdefghijklmnopqrstuvwxyz'
@@ -32,7 +32,8 @@ const nanoid = () => generateRandomString(10)
  * 2. convert line numbers into line options:
  *    [{ line: number, classes: string[] }]
  */
-const attrsToLines = (attrs: string): TransformerCompactLineOption[] => {
+function attrsToLines (attrs: string): TransformerCompactLineOption[] {
+  // eslint-disable-next-line regexp/no-super-linear-backtracking, regexp/optimal-quantifier-concatenation
   attrs = attrs.replace(/^(?:\[.*?\])?.*?([\d,-]+).*/, '$1').trim()
   const result: number[] = []
   if (!attrs) {
@@ -40,17 +41,18 @@ const attrsToLines = (attrs: string): TransformerCompactLineOption[] => {
   }
   attrs
     .split(',')
-    .map((v) => v.split('-').map((v) => parseInt(v, 10)))
+    .map(v => v.split('-').map(v => Number.parseInt(v, 10)))
     .forEach(([start, end]) => {
       if (start && end) {
         result.push(
           ...Array.from({ length: end - start + 1 }, (_, i) => start + i),
         )
-      } else {
+      }
+      else {
         result.push(start)
       }
     })
-  return result.map((v) => ({
+  return result.map(v => ({
     line: v,
     classes: ['highlighted'],
   }))
@@ -64,10 +66,10 @@ export async function highlight (
   const {
     defaultHighlightLang: defaultLang = '',
     codeTransformers: userTransformers = [],
-    
+
   } = options
 
-  const highlighter = await getHighlighter({
+  const highlighter = await getSingletonHighlighter({
     themes:
       typeof theme === 'object' && 'light' in theme && 'dark' in theme
         ? [theme.light, theme.dark]
@@ -77,7 +79,7 @@ export async function highlight (
       ...(options.languages || []),
     ],
     langAlias: {
-      'cjs': 'javascript',
+      cjs: 'javascript',
       ...options.languageAlias,
     },
   })
@@ -113,8 +115,8 @@ export async function highlight (
 
   return (str: string, lang: string, attrs: string) => {
     const vPre = vueRE.test(lang) ? '' : 'v-pre'
-    lang =
-      lang
+    lang
+      = lang
         .replace(lineNoStartRE, '')
         .replace(lineNoRE, '')
         .replace(vueRE, '')
@@ -136,7 +138,8 @@ export async function highlight (
     const mustaches = new Map<string, string>()
 
     const removeMustache = (s: string) => {
-      if (vPre) return s
+      if (vPre)
+        return s
       return s.replace(mustacheRE, (match) => {
         let marker = mustaches.get(match)
         if (!marker) {
@@ -164,7 +167,8 @@ export async function highlight (
         {
           name: 'vitepress:v-pre',
           pre (node) {
-            if (vPre) node.properties['v-pre'] = ''
+            if (vPre)
+              node.properties['v-pre'] = ''
           },
         },
         {
@@ -172,11 +176,11 @@ export async function highlight (
           code (hast) {
             hast.children.forEach((span) => {
               if (
-                span.type === 'element' &&
-                span.tagName === 'span' &&
-                Array.isArray(span.properties.class) &&
-                span.properties.class.includes('line') &&
-                span.children.length === 0
+                span.type === 'element'
+                && span.tagName === 'span'
+                && Array.isArray(span.properties.class)
+                && span.properties.class.includes('line')
+                && span.children.length === 0
               ) {
                 span.children.push({
                   type: 'element',

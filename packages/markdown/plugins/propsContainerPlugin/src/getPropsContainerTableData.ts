@@ -1,5 +1,6 @@
 import { NormalObject } from '@vunk-shared/types'
-import { getCalledValueFromExpression, getTypeFromAsExpression, getValueFromObjectLiteralExpression, parseCommentFromRanges } from '@vunk-shared/typescript/morph'
+import { getCalledValueFromExpression, getTypeFromAsExpression, getValueFromObjectLiteralExpression, parseCommentFromRanges, emptyObjectLiteralExpression } from '@vunk-shared/typescript/morph'
+
 import { AsExpression, Project, PropertyAssignment, SourceFile, SyntaxKind } from 'ts-morph'
 
 
@@ -25,7 +26,7 @@ export interface PropsContainerTableRow {
   /**
    * 是否是双向绑定属性
    */
-  isProperty: boolean
+  isMember: boolean
 
   /**
    * 描述
@@ -75,9 +76,10 @@ export function getPropsContainerTableData (options: {
   const infoList = props.getProperties().reduce((a, prop) => {
     if (prop instanceof PropertyAssignment) {
       const name = prop.getName()
-      const obje =  prop.getInitializerIfKindOrThrow(
+      const obje =  prop.getInitializerIfKind(
         SyntaxKind.ObjectLiteralExpression,
-      )
+      )  ?? emptyObjectLiteralExpression
+
 
       const requiredInfo = getValueFromObjectLiteralExpression(obje, 'required')
       const required = requiredInfo.value === 'true'
@@ -118,13 +120,11 @@ export function getPropsContainerTableData (options: {
       a.push({
         prop: name,
         type,
-        default: defaultValue,
-        description: commentInfo.description  
-          || commentInfo.default 
-          || '',
+        default: commentInfo.default || defaultValue,
+        description: commentInfo.description || '',
         link: commentInfo.link ?? '',
         required,
-        isProperty: 'property' in commentInfo,
+        isMember: 'member' in commentInfo,
       
       
       })

@@ -1,10 +1,10 @@
-import { parallel } from 'gulp'
-import path from 'path'
-import { globSync } from 'fast-glob'
-import { distDir } from '@lib-env/path'
-import { taskWithName } from '@lib-env/shared'
+import path from 'node:path'
 import { filePathIgnore } from '@lib-env/build-constants'
 import { genTypes, rollupFiles } from '@lib-env/build-utils'
+import { distDir } from '@lib-env/path'
+import { taskWithName } from '@lib-env/shared'
+import { globSync } from 'fast-glob'
+import { parallel } from 'gulp'
 
 const buildFile = '**/index.ts'
 const baseDirname = __dirname.split(path.sep).pop() as string
@@ -41,9 +41,6 @@ export default parallel(
         }),
       ],
     )
-
-
-    
   }),
   taskWithName(`gen ${baseDirname} types`, async () => {
     await genTypes({
@@ -52,4 +49,3 @@ export default parallel(
     })
   }),
 )
-

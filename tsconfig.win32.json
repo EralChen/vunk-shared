@@ -1,8 +1,9 @@
 {
   "compilerOptions": {
     "composite": true,
-    "moduleResolution": "NodeNext",
+    "moduleResolution": "nodenext",
     "module": "NodeNext"
+
   },
   "include": [
     "packages/win32/**/*",

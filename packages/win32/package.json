@@ -6,6 +6,7 @@
   },
   "dependencies": {
     "@waiting/shared-core": "^23.21.0",
-    "win32-api": "^26.0.2"
+    "win32-api": "^26.1.1",
+    "win32-def": "^26.1.1"
   }
 }

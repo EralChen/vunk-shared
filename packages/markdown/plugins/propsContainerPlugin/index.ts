@@ -14,6 +14,15 @@ export interface PropsContainerPluginSettings {
   root: string
 }
 
+
+const encodeMarkdownTd = (str: string) => {
+  return str
+    .replaceAll('|', '\\|')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('\n', '<br/>')
+}
+
 export function propsContainerPlugin (
   md: MarkdownIt,
   options?: PropsContainerPluginSettings,
@@ -24,6 +33,7 @@ export function propsContainerPlugin (
   const klass = 'props'
 
   const emptyStart = '<!-- '
+  const emptyEnd = ' -->\n'
 
 
   const args = [
@@ -68,7 +78,9 @@ export function propsContainerPlugin (
             ...propsTableData.map((row) => {
               let prop = row.prop
 
-              row.type = row.type.replaceAll('|', '\\|')
+              row.type = encodeMarkdownTd(row.type)
+                
+
 
               if (row.link) {
                 prop = `[${prop}](${row.link})`
@@ -76,7 +88,11 @@ export function propsContainerPlugin (
               if (row.required) {
                 prop += '*'
               }
-              row.isProperty && (prop = `:${prop}`)
+              row.isMember && (prop = `:${prop}`)
+
+              row.description = encodeMarkdownTd(row.description)
+              row.default = encodeMarkdownTd(row.default)
+
               return `|${prop}|${row.type}|${row.default}|${row.description}|`
             }),
             `${trailingStr}`,
@@ -85,7 +101,7 @@ export function propsContainerPlugin (
   
           return md.render(renderStr) + emptyStart
         } else {
-          return ` -->\n`
+          return emptyEnd
         }
       },
     },

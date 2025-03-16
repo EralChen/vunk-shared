@@ -1,0 +1,12 @@
+{
+  "name": "@vunk-shared/ai",
+  "private": true,
+  "scripts": {
+    "build": "gulp -f gulpfile.ts"
+  },
+  "dependencies": {
+    "hmacsha1": "^1.0.0",
+    "openai": "^4.83.0",
+    "string-random": "^0.1.3"
+  }
+}

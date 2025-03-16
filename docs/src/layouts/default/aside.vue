@@ -2,14 +2,14 @@
 import type { CrowdinFile, MenuRaw } from '#/shared'
 import type { Ref } from 'vue'
 import type { RouteRecordRaw } from 'vue-router'
-import { CrowdinFilePath, useCrowdinFile } from '#s/composables/crowdin'
-import { VkDuplex } from '@vunk/core'
+import AlgoliaSearchBox from '#s/components/AlgoliaSearchBox/index.vue'
 import { VkRoutesMenuContent } from '#s/components/routes-menu-content'
+import { CrowdinFilePath, useCrowdinFile } from '#s/composables/crowdin'
+import { useExplorerRoutes } from '#s/composables/explorer'
+import { VkDuplex } from '@vunk/core'
 import { findDeep } from 'deepdash-es/standalone'
 import { ElMenu } from 'element-plus'
 import { computed, nextTick, onMounted, ref, shallowRef } from 'vue'
-import AlgoliaSearchBox from '#s/components/AlgoliaSearchBox/index.vue'
-import { useExplorerRoutes } from '#s/composables/explorer'
 
 defineProps({
   search: {
@@ -70,8 +70,8 @@ const menu = computed(() => {
   return routes
 })
 function genRoutes (
-  menus: MenuRaw[], 
-  parentPath = basePath
+  menus: MenuRaw[],
+  parentPath = basePath,
 ): RouteRecordRaw[] {
   return menus.map((menu) => {
     const path = parentPath + (menu.link ?? '')
@@ -98,7 +98,9 @@ function genRoutes (
 /* menu event */
 onMounted(() => {
   pathname.value = window.location.pathname
-  initOpenMenu()
+  setTimeout(() => {
+    initOpenMenu()
+  }, 800)
 })
 function initOpenMenu () {
   // const testIndex = route.matched.map(item => item.path)
@@ -125,7 +127,6 @@ function initOpenMenu () {
   })
 }
 /* end of menu event   */
-
 </script>
 
 <template>
@@ -135,7 +136,7 @@ function initOpenMenu () {
         v-show="search"
       ></AlgoliaSearchBox>
     </template>
-    
+
     <template #two>
       <ElScrollbar>
         <ElMenu

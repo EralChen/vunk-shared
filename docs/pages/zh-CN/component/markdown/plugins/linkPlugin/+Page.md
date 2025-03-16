@@ -28,10 +28,17 @@ export default defineConfig({
     }),
     md({
       markdownItSetup (mdit) {
-        mdit.use(linkPlugin, {
-          base,
-          cleanUrls: true
-        })
+        mdit.use(linkPlugin,
+          { 
+            target: '_blank', 
+            rel: 'noreferrer', 
+          },
+          {
+            base,
+            cleanUrls: true,
+          },
+        )
+  
       },
     }),
   ],

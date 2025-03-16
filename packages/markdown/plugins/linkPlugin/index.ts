@@ -1,12 +1,12 @@
 
 
 import type MarkdownIt from 'markdown-it'
-import { URL } from 'url'
 import {
   externalUrlRE,
 } from '@vunk-shared/regexp'
 import { MarkdownEnv } from 'vitepress'
-import path from 'path'
+
+
 
 const indexRE = /(^|.*\/)index.md(#?.*)$/i
 
@@ -58,7 +58,8 @@ export const linkPlugin = (
 
       /* for vike page +Page */
       const filePath = new URL(url, 'http://a.com').pathname
-      const fileBasename = path.basename(filePath, '.md')
+      const fileBasename = filePath.split('/').pop()
+        ?.replace('.md', '') || ''
 
       const isEntry = fileBasename === '+Page'
       // for vikepage 

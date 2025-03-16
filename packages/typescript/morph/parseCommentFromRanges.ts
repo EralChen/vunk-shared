@@ -22,7 +22,7 @@ export function parseCommentFromRanges (
 
   return commentItems.map(item => {
     const obj: NormalObject = {
-      default: item.description,
+      description: item.description,
     }
     for (const tag of item.tags) {
       obj[tag.tag] = tag.name + (tag.description 

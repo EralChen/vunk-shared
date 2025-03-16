@@ -1,4 +1,6 @@
-
+import { NormalObject } from "@vunk-shared/types";
+import { PropType } from "vue";
+import { Func } from '@vunk/core'
 
 export const props = {
   /**
@@ -37,7 +39,7 @@ export const props = {
   },
 
   /**
-   * jsonstring 
+   * @description jsonstring 
    *  - key: filepath 相对 demoRoot 的路径
    *  - value: 对应的 md.render 后的文件代码
    */
@@ -53,4 +55,9 @@ export const props = {
     type: String,
     default: '',
   },
+
+  callback: {
+    type: Function as PropType<Func<NormalObject>>,
+    default: undefined
+  }
 }

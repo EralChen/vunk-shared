@@ -5,8 +5,8 @@
     "build": "gulp -f gulpfile.ts"
   },
   "dependencies": {
-    "mdast-util-from-markdown": "^2.0.1",
-    "mdast-util-to-markdown": "^2.1.0",
+    "mdast-util-from-markdown": "^2.0.2",
+    "mdast-util-to-markdown": "^2.1.2",
     "unocss-preset-vunk": "^1.0.4"
   }
 }
