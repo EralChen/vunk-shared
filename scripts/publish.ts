@@ -1,14 +1,13 @@
-import {series} from 'gulp'
+import { existsSync } from 'fs'
 import fsp from 'fs/promises'
 import path from 'path'
-import { entryPackage, distDir } from '@lib-env/path'
+import { distDir, entryPackage } from '@lib-env/path'
 import { run, taskWithName } from '@lib-env/shared'
-import { readJsonSync, writeJsonSync, readdirAsFlattenedTree } from '@vunk-shared/node/fs'
+import { readdirAsFlattenedTree, readJsonSync, writeJsonSync } from '@vunk-shared/node/fs'
 import { replaceRight } from '@vunk-shared/string'
-import { existsSync } from 'fs'
+import { series } from 'gulp'
 
 export default series(
-
 
   taskWithName('destPkg', async () => {
     const distPkgFile = path.resolve(distDir, './package.json')
@@ -18,13 +17,13 @@ export default series(
       distPkgFile,
     )
     // 处理 pkg
-    const jsonObj = readJsonSync(distPkgFile) as { 
-      module: string, 
-      main: string,
+    const jsonObj = readJsonSync(distPkgFile) as {
+      module: string
+      main: string
       exports: Record<string, {
-        import?: string,
-        types?: string,
-        require?: string,
+        import?: string
+        types?: string
+        require?: string
       }>
     }
     jsonObj.module = 'index.esm.js'
@@ -40,15 +39,12 @@ export default series(
     const modelEntries = distTree
       .filter(item => item.filename === 'index.mjs')
 
-
-    modelEntries.forEach(item => {
-
+    modelEntries.forEach((item) => {
       const cjsPath = replaceRight(item.id, '.mjs', '.cjs')
 
       let relativePath = path.relative(distDir, item.pid).replace(/\\/g, '/')
 
-      relativePath = './' + relativePath
-      
+      relativePath = `./${relativePath}`
 
       jsonObj.exports[relativePath] = {
         import: `${relativePath}` + `/${item.filename}`,
@@ -58,16 +54,15 @@ export default series(
       if (existsSync(cjsPath)) {
         jsonObj.exports[relativePath].require = `${relativePath}` + `/${item.filename.replace('.mjs', '.cjs')}`
       }
-
     })
 
     const cssEntries = distTree
       .filter(item => item.filename === 'index.css')
-    
-    cssEntries.forEach(item => {
+
+    cssEntries.forEach((item) => {
       let relativePath = path.relative(distDir, item.pid).replace(/\\/g, '/')
 
-      relativePath = './' + relativePath
+      relativePath = `./${relativePath}`
 
       const relativeFile = `${relativePath}` + `/${item.filename}`
 
@@ -76,10 +71,9 @@ export default series(
       }
     })
 
-
     writeJsonSync(distPkgFile, jsonObj, 2)
   }),
-  
+
   taskWithName('publish', async () => {
     run(
       'npm publish --registry https://registry.npmjs.org --access public',

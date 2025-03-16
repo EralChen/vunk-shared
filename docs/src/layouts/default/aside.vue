@@ -6,6 +6,7 @@ import AlgoliaSearchBox from '#s/components/AlgoliaSearchBox/index.vue'
 import { VkRoutesMenuContent } from '#s/components/routes-menu-content'
 import { CrowdinFilePath, useCrowdinFile } from '#s/composables/crowdin'
 import { useExplorerRoutes } from '#s/composables/explorer'
+import { withoutTrailingSlash } from '@vunk-shared/string'
 import { VkDuplex } from '@vunk/core'
 import { findDeep } from 'deepdash-es/standalone'
 import { ElMenu } from 'element-plus'
@@ -100,14 +101,21 @@ onMounted(() => {
   pathname.value = window.location.pathname
   setTimeout(() => {
     initOpenMenu()
-  }, 800)
+  }, 400)
 })
 function initOpenMenu () {
   // const testIndex = route.matched.map(item => item.path)
   const pathname = window.location.pathname
-  findDeep(menu.value, (v, k, _, { parents }) => {
-    if (k === 'path' && pathname === v) {
-      // console.log(parents)
+
+  findDeep(menu.value, (v: RouteRecordRaw, k, _, { parents }) => {
+    let thePath = v.path
+
+    if (!thePath.startsWith('/')) {
+      const menuParentsPath = parents?.map(p => p.value.path).filter(Boolean).reverse() ?? []
+      thePath = [menuBase.value, ...menuParentsPath, v.path].join('/')
+    }
+
+    if (withoutTrailingSlash(thePath) === withoutTrailingSlash(pathname)) {
       // 从后往前[非自身]找到第一个有 subMenuIndex 的父级
       if (!parents)
         return true
@@ -124,6 +132,8 @@ function initOpenMenu () {
 
       return true
     }
+  }, {
+    childrenPath: ['children'],
   })
 }
 /* end of menu event   */

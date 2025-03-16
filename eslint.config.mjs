@@ -11,6 +11,7 @@ export default eslint({
     '@stylistic/indent': ['error', 2],
     '@stylistic/space-before-function-paren': ['error', 'always'],
     'regexp/no-super-linear-backtracking': 'off',
+    'unicorn/prefer-node-protocol': 'off',
   },
   ignores: [
     'node_modules',
