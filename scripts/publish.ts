@@ -42,7 +42,7 @@ export default series(
     modelEntries.forEach((item) => {
       const cjsPath = replaceRight(item.id, '.mjs', '.cjs')
 
-      let relativePath = path.relative(distDir, item.pid).replace(/\\/g, '/')
+      let relativePath = path.relative(distDir, item.pid ?? '').replace(/\\/g, '/')
 
       relativePath = `./${relativePath}`
 
