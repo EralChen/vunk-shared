@@ -60,7 +60,7 @@ export default series(
       .filter(item => item.filename === 'index.css')
 
     cssEntries.forEach((item) => {
-      let relativePath = path.relative(distDir, item.pid).replace(/\\/g, '/')
+      let relativePath = path.relative(distDir, item.pid ?? '').replace(/\\/g, '/')
 
       relativePath = `./${relativePath}`
 
