@@ -10,11 +10,12 @@ export default eslint({
     'array-callback-return': 'off',
     '@stylistic/indent': ['error', 2],
     '@stylistic/space-before-function-paren': ['error', 'always'],
+    'regexp/no-super-linear-backtracking': 'off',
   },
   ignores: [
-    'node_modules', 
-    'dist', 
-    '*.md' , 
-    'docs/vite.config.mts'
+    'node_modules',
+    'dist',
+    '*.md',
+    'docs/vite.config.mts',
   ],
 })
