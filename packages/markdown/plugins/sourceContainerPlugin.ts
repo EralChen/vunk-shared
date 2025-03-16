@@ -51,10 +51,14 @@ export function sourceContainerPlugin (
 
           let filepath: null | string = null
           for (let i = 0; i < roots.length; i++) {
-            filepath = existentFilepath(
+            const current = existentFilepath(
               path.resolve(roots[i], sourceFile),
               extensions,
             )
+            if (current) {
+              filepath = current
+              break
+            }
           }
 
           if (!filepath) {

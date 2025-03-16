@@ -6,7 +6,7 @@ import AlgoliaSearchBox from '#s/components/AlgoliaSearchBox/index.vue'
 import { VkRoutesMenuContent } from '#s/components/routes-menu-content'
 import { CrowdinFilePath, useCrowdinFile } from '#s/composables/crowdin'
 import { useExplorerRoutes } from '#s/composables/explorer'
-import { withoutTrailingSlash } from '@vunk-shared/string'
+import { resolveFullPath, withoutTrailingSlash } from '@vunk-shared/string'
 import { VkDuplex } from '@vunk/core'
 import { findDeep } from 'deepdash-es/standalone'
 import { ElMenu } from 'element-plus'
@@ -36,7 +36,7 @@ onMounted(() => {
   pathname.value = window.location.pathname
   // 同步 pathname
   setInterval(() => {
-    pathname.value = window.location.pathname
+    pathname.value = withoutTrailingSlash(window.location.pathname)
   }, 400)
 })
 
@@ -65,7 +65,7 @@ const menu = computed(() => {
   )
 
   if (currentCrowname.value === 'component') {
-    routes.push(...explorerRoutes)
+    routes.push(...genRoutes(explorerRoutes, menuBase.value))
   }
 
   return routes
@@ -75,7 +75,7 @@ function genRoutes (
   parentPath = basePath,
 ): RouteRecordRaw[] {
   return menus.map((menu) => {
-    const path = parentPath + (menu.link ?? '')
+    const path = resolveFullPath(menu.link ?? '', parentPath)
     const meta: NonNullable<RouteRecordRaw['meta']> = {
       title: menu.text,
       alwaysShow: true,
@@ -105,22 +105,16 @@ onMounted(() => {
 })
 function initOpenMenu () {
   // const testIndex = route.matched.map(item => item.path)
-  const pathname = window.location.pathname
+  const pathname = withoutTrailingSlash(window.location.pathname)
 
   findDeep(menu.value, (v: RouteRecordRaw, k, _, { parents }) => {
-    let thePath = v.path
-
-    if (!thePath.startsWith('/')) {
-      const menuParentsPath = parents?.map(p => p.value.path).filter(Boolean).reverse() ?? []
-      thePath = [menuBase.value, ...menuParentsPath, v.path].join('/')
-    }
-
-    if (withoutTrailingSlash(thePath) === withoutTrailingSlash(pathname)) {
+    if (pathname === v.path) {
+      // console.log(parents)
       // 从后往前[非自身]找到第一个有 subMenuIndex 的父级
       if (!parents)
         return true
 
-      for (let i = parents.length - 2; i >= 0; i--) {
+      for (let i = parents.length - 1; i >= 0; i--) {
         const parent = parents[i]
         if (parent.value.meta?.subMenuIndex) {
           nextTick(() => {
@@ -132,9 +126,7 @@ function initOpenMenu () {
 
       return true
     }
-  }, {
-    childrenPath: ['children'],
-  })
+  }, { childrenPath: ['children'] })
 }
 /* end of menu event   */
 </script>
