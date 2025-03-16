@@ -1,6 +1,6 @@
-import { statSync, readdirSync } from 'fs'
-import { FlattenedTreeNode } from '@vunk-shared/types'
-import { resolve, relative } from 'path'
+import type { FlattenedTreeNode } from '@vunk-shared/types'
+import { readdirSync, statSync } from 'fs'
+import { relative, resolve } from 'path'
 import { minimatch } from 'minimatch'
 
 export interface DirFlattenedTreeNode extends FlattenedTreeNode {
@@ -17,11 +17,10 @@ export interface ReaddirAsFlattenedTreeSettings {
   recursive?: boolean
 }
 
-
 /**
  * 读取目录 返回扁平化树
- * @param dirPath 
- * @param settings 
+ * @param dirPath
+ * @param settings
  * @returns - 扁平化树
  */
 export function readdirAsFlattenedTree (
@@ -31,7 +30,7 @@ export function readdirAsFlattenedTree (
   const ignore = settings?.ignore ?? []
   const recursive = settings?.recursive ?? true
 
-  const dirFlattenedTree:DirFlattenedTreeNode[] = []
+  const dirFlattenedTree: DirFlattenedTreeNode[] = []
   const dirs: string[] = [dirPath]
   while (dirs.length > 0) {
     const dir = dirs.pop()
@@ -40,24 +39,21 @@ export function readdirAsFlattenedTree (
     }
     const filenames = readdirSync(dir)
 
-   
-     
     for (const filename of filenames) {
       const id = resolve(dir, filename)
       const relativeId = relative(dirPath, id)
       const isDirectory = statSync(id).isDirectory()
 
-
       if (
-        ignore.some((pattern) => minimatch(relativeId, pattern))
+        ignore.some(pattern => minimatch(relativeId, pattern))
       ) {
         continue
       }
 
       dirFlattenedTree.push({
         filename,
-        id,
-        pid: dir,
+        id: id.replace(/\\/g, '/'),
+        pid: dir.replace(/\\/g, '/'),
         isDirectory,
       })
 
@@ -69,5 +65,4 @@ export function readdirAsFlattenedTree (
     }
   }
   return dirFlattenedTree
-
 }
