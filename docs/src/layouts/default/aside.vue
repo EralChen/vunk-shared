@@ -36,7 +36,7 @@ onMounted(() => {
   pathname.value = window.location.pathname
   // 同步 pathname
   setInterval(() => {
-    pathname.value = window.location.pathname
+    pathname.value = withoutTrailingSlash(window.location.pathname)
   }, 400)
 })
 
@@ -105,16 +105,16 @@ onMounted(() => {
 })
 function initOpenMenu () {
   // const testIndex = route.matched.map(item => item.path)
-  const pathname = window.location.pathname
+  const pathname = withoutTrailingSlash(window.location.pathname)
 
   findDeep(menu.value, (v: RouteRecordRaw, k, _, { parents }) => {
-    if (withoutTrailingSlash(pathname) === v.path) {
+    if (pathname === v.path) {
       // console.log(parents)
       // 从后往前[非自身]找到第一个有 subMenuIndex 的父级
       if (!parents)
         return true
 
-      for (let i = parents.length - 2; i >= 0; i--) {
+      for (let i = parents.length - 1; i >= 0; i--) {
         const parent = parents[i]
         if (parent.value.meta?.subMenuIndex) {
           nextTick(() => {
