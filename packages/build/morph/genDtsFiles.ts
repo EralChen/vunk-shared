@@ -130,6 +130,10 @@ export async function genDtsFiles (settings: GenDtsFilesSettings) {
       const sourceFile = project.addSourceFileAtPath(file)
       sourceFiles.push(sourceFile)
     }
+    if (file.endsWith('.tsx')) {
+      const sourceFile = project.addSourceFileAtPath(file)
+      sourceFiles.push(sourceFile)
+    }
   }
 
   const diagnostics = project.getPreEmitDiagnostics()
