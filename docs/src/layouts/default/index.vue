@@ -3,9 +3,9 @@ import type { PageContext } from 'vike/types'
 import IconExpand from '#s/components/icon-expand/index.vue'
 import IconFold from '#s/components/icon-fold/index.vue'
 import IconSearch from '#s/components/icon-search/index.vue'
+import { onContentUpdated } from '@vunk-shared/vike/vue/hooks'
 import { VkDuplex } from '@vunk/core'
 import { VkCollapseTransitionHorizontal } from '@vunk/core/components/collapse-transition-horizontal'
-import { onContentUpdated } from '@vunk-shared/vike/vue/hooks'
 import { ElScrollbar } from 'element-plus'
 import { nextTick, ref, shallowRef } from 'vue'
 import Aside from './aside.vue'
@@ -86,7 +86,6 @@ function searchCollapsedToggle () {
                 ></IconSearch>
               </div>
             </template>
-      
 
             <Aside :search="!searchCollapsed"></Aside>
           </VkDuplex>

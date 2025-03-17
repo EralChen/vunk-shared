@@ -2,14 +2,15 @@
 import type { CrowdinFile, MenuRaw } from '#/shared'
 import type { Ref } from 'vue'
 import type { RouteRecordRaw } from 'vue-router'
-import { CrowdinFilePath, useCrowdinFile } from '#s/composables/crowdin'
-import { VkDuplex } from '@vunk/core'
+import AlgoliaSearchBox from '#s/components/AlgoliaSearchBox/index.vue'
 import { VkRoutesMenuContent } from '#s/components/routes-menu-content'
+import { CrowdinFilePath, useCrowdinFile } from '#s/composables/crowdin'
+import { useExplorerRoutes } from '#s/composables/explorer'
+import { resolveFullPath, withoutTrailingSlash } from '@vunk-shared/string'
+import { VkDuplex } from '@vunk/core'
 import { findDeep } from 'deepdash-es/standalone'
 import { ElMenu } from 'element-plus'
 import { computed, nextTick, onMounted, ref, shallowRef } from 'vue'
-import AlgoliaSearchBox from '#s/components/AlgoliaSearchBox/index.vue'
-import { useExplorerRoutes } from '#s/composables/explorer'
 
 defineProps({
   search: {
@@ -35,7 +36,7 @@ onMounted(() => {
   pathname.value = window.location.pathname
   // 同步 pathname
   setInterval(() => {
-    pathname.value = window.location.pathname
+    pathname.value = withoutTrailingSlash(window.location.pathname)
   }, 400)
 })
 
@@ -64,17 +65,17 @@ const menu = computed(() => {
   )
 
   if (currentCrowname.value === 'component') {
-    routes.push(...explorerRoutes)
+    routes.push(...genRoutes(explorerRoutes, menuBase.value))
   }
 
   return routes
 })
 function genRoutes (
-  menus: MenuRaw[], 
-  parentPath = basePath
+  menus: MenuRaw[],
+  parentPath = basePath,
 ): RouteRecordRaw[] {
   return menus.map((menu) => {
-    const path = parentPath + (menu.link ?? '')
+    const path = resolveFullPath(menu.link ?? '', parentPath)
     const meta: NonNullable<RouteRecordRaw['meta']> = {
       title: menu.text,
       alwaysShow: true,
@@ -101,19 +102,19 @@ onMounted(() => {
   setTimeout(() => {
     initOpenMenu()
   }, 400)
-
 })
 function initOpenMenu () {
   // const testIndex = route.matched.map(item => item.path)
-  const pathname = window.location.pathname
-  findDeep(menu.value, (v, k, _, { parents }) => {
-    if (k === 'path' && pathname === v) {
+  const pathname = withoutTrailingSlash(window.location.pathname)
+
+  findDeep(menu.value, (v: RouteRecordRaw, k, _, { parents }) => {
+    if (pathname === v.path) {
       // console.log(parents)
       // 从后往前[非自身]找到第一个有 subMenuIndex 的父级
       if (!parents)
         return true
 
-      for (let i = parents.length - 2; i >= 0; i--) {
+      for (let i = parents.length - 1; i >= 0; i--) {
         const parent = parents[i]
         if (parent.value.meta?.subMenuIndex) {
           nextTick(() => {
@@ -125,10 +126,9 @@ function initOpenMenu () {
 
       return true
     }
-  })
+  }, { childrenPath: ['children'] })
 }
 /* end of menu event   */
-
 </script>
 
 <template>
@@ -138,7 +138,7 @@ function initOpenMenu () {
         v-show="search"
       ></AlgoliaSearchBox>
     </template>
-    
+
     <template #two>
       <ElScrollbar>
         <ElMenu

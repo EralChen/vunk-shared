@@ -3,7 +3,7 @@
     "text": "Start 开始",
     "children": [
       {
-        "link": "/introduction",
+        "link": "introduction",
         "text": "Introduction 介绍"
       }
     ]

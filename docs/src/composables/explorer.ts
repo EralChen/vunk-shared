@@ -1,28 +1,23 @@
-import explorerTreeList from 'virtual:explorer'
+import type { MenuRaw } from '#/shared'
 import type { ExplorerTreeNode } from '@vunk-shared/types'
-import { RouteRecordRaw } from 'vue-router'
 import { toNestedTree } from '@vunk-shared/data'
+import explorerTreeList from 'virtual:explorer'
 
-type RouteRecord = RouteRecordRaw & ExplorerTreeNode
-
-export const useExplorerRoutes = () => {
+export function useExplorerRoutes () {
   function genRoutes (
-    raws: ExplorerTreeNode[], 
-  ): RouteRecord[] {
+    raws: ExplorerTreeNode[],
+  ) {
     return raws.map((menu) => {
-      const path = (menu.label ?? '')
-      const meta: NonNullable<RouteRecordRaw['meta']>  = {
-        title: menu.label,
-        alwaysShow: true,
-      } 
       const route = {
-        ...menu,
-        path,
-        meta,
-        name: menu.id,
-      } 
-      return route as RouteRecord
+        id: menu.id,
+        pid: menu.pid,
+        // 去除文件后缀名
+        link: menu.label,
+        text: menu.label,
+      }
+
+      return route as MenuRaw & ExplorerTreeNode
     })
   }
-  return toNestedTree(genRoutes(explorerTreeList)) 
+  return toNestedTree(genRoutes(explorerTreeList))
 }
