@@ -80,7 +80,7 @@ export async function genDtsFiles (settings: GenDtsFilesSettings) {
       skipLibCheck: true,
       skipDefaultLibCheck: true,
       baseUrl: workRoot,
-
+      strictNullChecks: true,
       ...compilerOptions,
     },
 
