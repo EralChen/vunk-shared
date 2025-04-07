@@ -38,19 +38,52 @@ await client.request({
 
 ## 高级特性
 
-### 请求拦截
+### 中间件
 
-你可以在 request 之前修改请求选项：
+中间件提供了一种强大的方式来处理请求和响应。每个中间件可以访问请求上下文、响应数据，并决定是否调用下一个中间件。
 
 ```typescript
-client.addRequestInterceptor(async (options) => {
-  options.params = {
-    ...options.params,
-    Timestamp: Date.now(),
+// 添加时间戳中间件
+client.addMiddleware(async (ctx, next) => {
+  // 修改请求参数
+  ctx.req.requestOptions.params = {
+    ...ctx.req.requestOptions.params,
+    startTime: Date.now(),
   }
-  return options
+
+  // 调用下一个中间件
+  await next()
+
+  // 处理响应数据
+  const data = await ctx.res.when()
+
+  if (data) {
+    ctx.body = {
+      response: data,
+      endTime: Date.now(),
+    }
+  }
+})
+
+// 添加认证中间件
+client.addMiddleware(async (ctx, next) => {
+  ctx.req.requestOptions.headers = {
+    ...ctx.req.requestOptions.headers,
+    Authorization: `Bearer ${getToken()}`,
+  }
+  await next()
 })
 ```
+
+中间件上下文 (ctx) 包含以下属性：
+- `req`: 请求相关信息
+  - `requestOptions`: RestFetch 请求选项
+  - `requestInit`: 原生 fetch 请求配置
+- `res`: 响应相关信息
+  - `response`: 响应数据
+  - `when()`: 获取响应 Promise
+- `body`: 最终的响应数据
+- `state`: 中间件之间共享的状态对象
 
 ### 响应处理
 
@@ -60,12 +93,8 @@ client.addRequestInterceptor(async (options) => {
 const client = new RestFetch({
   baseURL: 'https://api.example.com',
   // 自定义响应处理
-  responseThen: async (res) => {
-    const data = await res.json()
-    if (data.code !== 0) {
-      throw new Error(data.message)
-    }
-    return data.data
+  responseThen: (res) => {
+    return res.blob()
   }
 })
 ```
@@ -160,8 +189,8 @@ await client.reader({
 |------|------|------|---------|
 | baseURL | string | 基础 URL | - |
 | timeout | number | 超时时间(ms) | - |
-| presetRequestInit | (config: RequestInit) => RequestInit | 请求拦截器 (setRequestInit之前) | - |
-| setRequestInit | (config: RequestInit) => RequestInit | 请求拦截器（可被请求选项覆盖） | - |
+| presetRequestInit | (config: RequestInit) => RequestInit | 前置请求配置 (setRequestInit之前) | - |
+| setRequestInit | (config: RequestInit) => RequestInit | 请求配置（可被请求选项覆盖） | - |
 | responseThen | (res: Response) => any | 响应拦截器 | res => res.json() |
 | requestThen | (data: any) => any | 响应拦截器（responseThen之后） | data => data |
 | ontimeout | (config: RequestInit) => void | 超时回调 | - |
@@ -177,13 +206,41 @@ await client.reader({
 | params | object | URL 参数 | - |
 | data | object | 请求体数据 | - |
 | contentType | 'application/json' \| 'application/x-www-form-urlencoded' \| 'multipart/form-data' | 内容类型 | 'application/json' |
-| setRequestInit | (config: RequestInit) => RequestInit | 请求拦截器，覆盖构造函数配置 | - |
-| responseThen | (res: Response) => any | 响应拦截器，覆盖构造函数配置 | - |
+| setRequestInit | (config: RequestInit) => RequestInit | 请求配置，覆盖构造函数配置 | - |
+| responseThen | - | 响应拦截器，覆盖构造函数配置 | - |
 | timeout | number | 请求超时时间，覆盖构造函数配置 | - |
 | ontimeout | (config: RequestInit) => void | 超时回调，覆盖构造函数配置 | - |
 | abortController | AbortController | 自定义中断控制器 | new AbortController() |
 | cache | { id: string, forceUpdate?: boolean } | 缓存配置 | - |
 | queue | { id: string, mode?: 'abort' \| 'wait' \| 'parallel', leave?: boolean } | 队列配置 | - |
+
+### 中间件方法
+
+| 方法 | 描述 |
+|------|------|
+| addMiddleware(fn: RestFetchMiddleware) | 添加中间件 |
+| removeMiddleware(fn: RestFetchMiddleware) | 移除中间件 |
+
+### 中间件接口
+
+```typescript
+interface RestFetchMiddleware<S = Record<string, any>> {
+  (ctx: RestFetchMiddlewareContext<S>, next: () => Promise<any>): Promise<any>
+}
+
+interface RestFetchMiddlewareContext<S = Record<string, any>> {
+  req: {
+    requestOptions: RestFetchRequestOptions // 请求选项
+    requestInit?: RequestInit // 原生请求参数
+  }
+  res: {
+    response?: any // 响应数据
+    when: () => Promise<any> // 获取响应Promise
+  }
+  state: S // 中间件共享状态
+  body: any // 最终响应数据
+}
+```
 
 ## 基础示例
 
