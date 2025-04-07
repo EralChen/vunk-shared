@@ -20,10 +20,10 @@ export class LiblibFetch extends RestFetch {
       ...options,
     })
 
-    this.addRequestInterceptor((options, config) => {
+    this.addRequestInterceptor((options) => {
       const { url } = options
-      if (url.startsWith('http')) {
-        return [options, config]
+      if (url.startsWith('http')) { // 其他请求不需要签名
+        return options
       }
       const signature = this.urlSignature(url)
 
@@ -34,7 +34,8 @@ export class LiblibFetch extends RestFetch {
         SignatureNonce: signature.signatureNonce,
         Signature: signature.signature,
       }
-      return [options, config]
+
+      return options
     })
   }
 

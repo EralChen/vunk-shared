@@ -1,7 +1,191 @@
 # RestFetch
 
+RestFetch 是一个功能强大的 HTTP 客户端封装，基于浏览器原生的 fetch API 实现。它提供了请求拦截、响应拦截、请求队列、缓存、超时处理等丰富功能。
 
-## Basic
+## 基础用法
+
+### 创建实例
+
+```typescript
+import { RestFetch } from '@vunk/shared/fetch'
+
+const client = new RestFetch({
+  baseURL: 'https://api.example.com',
+  timeout: 5000, // 5 秒超时
+})
+```
+
+### 发送请求
+
+```typescript
+// GET 请求
+await client.request({
+  method: 'GET',
+  url: '/users',
+  params: { page: 1 }
+})
+
+// POST 请求
+await client.request({
+  method: 'POST',
+  url: '/users',
+  data: {
+    name: 'John',
+    email: 'john@example.com'
+  }
+})
+```
+
+## 高级特性
+
+### 请求拦截
+
+你可以在 request 之前修改请求选项：
+
+```typescript
+client.addRequestInterceptor(async (options) => {
+  options.params = {
+    ...options.params,
+    Timestamp: Date.now(),
+  }
+  return options
+})
+```
+
+### 响应处理
+
+可以自定义响应数据的处理方式：
+
+```typescript
+const client = new RestFetch({
+  baseURL: 'https://api.example.com',
+  // 自定义响应处理
+  responseThen: async (res) => {
+    const data = await res.json()
+    if (data.code !== 0) {
+      throw new Error(data.message)
+    }
+    return data.data
+  }
+})
+```
+
+### 请求队列
+
+支持三种队列模式：
+
+```typescript
+// 1. abort 模式：中断之前的请求
+await client.request({
+  method: 'GET',
+  url: '/search',
+  queue: {
+    id: 'search',
+    mode: 'abort'
+  }
+})
+
+// 2. wait 模式：等待之前的请求完成
+await client.request({
+  method: 'GET',
+  url: '/search',
+  queue: {
+    id: 'search',
+    mode: 'wait'
+  }
+})
+
+// 3. parallel 模式：并行执行 （默认）
+await client.request({
+  method: 'GET',
+  url: '/search',
+  queue: {
+    id: 'search',
+    mode: 'parallel'
+  }
+})
+```
+
+### 请求缓存
+
+```typescript
+// 使用缓存， 如果缓存 id 命中，则从 clone 流中直接读取
+const data = await client.request({
+  method: 'GET',
+  url: '/users/1',
+  cache: {
+    id: 'user-1'
+  }
+})
+
+// 强制更新缓存
+const newData = await client.request({
+  method: 'GET',
+  url: '/users/1',
+  cache: {
+    id: 'user-1',
+    forceUpdate: true
+  }
+})
+```
+
+### 文件下载
+
+```typescript
+await client.download({
+  url: '/files/download',
+  fileName: 'example.pdf', // 可选，自定义文件名
+  overwriteName: true // 可选，是否覆盖响应头中的文件名
+})
+```
+
+### 流式响应
+
+用于处理服务器发送事件（SSE）等流式数据：
+
+```typescript
+await client.reader({
+  url: '/stream',
+  onmessage: (event) => {
+    console.log('Received:', event.data)
+  }
+})
+```
+
+## API 参考
+
+### 构造函数选项
+
+| 参数 | 类型 | 描述 | 默认值 |
+|------|------|------|---------|
+| baseURL | string | 基础 URL | - |
+| timeout | number | 超时时间(ms) | - |
+| presetRequestInit | (config: RequestInit) => RequestInit | 请求拦截器 (setRequestInit之前) | - |
+| setRequestInit | (config: RequestInit) => RequestInit | 请求拦截器（可被请求选项覆盖） | - |
+| responseThen | (res: Response) => any | 响应拦截器 | res => res.json() |
+| requestThen | (data: any) => any | 响应拦截器（responseThen之后） | data => data |
+| ontimeout | (config: RequestInit) => void | 超时回调 | - |
+
+### 请求选项
+
+| 参数 | 类型 | 描述 | 默认值 |
+|------|------|------|---------|
+| url | string | 请求路径 | - |
+| baseURL | string | 覆盖构造函数中的基础 URL | - |
+| method | 'GET' \| 'POST' \| 'PUT' \| 'DELETE' | 请求方法 | - |
+| headers | object | 请求头 | - |
+| params | object | URL 参数 | - |
+| data | object | 请求体数据 | - |
+| contentType | 'application/json' \| 'application/x-www-form-urlencoded' \| 'multipart/form-data' | 内容类型 | 'application/json' |
+| setRequestInit | (config: RequestInit) => RequestInit | 请求拦截器，覆盖构造函数配置 | - |
+| responseThen | (res: Response) => any | 响应拦截器，覆盖构造函数配置 | - |
+| timeout | number | 请求超时时间，覆盖构造函数配置 | - |
+| ontimeout | (config: RequestInit) => void | 超时回调，覆盖构造函数配置 | - |
+| abortController | AbortController | 自定义中断控制器 | new AbortController() |
+| cache | { id: string, forceUpdate?: boolean } | 缓存配置 | - |
+| queue | { id: string, mode?: 'abort' \| 'wait' \| 'parallel', leave?: boolean } | 队列配置 | - |
+
+## 基础示例
 
 :::demo
 RestFetch/basic
@@ -10,7 +194,7 @@ RestFetch/basic
 >>>
 :::
 
-## Reader
+## 流式响应示例
 
 开启 `node server.cjs` 后预览。
 
@@ -21,8 +205,11 @@ RestFetch/reader
 >>>
 :::
 
-## Source
+## 源码
+
+:::details fetch/RestFetch
 
 :::source
 fetch/RestFetch
+
 :::

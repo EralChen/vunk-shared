@@ -1,4 +1,4 @@
-import type { AnyFunc, MaybePromise, ReturnVoid } from '@vunk/shared'
+import type { AnyFunc, MaybePromise, NormalObject, ReturnVoid } from '@vunk/shared'
 import type { EventSourceParseCallback } from 'eventsource-parser'
 import { noop } from '@vunk-shared/function'
 import { createParser } from 'eventsource-parser'
@@ -161,6 +161,12 @@ export class RestFetch {
     options: RestFetchRequestOptions,
     init?: RequestInit,
   ): Promise<Response> {
+    if (this.requestInterceptorQueue.length) {
+      for (const fn of this.requestInterceptorQueue) {
+        options = await fn(options)
+      }
+    }
+
     /* 超时处理 */
     let abortController = options.abortController
     if (!abortController) {
@@ -170,12 +176,6 @@ export class RestFetch {
     /* 超时处理 end */
 
     const headers = new Headers()
-
-    if (this.requestInterceptorQueue.length) {
-      for (const fn of this.requestInterceptorQueue) {
-        [options, init] = await fn(options, init)
-      }
-    }
 
     // 初始化init参数
     let config: RequestInit = {
@@ -217,6 +217,13 @@ export class RestFetch {
       }
     }
 
+    // 设置请求头
+    if (options.headers) {
+      Object.keys(options.headers).forEach((key) => {
+        headers.set(key, options.headers?.[key])
+      })
+    }
+
     // 将params 参数拼接到url
     let params = ''
     if (options.params) {
@@ -225,7 +232,6 @@ export class RestFetch {
     const input = (options.baseURL || this.baseURL) + options.url + params
 
     // 请求拦截
-
     const setRequestInit = options.setRequestInit ?? this.setRequestInit
     if (this.presetRequestInit) {
       config = this.presetRequestInit(config)
@@ -333,8 +339,7 @@ type ContentType = 'application/json' | 'application/x-www-form-urlencoded' | 'm
 export interface RequestInterceptor {
   (
     options: RestFetchRequestOptions,
-    config?: RequestInit
-  ): MaybePromise<[RestFetchRequestOptions, RequestInit | undefined]>
+  ): MaybePromise<RestFetchRequestOptions>
 }
 
 /**
@@ -403,6 +408,12 @@ export interface RestFetchRequestOptions {
    * 请求地址拼接参数
    */
   params?: Record<string, any>
+
+  /**
+   * 请求头
+   * @default {}
+   */
+  headers?: NormalObject
 
   /**
    * 请求头
