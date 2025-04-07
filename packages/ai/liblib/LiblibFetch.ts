@@ -20,22 +20,22 @@ export class LiblibFetch extends RestFetch {
       ...options,
     })
 
-    this.addRequestInterceptor((options) => {
-      const { url } = options
+    this.addMiddleware(async ({ req }, next) => {
+      const { url } = req.requestOptions
       if (url.startsWith('http')) { // 其他请求不需要签名
-        return options
+        return
       }
       const signature = this.urlSignature(url)
 
-      options.params = {
-        ...options.params,
+      req.requestOptions.params = {
+        ...req.requestOptions.params,
         AccessKey: this._accessKey,
         Timestamp: signature.timestamp,
         SignatureNonce: signature.signatureNonce,
         Signature: signature.signature,
       }
 
-      return options
+      await next()
     })
   }
 
