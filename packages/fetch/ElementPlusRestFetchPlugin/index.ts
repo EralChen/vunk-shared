@@ -167,6 +167,7 @@ export interface ElementPlusRestFetchContext {
 
   /**
    * 是否显示 loading
+   * @default true
    */
   loading?: boolean | LoadingOptions | Ref<boolean>
 
