@@ -80,7 +80,7 @@ export async function genDtsFiles (settings: GenDtsFilesSettings) {
       skipLibCheck: true,
       skipDefaultLibCheck: true,
       baseUrl: workRoot,
-
+      strictNullChecks: true,
       ...compilerOptions,
     },
 
@@ -127,6 +127,10 @@ export async function genDtsFiles (settings: GenDtsFilesSettings) {
     }
 
     if (file.endsWith('.ts')) {
+      const sourceFile = project.addSourceFileAtPath(file)
+      sourceFiles.push(sourceFile)
+    }
+    if (file.endsWith('.tsx')) {
       const sourceFile = project.addSourceFileAtPath(file)
       sourceFiles.push(sourceFile)
     }

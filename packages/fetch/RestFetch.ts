@@ -1,6 +1,7 @@
-import type { AnyFunc, MaybePromise, ReturnVoid } from '@vunk/shared'
+import type { AnyFunc, NormalObject, ReturnVoid } from '@vunk/shared'
 import type { EventSourceParseCallback } from 'eventsource-parser'
 import { noop } from '@vunk-shared/function'
+import { Deferred } from '@vunk-shared/promise'
 import { createParser } from 'eventsource-parser'
 import { stringify } from 'qs'
 
@@ -20,9 +21,16 @@ export class RestFetch {
   }[]>
 
   /**
-   * 请求拦截队列
+   * 中间件队列
    */
-  protected requestInterceptorQueue: RequestInterceptor[] = []
+  protected middlewareQueue: RestFetchMiddleware[] = []
+
+  async runMiddlewares (ctx, index = 0) {
+    if (index === this.middlewareQueue.length)
+      return
+    const middleware = this.middlewareQueue[index]
+    await middleware(ctx, () => this.runMiddlewares(ctx, index + 1))
+  }
 
   constructor (options: RestFetchConstructorOptions) {
     this.baseURL = options.baseURL
@@ -37,6 +45,8 @@ export class RestFetch {
     this.caches = {}
     this.queues = {}
   }
+
+  use (plugin: RestFetchPlugin, ...args) { return plugin(this, ...args) }
 
   response (
     options: RestFetchRequestOptions,
@@ -59,12 +69,56 @@ export class RestFetch {
     return readyPromise.then(responseThen)
   }
 
-  request (options: RestFetchRequestOptions, ...args: any[]): Promise<any>
-  request (
+  async request (
     options: RestFetchRequestOptions,
+    state?: NormalObject,
     requestInit?: RequestInit,
   ) {
-    return this.response(options, requestInit)
+    const responseDef = new Deferred()
+
+    const when = () => responseDef.promise
+    const middlewareCtx = {
+      req: {
+        requestOptions: options,
+        requestInit,
+      },
+      res: {
+        when,
+        response: undefined,
+      },
+      state: state ?? {},
+      body: undefined,
+    }
+
+    // 定义 next 函数
+    const next = async (index = 0) => {
+      if (index >= this.middlewareQueue.length)
+        return
+      // 获取下一个中间件
+      const middleware = this.middlewareQueue[index]
+      await middleware(middlewareCtx, () => next(index + 1))
+    }
+
+    const middlewarePromise = next()
+
+    this.response(
+      middlewareCtx.req.requestOptions,
+      middlewareCtx.req.requestInit,
+    )
+      .then((res) => {
+        middlewareCtx.res.response = res
+        middlewareCtx.body = res
+        return res
+      })
+      .then(
+        responseDef.resolve,
+        responseDef.reject,
+      )
+
+    return responseDef
+      .promise
+      .then(() => middlewarePromise)
+      .then(() => middlewareCtx.body)
       .then(this.requestThen)
   }
 
@@ -171,12 +225,6 @@ export class RestFetch {
 
     const headers = new Headers()
 
-    if (this.requestInterceptorQueue.length) {
-      for (const fn of this.requestInterceptorQueue) {
-        [options, init] = await fn(options, init)
-      }
-    }
-
     // 初始化init参数
     let config: RequestInit = {
       method: options.method,
@@ -217,6 +265,13 @@ export class RestFetch {
       }
     }
 
+    // 设置请求头
+    if (options.headers) {
+      Object.keys(options.headers).forEach((key) => {
+        headers.set(key, options.headers?.[key])
+      })
+    }
+
     // 将params 参数拼接到url
     let params = ''
     if (options.params) {
@@ -225,7 +280,6 @@ export class RestFetch {
     const input = (options.baseURL || this.baseURL) + options.url + params
 
     // 请求拦截
-
     const setRequestInit = options.setRequestInit ?? this.setRequestInit
     if (this.presetRequestInit) {
       config = this.presetRequestInit(config)
@@ -316,25 +370,64 @@ export class RestFetch {
     return fetchPromise ?? fetchFn()
   }
 
-  addRequestInterceptor (fn: RequestInterceptor) {
-    this.requestInterceptorQueue.push(fn)
+  addMiddleware (fn: RestFetchMiddleware) {
+    this.middlewareQueue.push(fn)
   }
 
-  removeRequestInterceptor (fn: RequestInterceptor) {
-    const index = this.requestInterceptorQueue.indexOf(fn)
+  removeMiddleware (fn: RestFetchMiddleware) {
+    const index = this.middlewareQueue.indexOf(fn)
     if (index !== -1) {
-      this.requestInterceptorQueue.splice(index, 1)
+      this.middlewareQueue.splice(index, 1)
     }
   }
 }
 
+export type RestFetchPlugin = (restFetch: RestFetch, ...args: any) => any
+
 type ContentType = 'application/json' | 'application/x-www-form-urlencoded' | 'multipart/form-data'
 
-export interface RequestInterceptor {
-  (
-    options: RestFetchRequestOptions,
-    config?: RequestInit
-  ): MaybePromise<[RestFetchRequestOptions, RequestInit | undefined]>
+export interface RestFetchMiddlewareContext<S = NormalObject> {
+  /**
+   * 请求参数
+   */
+  req: {
+    /**
+     * request 参数
+     */
+    requestOptions: RestFetchRequestOptions
+
+    /**
+     * 原生请求参数
+     */
+    requestInit?: RequestInit
+  }
+
+  res: {
+    /**
+     * this.response 返回值
+     */
+    response?: any
+
+    /**
+     * 返回 respose Promise
+     */
+    when: () => Promise<any>
+  }
+
+  /**
+   * 中间件提供的参数
+   */
+  state: S
+
+  /**
+   * 接口返回值
+   */
+  body: any
+
+}
+
+export interface RestFetchMiddleware<S = NormalObject> {
+  (ctx: RestFetchMiddlewareContext<S>, next: () => Promise<any>): Promise<any>
 }
 
 /**
@@ -403,6 +496,12 @@ export interface RestFetchRequestOptions {
    * 请求地址拼接参数
    */
   params?: Record<string, any>
+
+  /**
+   * 请求头
+   * @default {}
+   */
+  headers?: NormalObject
 
   /**
    * 请求头
