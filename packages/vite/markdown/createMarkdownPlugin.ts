@@ -1,25 +1,26 @@
-import markdown from 'unplugin-vue-markdown/vite'
-import { 
-  customContainerPlugin, 
-  detailsContainerPlugin, 
-  linkPlugin,
-  anchorPlugin,
-  demoContainerPlugin,
+import type {
   DemoContainerPluginSettings,
-  copyableFencePlugin,
-  sourceContainerPlugin,
-  SourceContainerPluginSettings,
-  propsContainerPlugin,
   PropsContainerPluginSettings,
+  SourceContainerPluginSettings,
 } from '@vunk-shared/markdown/plugins'
-
-import {
-  highlight,
-} from '@vunk-shared/markdown/shiki'
 import type { ReturnVoid } from '@vunk-shared/types'
-import type MarkdownIt from 'markdown-it'
-import type {} from 'vitepress'
 
+import type { MarkdownItAsync } from 'markdown-it-async'
+import type {} from 'vitepress'
+import {
+  anchorPlugin,
+  copyableFencePlugin,
+  customContainerPlugin,
+  demoContainerPlugin,
+  detailsContainerPlugin,
+  linkPlugin,
+  propsContainerPlugin,
+  sourceContainerPlugin,
+} from '@vunk-shared/markdown/plugins'
+import {
+  highlight as createHighlighter,
+} from '@vunk-shared/markdown/shiki'
+import markdown from 'unplugin-vue-markdown/vite'
 
 const customBlocks = [
   'tip',
@@ -28,7 +29,6 @@ const customBlocks = [
   'info',
 ]
 
-
 export interface CreateMarkdownPluginSettings {
   base: string
   demoContainerPluginSettings?: DemoContainerPluginSettings
@@ -36,64 +36,54 @@ export interface CreateMarkdownPluginSettings {
 
   propsContainerPluginSettings?: PropsContainerPluginSettings
 
-  markdownItSetup?: (MarkdownIt: MarkdownIt) => ReturnVoid
+  markdownItSetup?: (MarkdownIt: MarkdownItAsync) => ReturnVoid
 }
 
-export const createMarkdownPlugin = async (
-  settings: CreateMarkdownPluginSettings,
-) => {
-
+export async function createMarkdownPlugin (settings: CreateMarkdownPluginSettings) {
   const demoContainerPluginSettings = settings.demoContainerPluginSettings
   const sourceContainerPluginSettings = settings.sourceContainerPluginSettings
   const propsContainerPluginSettings = settings.propsContainerPluginSettings
 
+  // ref: https://github1s.com/vuejs/vitepress/blob/main/src/node/markdown/markdown.ts#L221-L222
+  const [highlighter] = await createHighlighter({
+    dark: 'github-dark',
+    light: 'github-light',
+  }, {})
+
   return markdown({
-
-
     markdownItOptions: {
       linkify: true,
-      highlight: (await highlight({
-        dark: 'github-dark',
-        light: 'github-light',
-      }, {})),
+      highlight: highlighter,
     },
-  
     markdownItSetup (markdownIt) {
-
       // 用户自定义
       settings.markdownItSetup?.(markdownIt)
-            
-  
+
       // customBlocks
       customBlocks.forEach((block) => {
         markdownIt.use(
-          customContainerPlugin, 
+          customContainerPlugin,
           block,
         )
       })
-  
+
       // details
       markdownIt.use(detailsContainerPlugin)
-      
+
       // 为标题添加锚点
       markdownIt.use(anchorPlugin)
-  
-  
+
       // link
-      markdownIt.use(linkPlugin,
-        { 
-          target: '_blank', 
-          rel: 'noreferrer', 
-        },
-        {
-          base: settings.base,
-          cleanUrls: true,
-        },
-      )
-  
+      markdownIt.use(linkPlugin, {
+        target: '_blank',
+        rel: 'noreferrer',
+      }, {
+        base: settings.base,
+        cleanUrls: true,
+      })
+
       // demo
       markdownIt.use(demoContainerPlugin, demoContainerPluginSettings)
-  
 
       // source
       markdownIt.use(sourceContainerPlugin, sourceContainerPluginSettings)
@@ -103,16 +93,13 @@ export const createMarkdownPlugin = async (
 
       // props container
       markdownIt.use(propsContainerPlugin, propsContainerPluginSettings)
-  
-
-  
     },
-  
+
     wrapperClasses: [
       'vp-doc',
       'VPDoc',
       'doc-content',
     ],
-  
+
   })
-} 
+}

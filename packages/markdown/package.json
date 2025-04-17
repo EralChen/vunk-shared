@@ -5,12 +5,14 @@
     "build": "gulp -f gulpfile.ts"
   },
   "dependencies": {
-    "@shikijs/core": "^3.0.0",
-    "@shikijs/transformers": "^3.0.0",
+    "@shikijs/core": "^3.2.2",
+    "@shikijs/transformers": "^3.2.2",
+    "@shikijs/types": "^3.2.2",
     "markdown-it": "^14.1.0",
+    "markdown-it-async": "^2.2.0",
     "markdown-it-container": "^4.0.0",
     "picocolors": "^1.1.1",
-    "shiki": "^3.0.0",
+    "shiki": "^3.2.2",
     "ts-morph": "latest",
     "vitepress": "1.6.3"
   },
