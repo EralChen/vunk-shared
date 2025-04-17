@@ -9,10 +9,20 @@ import {
   transformerNotationFocus,
   transformerNotationHighlight,
 } from '@shikijs/transformers'
-import { customAlphabet } from 'nanoid'
 import { createHighlighter, isSpecialLang } from 'shiki'
 
-const nanoid = customAlphabet('abcdefghijklmnopqrstuvwxyz', 10)
+function generateRandomString (length: number) {
+  const characters = 'abcdefghijklmnopqrstuvwxyz'
+  let result = ''
+  const charactersLength = characters.length
+  for (let i = 0; i < length; i++) {
+    result += characters.charAt(
+      Math.floor(Math.random() * charactersLength),
+    )
+  }
+  return result
+}
+const nanoid = () => generateRandomString(10)
 
 /**
  * 2 steps:
