@@ -9,7 +9,7 @@ import {
   transformerNotationFocus,
   transformerNotationHighlight,
 } from '@shikijs/transformers'
-import { createHighlighter, isSpecialLang } from 'shiki'
+import { bundledLanguages, createHighlighter, isSpecialLang } from 'shiki'
 
 function generateRandomString (length: number) {
   const characters = 'abcdefghijklmnopqrstuvwxyz'
@@ -79,6 +79,7 @@ export async function highlight (
         ? [theme.light, theme.dark]
         : [theme],
     langs: [
+      ...Object.keys(bundledLanguages),
       ...(options.languages || []),
       ...Object.values(options.languageAlias || {}),
     ],
