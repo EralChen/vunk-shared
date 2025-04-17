@@ -48,6 +48,7 @@ export async function createMarkdownPlugin (settings: CreateMarkdownPluginSettin
   const [highlighter] = await createHighlighter({
     dark: 'github-dark',
     light: 'github-light',
+
   }, {})
 
   return markdown({

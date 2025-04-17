@@ -71,6 +71,7 @@ export async function highlight (
       ...Object.values(options.languageAlias || {}),
     ],
     langAlias: options.languageAlias,
+
   })
 
   await options?.shikiSetup?.(highlighter as never)
