@@ -1,5 +1,5 @@
 import type { TransformerCompactLineOption } from '@shikijs/transformers'
-import type { BundledLanguage, ShikiTransformer } from 'shiki'
+import type { ShikiTransformer } from 'shiki'
 import type { Logger } from 'vite'
 import type { MarkdownOptions, ThemeOptions } from 'vitepress'
 import {
@@ -10,8 +10,7 @@ import {
   transformerNotationHighlight,
 } from '@shikijs/transformers'
 import { customAlphabet } from 'nanoid'
-import c from 'picocolors'
-import { createHighlighter, guessEmbeddedLanguages, isSpecialLang } from 'shiki'
+import { createHighlighter, isSpecialLang } from 'shiki'
 
 const nanoid = customAlphabet('abcdefghijklmnopqrstuvwxyz', 10)
 
@@ -54,7 +53,10 @@ export async function highlight (
   options: MarkdownOptions,
   logger: Pick<Logger, 'warn'> = console,
 ): Promise<
-    [(str: string, lang: string, attrs: string) => Promise<string>, () => void]
+    [
+      (str: string, lang: string, attrs: string) => string,
+      () => void,
+    ]
   > {
   const {
     defaultHighlightLang: defaultLang = 'txt',
@@ -71,6 +73,7 @@ export async function highlight (
       ...Object.values(options.languageAlias || {}),
     ],
     langAlias: options.languageAlias,
+
   })
 
   await options?.shikiSetup?.(highlighter as never)
@@ -91,31 +94,26 @@ export async function highlight (
   const mustacheRE = /\{\{.*?\}\}/g
 
   return [
-    async (str: string, lang: string, attrs: string) => {
+    (str: string, lang: string, attrs: string) => {
       const vPre = vueRE.test(lang) ? '' : 'v-pre'
       lang
-        = lang
+      = lang
           .replace(lineNoStartRE, '')
           .replace(lineNoRE, '')
           .replace(vueRE, '')
           .toLowerCase() || defaultLang
 
-      try {
-        // https://github.com/shikijs/shiki/issues/952
-        if (
-          !isSpecialLang(lang)
-          && !highlighter.getLoadedLanguages().includes(lang)
-        ) {
-          await highlighter.loadLanguage(lang as any)
+      if (lang) {
+        const langLoaded = highlighter.getLoadedLanguages().includes(lang as any)
+
+        if (!langLoaded && !isSpecialLang(lang)) {
+          logger.warn(
+            `\nThe language '${lang}' is not loaded, falling back to '${
+              defaultLang || 'txt'
+            }' for syntax highlighting.`,
+          )
+          lang = defaultLang
         }
-      }
-      catch {
-        logger.warn(
-          c.yellow(
-            `\nThe language '${lang}' is not loaded, falling back to '${defaultLang}' for syntax highlighting.`,
-          ),
-        )
-        lang = defaultLang
       }
 
       const lineOptions = attrsToLines(attrs)
@@ -143,8 +141,8 @@ export async function highlight (
 
       str = removeMustache(str).trimEnd()
 
-      const embeddedLang = guessEmbeddedLanguages(str, lang, highlighter)
-      await highlighter.loadLanguage(...(embeddedLang as BundledLanguage[]))
+      // const embeddedLang = guessEmbeddedLanguages(str, lang, highlighter)
+      // highlighter.loadLanguageSync(...(embeddedLang as any))
 
       const highlighted = highlighter.codeToHtml(str, {
         lang,

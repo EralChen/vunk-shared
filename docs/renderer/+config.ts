@@ -1,13 +1,13 @@
-import defaultConfig from '@vunk-shared/vike/vue/config'
+import { vikeVueConfig } from '@lib-env/app-utils'
 
 export default {
-  ...defaultConfig,
+  ...vikeVueConfig,
 
   onRenderClient: 'import:@vunk-shared/vike/vue/onRenderClient:onRenderClient',
   onRenderHtml: 'import:@vunk-shared/vike/vue/onRenderHtml:onRenderHtml',
 
   passToClient: [
-    ...defaultConfig.passToClient,
+    ...vikeVueConfig.passToClient,
     'crowdin',
   ],
   clientRouting: true,
