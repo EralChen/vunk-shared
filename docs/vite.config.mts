@@ -12,6 +12,7 @@ import { packagesDir, workRoot } from '@lib-env/path'
 import { fixPath } from '@lib-env/build-utils'
 import { explorerTree, createMarkdownPlugin } from '@lib-env/app-utils'
 import unocss from 'unocss/vite'
+import { PluginOption } from 'vite'
 
 
 const alias: AliasOptions = [
@@ -128,7 +129,7 @@ export default defineConfig(async ({ mode }) => {
       }),
 
       Icons(),
-    ],
+    ] as PluginOption[],
     // We manually add a list of dependencies to be pre-bundled, in order to avoid a page reload at dev start which breaks vike's CI
     optimizeDeps: {
       esbuildOptions: {

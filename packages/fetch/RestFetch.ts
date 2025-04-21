@@ -597,7 +597,8 @@ export interface RestFetchResponse {
 export interface RestFetchRequest {
   (
     options: RestFetchRequestOptions,
-    requestInit?: RequestInit
+    state?: NormalObject,
+    requestInit?: RequestInit,
   ): Promise<any>
 }
 

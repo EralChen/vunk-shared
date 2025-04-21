@@ -1,17 +1,16 @@
 // ref: https://github.com/vikejs/vike-vue/blob/main/packages/vike-vue/src/%2Bconfig.ts
 
-import { Config } from 'vike/types'
+import type { Config } from 'vike/types'
 import { ssrEffect } from '../../plain/src/ssrEffect'
 
 export default {
 
-  onRenderClient: process.env.ROLLUP_BUILD 
+  onRenderClient: process.env.ROLLUP_BUILD
     ? 'import:@vunk/shared/vike/vue/onRenderClient:onRenderClient'
     : 'import:@vunk-shared/vike/vue/onRenderClient:onRenderClient',
-  onRenderHtml: process.env.ROLLUP_BUILD 
-    ? 'import:@vunk/shared/vike/vue/onRenderHtml:onRenderHtml' 
+  onRenderHtml: process.env.ROLLUP_BUILD
+    ? 'import:@vunk/shared/vike/vue/onRenderHtml:onRenderHtml'
     : 'import:@vunk-shared/vike/vue/onRenderHtml:onRenderHtml',
-
 
   // https://vike.dev/passToClient
   // It is a cumulative config option, so a web app using vike-vue can extend
@@ -100,4 +99,3 @@ export default {
     },
   },
 } satisfies Config
-
