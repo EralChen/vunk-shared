@@ -191,7 +191,7 @@ await client.reader({
 | timeout | number | 超时时间(ms) | - |
 | presetRequestInit | (config: RequestInit) => RequestInit | 前置请求配置 (setRequestInit之前) | - |
 | setRequestInit | (config: RequestInit) => RequestInit | 请求配置（可被请求选项覆盖） | - |
-| responseThen | (res: Response) => any | 响应拦截器 | res => res.json() |
+| responseThen | (res: Response) => any | 响应拦截器（可被请求选项覆盖） | res => res.json() |
 | requestThen | (data: any) => any | 响应拦截器（responseThen之后） | data => data |
 | ontimeout | (config: RequestInit) => void | 超时回调 | - |
 
