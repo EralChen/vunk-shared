@@ -73,7 +73,6 @@ export function ElementPlusRestFetchPlugin (
     await next()
 
     const resReady = res.when()
-
     if (loading) {
       const LoadingService = ElLoading.service || ElLoadingService
 
@@ -118,9 +117,9 @@ export function ElementPlusRestFetchPlugin (
         initOptions.successMessage && ElMessage({
           type: 'success',
           message:
-              typeof initOptions.successMessage === 'string'
-                ? initOptions.successMessage
-                : data.msg || data.message || '请求成功',
+                typeof initOptions.successMessage === 'string'
+                  ? initOptions.successMessage
+                  : data.msg || data.message || '请求成功',
         })
       }
       else {
