@@ -7,9 +7,6 @@ export const libExternal = [
   new RegExp(`^${LIB_ALIAS}`),
 ]
 
-
-
-
 export const filePathIgnore = [
   'gulpfile.ts',
   'package.json',
@@ -17,4 +14,3 @@ export const filePathIgnore = [
   '**/README.md',
   '**/__tests__/**',
 ]
-

@@ -34,6 +34,10 @@ function getPosts () {
 }
 ```
 
+:::demo
+ElementPlusRestFetchPlugin/basic
+:::
+
 ## 核心功能
 
 ### Loading 处理
