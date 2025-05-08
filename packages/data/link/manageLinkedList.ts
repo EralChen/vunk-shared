@@ -1,11 +1,8 @@
-import { LinkedNode, LinkedNodeInfo } from '@vunk-shared/types'
-
-
+import type { LinkedNode, LinkedNodeInfo } from '@vunk-shared/types'
 
 export function manageLinkedList<T extends LinkedNode> (
   list: T[],
 ) {
-
   const rawMap = new Map<string, T>()
 
   /**
@@ -13,7 +10,7 @@ export function manageLinkedList<T extends LinkedNode> (
    */
   const prevRawMap = new Map<string, T>()
 
-  list.forEach(node => {
+  list.forEach((node) => {
     rawMap.set(node.id, node)
     if (node.nextId) {
       prevRawMap.set(node.nextId, node)
@@ -25,14 +22,11 @@ export function manageLinkedList<T extends LinkedNode> (
   const linkInfo: Map<
     string,
     {
-      id: string,
-      link: LinkedNode[],
-      index: number,
+      id: string
+      link: LinkedNode[]
+      index: number
     }
   > = new Map()
-
-  
-
 
   // 构建链条的辅助函数
   const buildChain = (startNode: LinkedNode) => {
@@ -43,8 +37,8 @@ export function manageLinkedList<T extends LinkedNode> (
       chain.push(currentNode)
       visited.add(currentNode.id)
       localVisited.add(currentNode.id)
-      currentNode = currentNode.nextId 
-        ? rawMap.get(currentNode.nextId) 
+      currentNode = currentNode.nextId
+        ? rawMap.get(currentNode.nextId)
         : undefined
     }
 
@@ -55,7 +49,6 @@ export function manageLinkedList<T extends LinkedNode> (
   }
 
   const startNodes = list.filter(node => !prevRawMap.has(node.id))
-
 
   function buildChainAndSet (node: LinkedNode) {
     const [ids, chain] = buildChain(node)
@@ -69,16 +62,15 @@ export function manageLinkedList<T extends LinkedNode> (
   }
   startNodes.forEach(buildChainAndSet)
 
-  list.forEach(node => {
+  list.forEach((node) => {
     if (visited.has(node.id)) {
       return
     }
     buildChainAndSet(node)
   })
 
-
   const dataMap = new Map<string, LinkedNodeInfo<T>>()
-  const data: LinkedNodeInfo<T>[] = list.map(node => {
+  const data: LinkedNodeInfo<T>[] = list.map((node) => {
     const info = linkInfo.get(node.id)
     if (!info) {
       throw new Error('No info found')
@@ -97,22 +89,9 @@ export function manageLinkedList<T extends LinkedNode> (
     return doc
   })
 
-  
-
-
-
-
-
-  
-
-
-
-
   return {
     rawMap,
     data,
     dataMap,
   }
-
 }
-
