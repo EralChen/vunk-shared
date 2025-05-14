@@ -1,9 +1,9 @@
-import { presetAttributify, presetWind, UserConfig } from 'unocss'
+import type { UserConfig } from 'unocss'
+import { presetAttributify, presetWind4 } from 'unocss'
 import { presetFlex, presetFont, presetGap } from 'unocss-preset-vunk'
 import { elThemeColors } from './elThemeColors'
 import { fontTheme } from './fontTheme'
 import { gapTheme } from './gapTheme'
-
 
 export interface CreateUnocssSettingsOptions {
   presetFontTheme?: Record<string, string>
@@ -33,7 +33,7 @@ export function createUnocssSettings (
   return {
     presets: [
       presetAttributify(),
-      presetWind(),
+      presetWind4(),
       presetFont({
         theme: {
           ...fontTheme,
@@ -58,4 +58,3 @@ export function createUnocssSettings (
     },
   } as UserConfig
 }
-
