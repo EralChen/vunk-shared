@@ -6,6 +6,7 @@ it('bubbleSort', async () => {
     { index: undefined, name: 'a' },
     { index: 3 },
     { index: undefined, name: 'b' },
+    { index: undefined, name: 'c' },
     { index: 2 },
     { index: 1 },
   ])
@@ -14,6 +15,7 @@ it('bubbleSort', async () => {
     { index: undefined, name: 'a' },
     { index: 1 },
     { index: undefined, name: 'b' },
+    { index: undefined, name: 'c' },
     { index: 2 },
     { index: 3 },
   ])
@@ -29,6 +31,8 @@ it('bubbleSort deep key', async () => {
     {
       meta: { index: 2 },
     },
+    { name: 'c' },
+    { name: 'd' },
     {
       meta: { index: 1 },
     },
@@ -39,6 +43,8 @@ it('bubbleSort deep key', async () => {
     { meta: { index: 1 } },
     { name: 'b' },
     { meta: { index: 2 } },
+    { name: 'c' },
+    { name: 'd' },
     { meta: { index: 3 } },
   ])
 })

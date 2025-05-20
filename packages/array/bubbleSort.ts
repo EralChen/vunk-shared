@@ -32,11 +32,24 @@ export function bubbleSort<T> (
         continue
       }
 
+      // 如果 nextItemIndex 为 undefined，继续向前查找非 undefined 的值
       if (nextItemIndex === undefined) {
-        nextJ++
-        nextItemIndex = arr[nextJ] as never
-        if (isObject(nextItemIndex)) {
-          nextItemIndex = get(nextItemIndex, key) as number
+        // 持续查找直到找到非 undefined 值或达到数组末尾
+        while (nextJ < len - 1) {
+          nextJ++
+          nextItemIndex = arr[nextJ] as never
+          if (isObject(nextItemIndex)) {
+            nextItemIndex = get(nextItemIndex, key) as number
+          }
+          // 找到非 undefined 值后退出循环
+          if (nextItemIndex !== undefined) {
+            break
+          }
+        }
+
+        // 如果所有后续项都是 undefined，则跳过当前比较
+        if (nextItemIndex === undefined) {
+          continue
         }
       }
 
