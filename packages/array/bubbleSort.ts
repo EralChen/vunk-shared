@@ -2,61 +2,95 @@ import { isObject } from '@vunk-shared/object'
 import { get } from 'lodash-es'
 
 /**
- * 跳过 undefined 的冒泡排序
- * @param arr
- * @param key
- * @returns
+ * 获取项的索引值
+ * @param item - 要获取索引的项
+ * @param key - 索引键名
+ * @returns 索引值
+ */
+function getItemIndex (item: any, key: string | string[]): number | undefined {
+  if (isObject(item)) {
+    return get(item, key) as number
+  }
+  return item
+}
+
+/**
+ * 跳过 undefined 的冒泡排序 (优化版)
+ * @param arr - 要排序的数组
+ * @param key - 排序的键 (默认为 'index')
+ * @returns 排序后的数组
  */
 export function bubbleSort<T> (
   arr: T[],
   key: string | string[] = 'index',
 ): T[] {
+  if (!arr || arr.length <= 1) {
+    return arr
+  }
+
   const len = arr.length
+  let swapped: boolean
+
+  // 预处理：创建值与索引的映射，用于提高查找效率
+  const indexMap = new Map<number, number>()
+
   for (let i = 0; i < len; i++) {
+    const index = getItemIndex(arr[i], key)
+    if (index !== undefined) {
+      indexMap.set(i, index)
+    }
+  }
+
+  // 如果没有有效的索引，直接返回原数组
+  if (indexMap.size === 0) {
+    return arr
+  }
+
+  for (let i = 0; i < len; i++) {
+    swapped = false
+
     for (let j = 0; j < len - i - 1; j++) {
-      let itemIndex: number = arr[j] as never
+      const currentIndex = indexMap.get(j)
 
-      let nextJ = j + 1
-      let nextItemIndex: number = arr[nextJ] as never
-
-      if (isObject(itemIndex)) {
-        itemIndex = get(itemIndex, key) as number
-      }
-
-      if (isObject(nextItemIndex)) {
-        nextItemIndex = get(nextItemIndex, key) as number
-      }
-
-      // 如果 itemIndex 为 undefined ，则忽略
-      if (itemIndex === undefined) {
+      // 如果当前项没有有效索引，跳过
+      if (currentIndex === undefined) {
         continue
       }
 
-      // 如果 nextItemIndex 为 undefined，继续向前查找非 undefined 的值
-      if (nextItemIndex === undefined) {
-        // 持续查找直到找到非 undefined 值或达到数组末尾
-        while (nextJ < len - 1) {
-          nextJ++
-          nextItemIndex = arr[nextJ] as never
-          if (isObject(nextItemIndex)) {
-            nextItemIndex = get(nextItemIndex, key) as number
-          }
-          // 找到非 undefined 值后退出循环
-          if (nextItemIndex !== undefined) {
-            break
-          }
-        }
+      // 查找下一个有有效索引的项
+      let nextJ = j + 1
+      let nextItemIndex: number | undefined
 
-        // 如果所有后续项都是 undefined，则跳过当前比较
-        if (nextItemIndex === undefined) {
-          continue
+      while (nextJ < len) {
+        nextItemIndex = indexMap.get(nextJ)
+        if (nextItemIndex !== undefined) {
+          break
         }
+        nextJ++
       }
 
-      if (itemIndex > nextItemIndex) {
+      // 如果没有找到有效的下一项，结束本轮比较
+      if (nextItemIndex === undefined) {
+        break
+      }
+
+      // 如果当前值大于下一个值，交换位置
+      if (currentIndex > nextItemIndex) {
         [arr[j], arr[nextJ]] = [arr[nextJ], arr[j]]
+
+        // 更新索引映射
+        indexMap.set(nextJ, currentIndex)
+        indexMap.set(j, nextItemIndex)
+
+        swapped = true
       }
     }
+
+    // 如果本轮没有交换，说明已经排序完成
+    if (!swapped) {
+      break
+    }
   }
+
   return arr
 }

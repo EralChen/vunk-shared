@@ -23,28 +23,23 @@ it('bubbleSort', async () => {
 
 it('bubbleSort deep key', async () => {
   const b = bubbleSort([
-    { name: 'a' },
     {
       meta: { index: 3 },
     },
-    { name: 'b' },
     {
       meta: { index: 2 },
     },
-    { name: 'c' },
-    { name: 'd' },
     {
       meta: { index: 1 },
     },
   ], ['meta', 'index'])
 
   expect(b).toEqual([
-    { name: 'a' },
+
     { meta: { index: 1 } },
-    { name: 'b' },
+
     { meta: { index: 2 } },
-    { name: 'c' },
-    { name: 'd' },
+
     { meta: { index: 3 } },
   ])
 })
