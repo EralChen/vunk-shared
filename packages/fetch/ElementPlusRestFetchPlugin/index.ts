@@ -73,6 +73,13 @@ export function ElementPlusRestFetchPlugin (
     await next()
 
     const resReady = res.when()
+
+    resReady.catch((err) => {
+      if (initOptions.error) {
+        initOptions.onerror(err)
+      }
+    })
+
     if (loading) {
       const LoadingService = ElLoading.service || ElLoadingService
 
@@ -103,15 +110,6 @@ export function ElementPlusRestFetchPlugin (
       })
     }
 
-    if (initOptions.error) {
-      resReady.catch((err) => {
-        if (initOptions.error) {
-          initOptions.onerror(err)
-        }
-        throw err
-      })
-    }
-
     await resReady.then((data) => {
       if (pluginCustomOk(data)) {
         initOptions.successMessage && ElMessage({
@@ -125,7 +123,7 @@ export function ElementPlusRestFetchPlugin (
       else {
         initOptions.error && initOptions.onerror(data)
         if (initOptions.throwResErr) {
-          ctx.body = Promise.reject(data)
+          throw data
         }
       }
     })
