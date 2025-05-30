@@ -123,6 +123,7 @@ export function ElementPlusRestFetchPlugin (
       else {
         initOptions.error && initOptions.onerror(data)
         if (initOptions.throwResErr) {
+          ctx.body = Promise.reject(data)
           throw data
         }
       }
