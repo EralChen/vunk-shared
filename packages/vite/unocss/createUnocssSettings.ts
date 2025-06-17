@@ -33,7 +33,9 @@ export function createUnocssSettings (
   return {
     presets: [
       presetAttributify(),
-      presetWind4(),
+      presetWind4({
+        reset: false,
+      }),
       presetFont({
         theme: {
           ...fontTheme,
