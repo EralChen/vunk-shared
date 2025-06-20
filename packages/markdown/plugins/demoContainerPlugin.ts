@@ -180,7 +180,7 @@ export async function demoContainerPlugin (md: MarkdownIt, options?: DemoContain
   function readCodeInfo (
     filename: string,
   ) {
-    const suffix = ['vue', 'ts', 'js', 'cjs']
+    const suffix = ['vue', 'ts', 'js', 'cjs', 'txt', 'json']
     const fileIndex = suffix
       .map(sfx => path.resolve(demoRoot, `${filename}.${sfx}`))
       .findIndex(item => fs.existsSync(item))
