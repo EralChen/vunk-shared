@@ -9,7 +9,6 @@ function read () {
   loading.value = true
   rName(loading).then((res) => {
     data.value = res.name
-    console.log('res', res)
     loading.value = false
   })
 }

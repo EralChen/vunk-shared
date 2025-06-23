@@ -1,5 +1,8 @@
+import type { AnyFunc, NormalObject } from '@vunk-shared/types'
 import type { RestFetch, RestFetchMiddleware } from '../RestFetch'
 import { sleep } from '@vunk-shared/promise'
+
+const stateSymbol = Symbol('retryRestFetchState')
 
 export function RetryRestFetchPlugin (
   restFetch: RestFetch,
@@ -16,6 +19,10 @@ export function RetryRestFetchPlugin (
       ...state,
     } as Required<RetryRestFetchContext>
 
+    state[stateSymbol] ??= initOptions
+
+    Object.assign(state, initOptions.retryState?.(state) || {})
+
     await next()
 
     async function doRetry () {
@@ -23,15 +30,24 @@ export function RetryRestFetchPlugin (
         initOptions.retryEnable
         && initOptions.retryTimes > 0
       ) {
+        const retryState = {
+          ...state[stateSymbol],
+          retryTimes: --initOptions.retryTimes,
+          [stateSymbol]: state[stateSymbol],
+        }
+        Object.assign(retryState, initOptions.retryState?.(retryState) || {})
+
         await sleep(initOptions.retryDelay)
-        ctx.body = await restFetch.request(
+
+        await restFetch.request(
           requestOptions,
-          {
-            ...state,
-            retryTimes: --initOptions.retryTimes,
-          },
+          retryState,
           requestInit,
-        )
+        ).then((res) => {
+          ctx.body = res
+        }).finally(() => {
+          Reflect.deleteProperty(ctx.state, stateSymbol)
+        })
       }
     }
 
@@ -52,6 +68,8 @@ export function RetryRestFetchPlugin (
 export interface RetryRestFetchPluginOptions {
   retryTimes?: number
   retryDelay?: number
+
+  retryState?: AnyFunc
   /**
    * @description 自定义重试条件
    */

@@ -88,7 +88,7 @@ export class RestFetch {
       },
       state: state ?? {},
       body: undefined,
-    }
+    } as RestFetchMiddlewareContext<NormalObject>
 
     // 定义 next 函数
     const next = async (index = 0) => {
@@ -110,10 +110,11 @@ export class RestFetch {
         middlewareCtx.body = res
         return res
       })
-      .then( // 失败与否都却表中间件运行
-        responseDef.resolve,
-        responseDef.resolve,
-      )
+
+      .then(responseDef.resolve, (err) => {
+        middlewareCtx.res.reason = err
+        responseDef.resolve(err)
+      })
 
     return responseDef
       .promise
@@ -407,6 +408,11 @@ export interface RestFetchMiddlewareContext<S = NormalObject> {
      * this.response 返回值
      */
     response?: any
+
+    /**
+     * 请求失败
+     */
+    reason?: any
 
     /**
      * 返回 respose Promise

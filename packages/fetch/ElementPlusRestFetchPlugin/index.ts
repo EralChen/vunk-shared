@@ -70,7 +70,13 @@ export function ElementPlusRestFetchPlugin (
     const loading = initOptions.loading
     let loadingService: ReturnType<typeof ElLoadingService> | null = null
 
+    console.log('ElementPlusRestFetchPlugin', ctx)
+
     await next()
+
+    Object.assign(initOptions, ctx.state)
+
+    console.log('ElementPlusRestFetchPlugin next', initOptions)
 
     const resReady = res.when()
 
@@ -124,7 +130,6 @@ export function ElementPlusRestFetchPlugin (
         initOptions.error && initOptions.onerror(data)
         if (initOptions.throwResErr) {
           ctx.body = Promise.reject(data)
-          throw data
         }
       }
     })
