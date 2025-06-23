@@ -110,9 +110,9 @@ export class RestFetch {
         middlewareCtx.body = res
         return res
       })
-      .then(
+      .then( // 失败与否都却表中间件运行
         responseDef.resolve,
-        responseDef.reject,
+        responseDef.resolve,
       )
 
     return responseDef
