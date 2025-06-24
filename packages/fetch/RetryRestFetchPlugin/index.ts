@@ -1,5 +1,6 @@
-import type { AnyFunc, NormalObject } from '@vunk-shared/types'
-import type { RestFetch, RestFetchMiddleware } from '../RestFetch'
+import type { RestFetch, RestFetchMiddleware, RestFetchMiddlewareContext } from '@vunk-shared/fetch'
+import type { AnyFunc } from '@vunk-shared/types'
+import type { MaybePromise } from '@vunk/shared'
 import { sleep } from '@vunk-shared/promise'
 
 const stateSymbol = Symbol('retryRestFetchState')
@@ -15,6 +16,17 @@ export function RetryRestFetchPlugin (
       retryTimes: 3,
       retryDelay: 4000,
       retryEnable: true,
+      async retryWhen (ctx) {
+        const respose = await ctx.res.when()
+
+        if (respose instanceof Error) {
+          return true
+        }
+        if (respose instanceof Response) {
+          return respose.status >= 500 || respose.status === 404
+        }
+        return false
+      },
       ...pluginOptions,
       ...state,
     } as Required<RetryRestFetchContext>
@@ -51,12 +63,9 @@ export function RetryRestFetchPlugin (
       }
     }
 
-    if (ctx.body instanceof Promise) {
-      await ctx.body.catch(doRetry)
-    }
-    else if (
+    if (
       initOptions.retryWhen
-      && initOptions.retryWhen(ctx.body)
+      && (await initOptions.retryWhen(ctx))
     ) {
       await doRetry()
     }
@@ -73,7 +82,7 @@ export interface RetryRestFetchPluginOptions {
   /**
    * @description 自定义重试条件
    */
-  retryWhen?: (body: any) => boolean
+  retryWhen?: (ctx: RestFetchMiddlewareContext) => MaybePromise<boolean>
 }
 export interface RetryRestFetchContext extends RetryRestFetchPluginOptions {
   retryEnable?: boolean

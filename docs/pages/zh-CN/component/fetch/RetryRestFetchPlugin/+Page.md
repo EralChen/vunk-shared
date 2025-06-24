@@ -36,7 +36,7 @@ restFetch.use(RetryRestFetchPlugin, {
 | --- | --- | --- | --- |
 | retryTimes | number | 3 | 重试次数 |
 | retryDelay | number | 4000 | 重试延迟时间（毫秒） |
-| retryWhen | (body: any) => boolean | undefined | 自定义重试条件函数 |
+| retryWhen | (ctx: any) => MaybePromise\<boolean\> | undefined | 重试条件函数 |
 
 **注意**：重试次数是指除首次请求外，额外尝试的次数。例如，`retryTimes = 3` 表示首次请求失败后，最多会额外重试 3 次，总共发送 4 次请求。
 
@@ -45,7 +45,6 @@ restFetch.use(RetryRestFetchPlugin, {
 除了全局配置，你还可以在单个请求中使用不同的重试策略：
 
 ```ts
-// 发送请求时覆盖全局配置
 restFetch.request({
   method: 'GET',
   url: '/api/data',
@@ -58,12 +57,34 @@ restFetch.request({
 
 ## 自定义重试条件
 
-默认情况下，插件会在请求出现网络错误或 Promise 被拒绝时自动重试。但你可以通过 `retryWhen` 函数自定义重试条件：
+默认情况下，插件会在请求失败时自动重试。
+
+```ts
+async function retryWhen (ctx) {
+  const respose = await ctx.res.when()
+
+  if (respose instanceof Error) {
+    return true
+  }
+  if (respose instanceof Response) {
+    return respose.status >= 500 || respose.status === 404
+  }
+  return false
+}
+```
+
+但你可以通过 `retryWhen` 函数自定义重试条件：
 
 ```ts
 restFetch.use(RetryRestFetchPlugin, {
   // 当响应状态码为 500 时重试
-  retryWhen: res => res && res.status === 500,
+  async retryWhen (ctx) {
+    const respose = await ctx.res.when()
+    if (respose instanceof Response) {
+      return respose.status = 500
+    }
+    return false
+  }
 })
 ```
 
@@ -74,8 +95,7 @@ restFetch.request({
   method: 'GET',
   url: '/api/data',
 }, {
-  // 当业务状态码不为 200 时重试
-  retryWhen: res => res && res.code !== 200,
+  retryWhen,
 })
 ```
 
@@ -121,13 +141,72 @@ function fetchData () {
 RetryRestFetchPlugin 可以与其他插件（如 ElementPlusRestFetchPlugin）一起使用：
 
 ```ts
-// 安装多个插件
-restFetch.use(RetryRestFetchPlugin, {
-  retryTimes: 3,
-})
 restFetch.use(ElementPlusRestFetchPlugin, {
-  customOk: res => res.code === 200,
-})
+  customOk: (res) => {
+    if (res instanceof Response && res.status !== 200) {
+      return false
+    }
+
+    if (isPlainObject(res) && res.code !== 200) {
+      return false
+    }
+    return true
+  },
+  onerror: (err) => {
+    if (err instanceof Response) {
+      if (err.status === 401) {
+        ElMessage.error('请先登录')
+        sessionStorage.removeItem('accessToken')
+        localStorage.removeItem('token')
+        localStorage.removeItem('accessToken')
+        setTimeout(() => {
+          window.location.href = `${import.meta.env.BASE_URL}login`
+        }, 1000)
+        return
+      }
+      if (err.status === 403) {
+        ElMessage.error('没有权限访问')
+        return
+      }
+    }
+    defaultOnerror(err)
+  },
+} as ElementPlusRestFetchPluginOptions)
+
+restFetch.use(RetryRestFetchPlugin, {
+  retryTimes: 2,
+  async retryWhen (ctx: RestFetchMiddlewareContext) {
+    const { res, req: { requestOptions } } = ctx
+
+    const respose = await res.when()
+
+    if (respose instanceof Response) {
+      if (respose.status === 401) {
+        return true
+      }
+      if (respose.status === 403) { // accessToken token 失效，尝试使用 token
+        sessionStorage.removeItem('accessToken')
+
+        const token = localStorage.getItem('token')
+          || localStorage.getItem('accessToken')
+
+        if (token && requestOptions.headers) {
+          requestOptions.headers.Authorization = token
+        }
+
+        return true
+      }
+    }
+    return false
+  },
+  retryState: (state) => {
+    if (state.retryTimes !== 0) {
+      return {
+        error: false,
+      }
+    }
+  },
+} as RetryRestFetchPluginOptions)
 ```
 
 ## 基本演示

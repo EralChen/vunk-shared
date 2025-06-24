@@ -2,7 +2,6 @@ import type { RestFetchMiddleware, RestFetchRequestOptions } from '@vunk-shared/
 import type { ElementPlusRestFetchContext, ElementPlusRestFetchPluginOptions } from '@vunk-shared/fetch/ElementPlusRestFetchPlugin'
 import type { RetryRestFetchContext, RetryRestFetchPluginOptions } from '@vunk-shared/fetch/RetryRestFetchPlugin'
 import type { Ref } from 'vue'
-import { error } from 'console'
 import { RestFetch } from '@vunk-shared/fetch'
 import { ElementPlusRestFetchPlugin } from '@vunk-shared/fetch/ElementPlusRestFetchPlugin'
 import { RetryRestFetchPlugin } from '@vunk-shared/fetch/RetryRestFetchPlugin'
