@@ -4,8 +4,7 @@ import type { Ref } from 'vue'
 import type { RestFetch, RestFetchMiddleware } from '../RestFetch'
 import { isPlainObject } from '@vunk-shared/object'
 import { sleep } from '@vunk-shared/promise'
-import { ElLoading, ElLoadingService, ElMessage } from 'element-plus'
-
+import { ElLoading, ElMessage } from 'element-plus'
 import { throttle } from 'lodash-es'
 import { isRef } from 'vue'
 
@@ -68,27 +67,10 @@ export function ElementPlusRestFetchPlugin (
     } as Required<ElementPlusRestFetchContext>
 
     const loading = initOptions.loading
-    let loadingService: ReturnType<typeof ElLoadingService> | null = null
-
-    console.log('ElementPlusRestFetchPlugin', ctx)
-
-    await next()
-
-    Object.assign(initOptions, ctx.state)
-
-    console.log('ElementPlusRestFetchPlugin next', initOptions)
+    let loadingService: ReturnType<typeof ElLoading.service> | null = null
 
     const resReady = res.when()
-
-    resReady.catch((err) => {
-      if (initOptions.error) {
-        initOptions.onerror(err)
-      }
-    })
-
     if (loading) {
-      const LoadingService = ElLoading.service || ElLoadingService
-
       const preres = await Promise.race([
         sleep(initOptions.loadingDelay),
         resReady,
@@ -98,7 +80,7 @@ export function ElementPlusRestFetchPlugin (
           initOptions.loading.value = true
         }
         else {
-          loadingService = LoadingService(
+          loadingService = ElLoading.service(
             typeof initOptions.loading === 'boolean'
               ? {}
               : initOptions.loading,
@@ -106,6 +88,16 @@ export function ElementPlusRestFetchPlugin (
         }
       }
     }
+
+    await next()
+
+    Object.assign(initOptions, ctx.state)
+
+    resReady.catch((err) => {
+      if (initOptions.error) {
+        initOptions.onerror(err)
+      }
+    })
 
     if (initOptions.loadingClose) {
       resReady.finally(() => {
@@ -137,7 +129,6 @@ export function ElementPlusRestFetchPlugin (
 
   restFetch.addMiddleware(restFetchMiddleware)
 }
-
 export interface ElementPlusRestFetchPluginOptions {
   /**
    * 自定义业务响应成功的条件
