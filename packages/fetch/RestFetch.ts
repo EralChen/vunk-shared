@@ -1,5 +1,5 @@
 import type { AnyFunc, NormalObject, ReturnVoid } from '@vunk/shared'
-import type { EventSourceParseCallback } from 'eventsource-parser'
+import type { EventSourceMessage } from 'eventsource-parser'
 import { noop } from '@vunk-shared/function'
 import { Deferred } from '@vunk-shared/promise'
 import { createParser } from 'eventsource-parser'
@@ -185,31 +185,46 @@ export class RestFetch {
   async reader (
     readerOpts: {
       url: string
-      onmessage: EventSourceParseCallback
+      onmessage: RestFetchReaderOnmessage
       abortController?: AbortController
+      returnResponse?: boolean
     },
     requestOptions?: Partial<RestFetchRequestOptions>,
     requestInit?: RequestInit,
   ) {
     const onmessage = readerOpts.onmessage ?? noop
 
-    const reader: ReadableStreamDefaultReader<Uint8Array> = await this.response({
+    const res: Response = await this.response({
       url: readerOpts.url,
       method: 'POST',
-      responseThen: res => res.body?.getReader(),
+      responseThen: res => res,
       abortController: readerOpts.abortController,
       ...requestOptions,
     }, requestInit)
+
+    const cloneRes = readerOpts.returnResponse
+      ? res.clone()
+      : res
+
+    const reader = res.body?.getReader()
+
+    if (!reader) {
+      return cloneRes
+    }
+
     const decoder = new TextDecoder('utf-8')
-    const parser = createParser(onmessage)
-    if (!reader)
-      return
+    const parser = createParser({
+      onEvent: onmessage,
+    })
+
     while (true) {
       const { done, value } = await reader.read()
       if (done)
         break
       parser.feed(decoder.decode(value))
     }
+
+    return cloneRes
   }
 
   private async initFetch (
@@ -608,4 +623,4 @@ export interface RestFetchRequest {
   ): Promise<any>
 }
 
-export type RestFetchReaderOnmessage = EventSourceParseCallback
+export type RestFetchReaderOnmessage = (event: EventSourceMessage) => void

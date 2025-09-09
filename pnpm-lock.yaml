@@ -317,8 +317,8 @@ importers:
   packages/fetch:
     dependencies:
       eventsource-parser:
-        specifier: ^2.0.1
-        version: 2.0.1
+        specifier: ^3.0.6
+        version: 3.0.6
       qs:
         specifier: ^6.13.0
         version: 6.14.0
@@ -3307,8 +3307,8 @@ packages:
     resolution: {integrity: sha512-i/2XbnSz/uxRCU6+NdVJgKWDTM427+MqYbkQzD321DuCQJUqOuJKIA0IM2+W2xtYHdKOmZ4dR6fExsd4SXL+WQ==}
     engines: {node: '>=6'}
 
-  eventsource-parser@2.0.1:
-    resolution: {integrity: sha512-gMaRLm5zejEH9mNXC54AnIteFI9YwL/q5JKMdBnoG+lEI1JWVGFVk0Taaj9Xb5SKgzIBDZoQX5IzMe44ILWODg==}
+  eventsource-parser@3.0.6:
+    resolution: {integrity: sha512-Vo1ab+QXPzZ4tCa8SwIHJFaSzy4R6SHf7BY79rFBDf0idraZWAkYrDjDj8uWaSm3S2TK+hJ7/t1CEmZ7jXw+pg==}
     engines: {node: '>=18.0.0'}
 
   execa@9.5.2:
@@ -8945,7 +8945,7 @@ snapshots:
 
   event-target-shim@5.0.1: {}
 
-  eventsource-parser@2.0.1: {}
+  eventsource-parser@3.0.6: {}
 
   execa@9.5.2:
     dependencies:
