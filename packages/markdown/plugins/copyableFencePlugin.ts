@@ -1,6 +1,5 @@
-
-import { markdownSetupInject } from '@vunk-shared/vite/markdown'
 import type MarkdownIt from 'markdown-it'
+import { markdownSetupInject } from '@vunk-shared/vite/markdown'
 
 /**
  * @link https://github.com/vuejs/vitepress/blob/1188951785fd2a72f9242d46dc55abb1effd212a/src/node/markdown/plugins/preWrapper.ts#L8
@@ -11,9 +10,6 @@ import type MarkdownIt from 'markdown-it'
  * ```
  */
 export function copyableFencePlugin (md: MarkdownIt) {
-
-
-
   const fence = md.renderer.rules.fence
   md.renderer.rules.fence = (...args) => {
     const [tokens, idx] = args
@@ -27,32 +23,32 @@ export function copyableFencePlugin (md: MarkdownIt) {
 
     const lang = extractLang(token.info)
 
-    
     return (
-      `<div class="language-${lang} ${active}">` +
-      `<button class="copy"></button>` +
-      `<span class="lang">${lang}</span>` +
-      fence?.(...args) +
-      '</div>'
+      `<div class="language-${lang} ${active}">`
+      + `<button class="copy"></button>`
+      + `<span class="lang">${lang}</span>${
+        fence?.(...args)
+      }</div>`
     )
   }
 
   md.core.ruler.before(
-    'normalize', 
-    'add_copy_code_script', 
+    'normalize',
+    'add_copy_code_script',
     (state) => {
-      const currentMdPath: string = state.env.id 
-      || state.env.realPath // for vitepress
-      
-      if (state.env.__vunk_noMarkdownSetupInject) return
+      const currentMdPath: string = state.env.id
+        || state.env.realPath // for vitepress
 
-      if (!currentMdPath) return
-      
+      if (state.env.__vunk_noMarkdownSetupInject)
+        return
 
-      const leadings = process.env.ROLLUP_BUILD 
+      if (!currentMdPath)
+        return
+
+      const leadings = process.env.ROLLUP_BUILD
         ? [
           `import { useCopyCode } from '@vunk/shared/markdown/plugins/copyableFence'`,
-        ] 
+        ]
         : [
           `import { useCopyCode } from '@vunk-shared/markdown/plugins/copyableFence'`,
         ]
@@ -65,20 +61,19 @@ export function copyableFencePlugin (md: MarkdownIt) {
       })
 
       state.src = mdSetupInject.transform(
-        state.src, currentMdPath,
+        state.src,
+        currentMdPath,
       )
     },
   )
-
 }
-
 
 function extractLang (info: string) {
   return info
     .trim()
     .replace(/=(\d*)/, '')
-    .replace(/:(no-)?line-numbers({| |$|=\d*).*/, '')
-    .replace(/(-vue|{| ).*$/, '')
+    .replace(/:(no-)?line-numbers(\{| |$|=\d*).*/, '')
+    .replace(/(-vue|\{| ).*$/, '')
     .replace(/^vue-html$/, 'template')
     .replace(/^ansi$/, '')
 }

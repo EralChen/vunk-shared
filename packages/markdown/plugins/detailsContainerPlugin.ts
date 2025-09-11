@@ -1,18 +1,17 @@
 import type MarkdownIt from 'markdown-it'
-import container from 'markdown-it-container'
-import { ContainerPluginWithParams } from './types'
 import type { MarkdownEnv } from 'vitepress'
+import type { ContainerPluginWithParams } from './types'
+import container from 'markdown-it-container'
 
 /**
- * 
+ *
  * @param md markdown-it instance
- * @returns 
- * 
+ *
  * @example
  ```ts
  md.use(detailsContainerPlugin)
  ```
-
+ 
 ```md
  :::details Click me
   Hello World
@@ -23,20 +22,22 @@ export function detailsContainerPlugin (
   md: MarkdownIt,
 ) {
   const klass = 'details'
-  
+
   const args = [
     container,
     klass,
     {
       render (
-        tokens, idx, _options, 
+        tokens,
+        idx,
+        _options,
         env: MarkdownEnv & { references?: any },
         self,
       ) {
         const token = tokens[idx]
         const info = token.info.trim().slice(klass.length).trim()
         const attrs = self.renderAttrs(token)
-        
+
         if (token.nesting === 1) {
           const title = md.renderInline(info, {
             references: env.references,
@@ -45,7 +46,8 @@ export function detailsContainerPlugin (
             `<details class="${klass} custom-block"${attrs}>`,
             ` <summary>${title}</summary>`,
           ].join('\n')
-        } else {
+        }
+        else {
           return `</details>\n`
         }
       },
