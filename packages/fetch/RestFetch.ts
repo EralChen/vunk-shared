@@ -1,4 +1,4 @@
-import type { AnyFunc, NormalObject, ReturnVoid } from '@vunk/shared'
+import type { AnyFunc, MakeRequired, NormalObject, ReturnVoid } from '@vunk/shared'
 import type { EventSourceMessage } from 'eventsource-parser'
 import { noop } from '@vunk-shared/function'
 import { Deferred } from '@vunk-shared/promise'
@@ -90,16 +90,7 @@ export class RestFetch {
       body: undefined,
     } as RestFetchMiddlewareContext<NormalObject>
 
-    // 定义 next 函数
-    const next = async (index = 0) => {
-      if (index >= this.middlewareQueue.length)
-        return
-      // 获取下一个中间件
-      const middleware = this.middlewareQueue[index]
-      await middleware(middlewareCtx, () => next(index + 1))
-    }
-
-    const middlewarePromise = next()
+    const middlewarePromise = this.middlewareRun(middlewareCtx)
 
     this.response(
       middlewareCtx.req.requestOptions,
@@ -110,7 +101,6 @@ export class RestFetch {
         middlewareCtx.body = res
         return res
       })
-
       .then(responseDef.resolve, (err) => {
         middlewareCtx.res.reason = err
         responseDef.resolve(err)
@@ -227,18 +217,144 @@ export class RestFetch {
     return cloneRes
   }
 
+  async resolve (
+    options: RestFetchRequestOptions,
+    state?: NormalObject,
+  ) {
+    const body = {}
+    const responseDef = new Deferred<any>()
+    const when = () => responseDef.promise
+
+    const middlewareCtx = {
+      req: {
+        requestOptions: options,
+      },
+      res: {
+        when,
+        response: new Response('{}', {
+          status: 200,
+          headers: { 'Content-Type': 'application/json' },
+        }),
+      },
+      state: state ?? {
+        error: false,
+      },
+      body,
+    } as RestFetchMiddlewareContext<NormalObject>
+
+    const middlewarePromise = this.middlewareRun(middlewareCtx)
+
+    const requestInitPromise = this.resolveRequestInit(middlewareCtx.req.requestOptions)
+
+    requestInitPromise.then(() => responseDef.resolve(body))
+
+    return responseDef
+      .promise
+      .then(() => middlewarePromise)
+      .then(() => requestInitPromise)
+  }
+
   private async initFetch (
     options: RestFetchRequestOptions,
     init?: RequestInit,
   ): Promise<Response> {
+    const [input, { abortController, timeout, ontimeout, queue }, config] = await this.resolveRequestInit(options)
+
+    const fetchFn = () => {
+      const p = fetch(input, {
+        ...config,
+        ...init,
+      }).then((res) => {
+        if (!res.ok)
+          return Promise.reject(res)
+        return res
+      })
+
+      /* 超时处理2 */
+      if (!timeout)
+        return p
+
+      const timeoutId = window.setTimeout(() => {
+        abortController?.abort()
+        ontimeout?.(config)
+      }, timeout)
+
+      p.finally(() => {
+        window.clearTimeout(timeoutId)
+      })
+      /* 超时处理2 end */
+
+      return p
+    }
+
+    let fetchPromise: Promise<Response> | undefined
+
+    /* 设置队列 */
+    if (
+      (!queue?.id)
+      || queue.leave
+    ) {
+      fetchPromise = fetchFn()
+      return fetchPromise
+    }
+    if (!this.queues[queue.id]) {
+      this.queues[queue.id] = []
+    }
+    if (queue.mode === 'parallel') {
+      fetchPromise = fetchFn()
+      // 并行模式, 直接push
+      this.queues[queue.id].push({
+        promise: fetchPromise,
+        abortController,
+      })
+    }
+    else if (queue.mode === 'wait') {
+      // 等待其他请求完成
+      const promises = this.queues[queue.id].map(({ promise }) => promise)
+      // 所有请求完成，无论成功失败
+      const others = Promise.allSettled(promises)
+
+      fetchPromise = others.then(() => {
+        return fetchFn()
+      })
+      // 清空之前队列，只保留当前请求
+      this.queues[queue.id] = [
+        {
+          promise: fetchPromise,
+          abortController,
+        },
+      ]
+    }
+    else {
+      // 取消其他请求
+      this.queues[queue.id].forEach(({ abortController }) => {
+        abortController?.abort()
+      })
+      fetchPromise = fetchFn()
+
+      this.queues[queue.id] = [{
+        promise: fetchPromise,
+        abortController,
+      }]
+    }
+    /* 设置队列 end */
+
+    return fetchPromise ?? fetchFn()
+  }
+
+  private async resolveRequestInit (options: RestFetchRequestOptions): Promise<[
+    string,
+    MakeRequired<RestFetchRequestOptions, 'abortController'>,
+    RequestInit,
+  ]> {
     /* 超时处理 */
     let abortController = options.abortController
     if (!abortController) {
       abortController = new AbortController()
     }
     const timeout = options.timeout ?? this.timeout
+    const ontimeout = options.ontimeout ?? this.ontimeout
     /* 超时处理 end */
-
     const headers = new Headers()
 
     // 初始化init参数
@@ -247,7 +363,6 @@ export class RestFetch {
       headers,
       signal: abortController?.signal,
     }
-
     const postContentType = options.contentType || 'application/json'
 
     if (options.method !== 'GET') {
@@ -287,7 +402,6 @@ export class RestFetch {
         headers.set(key, options.headers?.[key])
       })
     }
-
     // 将params 参数拼接到url
     let params = ''
     if (options.params) {
@@ -297,6 +411,7 @@ export class RestFetch {
 
     // 请求拦截
     const setRequestInit = options.setRequestInit ?? this.setRequestInit
+
     if (this.presetRequestInit) {
       config = this.presetRequestInit(config)
     }
@@ -305,85 +420,30 @@ export class RestFetch {
       config = setRequestInit(config)
     }
 
-    const fetchFn = () => {
-      const p = fetch(input, {
-        ...config,
-        ...init,
-      }).then((res) => {
-        if (!res.ok)
-          return Promise.reject(res)
-        return res
-      })
-
-      /* 超时处理2 */
-      if (!timeout)
-        return p
-      const ontimeout = options.ontimeout ?? this.ontimeout
-      const timeoutId = window.setTimeout(() => {
-        abortController?.abort()
-        ontimeout?.(config)
-      }, timeout)
-      p.finally(() => {
-        window.clearTimeout(timeoutId)
-      })
-      /* 超时处理2 end */
-
-      return p
-    }
-
-    let fetchPromise: Promise<Response> | undefined
-
-    /* 设置队列 */
-    if (
-      (!options.queue?.id)
-      || options.queue.leave
-    ) {
-      fetchPromise = fetchFn()
-      return fetchPromise
-    }
-    if (!this.queues[options.queue.id]) {
-      this.queues[options.queue.id] = []
-    }
-    if (options.queue.mode === 'parallel') {
-      fetchPromise = fetchFn()
-      // 并行模式, 直接push
-      this.queues[options.queue.id].push({
-        promise: fetchPromise,
+    return [
+      input,
+      {
+        ...options,
+        timeout,
+        setRequestInit,
         abortController,
-      })
-    }
-    else if (options.queue.mode === 'wait') {
-      // 等待其他请求完成
-      const promises = this.queues[options.queue.id].map(({ promise }) => promise)
-      // 所有请求完成，无论成功失败
-      const others = Promise.allSettled(promises)
+        ontimeout,
+      },
+      config,
+    ] as const
+  }
 
-      fetchPromise = others.then(() => {
-        return fetchFn()
-      })
-      // 清空之前队列，只保留当前请求
-      this.queues[options.queue.id] = [
-        {
-          promise: fetchPromise,
-          abortController,
-        },
-      ]
+  private async middlewareRun (
+    middlewareCtx: RestFetchMiddlewareContext,
+  ) {
+    const next = async (index = 0) => {
+      if (index >= this.middlewareQueue.length)
+        return
+      // 获取下一个中间件
+      const middleware = this.middlewareQueue[index]
+      await middleware(middlewareCtx, () => next(index + 1))
     }
-    else {
-      // 取消其他请求
-      this.queues[options.queue.id].forEach(({ abortController }) => {
-        abortController?.abort()
-      })
-      fetchPromise = fetchFn()
-
-      this.queues[options.queue.id] = [{
-        promise: fetchPromise,
-        abortController,
-      }]
-    }
-    /* 设置队列 end */
-
-    return fetchPromise ?? fetchFn()
+    return next()
   }
 
   addMiddleware (fn: RestFetchMiddleware) {

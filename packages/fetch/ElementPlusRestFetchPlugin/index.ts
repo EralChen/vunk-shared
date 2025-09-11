@@ -70,13 +70,16 @@ export function ElementPlusRestFetchPlugin (
     let loadingService: ReturnType<typeof ElLoading.service> | null = null
 
     const resReady = res.when()
+
     if (loading) {
-      const preres = await Promise.race([
+      Promise.race([
         sleep(initOptions.loadingDelay),
         resReady,
-      ])
-      if (!preres) { // 超时开启loading
-        if (isRef(initOptions.loading)) {
+      ]).then((preres) => {
+        if (preres) // 已经有结果了
+          return
+
+        if (isRef(initOptions.loading)) { // 超时开启loading
           initOptions.loading.value = true
         }
         else {
@@ -86,7 +89,7 @@ export function ElementPlusRestFetchPlugin (
               : initOptions.loading,
           )
         }
-      }
+      })
     }
 
     await next()

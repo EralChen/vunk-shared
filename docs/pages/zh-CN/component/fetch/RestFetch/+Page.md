@@ -2,7 +2,14 @@
 
 RestFetch 是一个功能强大的 HTTP 客户端封装，基于浏览器原生的 fetch API 实现。它提供了请求拦截、响应拦截、请求队列、缓存、超时处理等丰富功能。
 
-## 基础用法
+## 基础示例
+
+:::demo
+RestFetch/basic
+>>>subs
+[RestFetch/api/init, RestFetch/api/posts/index, RestFetch/api/posts/types]
+>>>
+:::
 
 ### 创建实例
 
@@ -181,6 +188,23 @@ await client.reader({
 })
 ```
 
+## 流式响应示例
+
+开启 `node server.cjs` 后预览。
+
+:::demo
+RestFetch/reader
+>>>subs
+[RestFetch/api/stream, RestFetch/api/server]
+>>>
+:::
+
+## Resolve 提取参数
+
+:::demo
+RestFetch/resolve
+:::
+
 ## API 参考
 
 ### 构造函数选项
@@ -241,26 +265,6 @@ interface RestFetchMiddlewareContext<S = Record<string, any>> {
   body: any // 最终响应数据
 }
 ```
-
-## 基础示例
-
-:::demo
-RestFetch/basic
->>>subs
-[RestFetch/api/init, RestFetch/api/posts/index, RestFetch/api/posts/types]
->>>
-:::
-
-## 流式响应示例
-
-开启 `node server.cjs` 后预览。
-
-:::demo
-RestFetch/reader
->>>subs
-[RestFetch/api/stream, RestFetch/api/server]
->>>
-:::
 
 ## 源码
 
