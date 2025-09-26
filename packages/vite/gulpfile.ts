@@ -12,6 +12,7 @@ const external = [
   'vite',
   /^unplugin-vue-markdown/,
   /^unocss/,
+  'xlsx',
 ]
 
 const filePaths = globSync(buildFile, {
