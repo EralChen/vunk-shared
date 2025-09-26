@@ -1,5 +1,5 @@
-import { PluginOption, loadEnv } from 'vite'
-
+import type { PluginOption } from 'vite'
+import { loadEnv } from 'vite'
 
 /**
  * 将 VITE_ 环境变量  挂载到 window 上
@@ -10,7 +10,7 @@ export function windowEnv (
   envDir = process.cwd(),
 ): PluginOption {
   let mode = ''
-  
+
   return {
     configResolved (resolvedConfig) {
       // 存储最终解析的配置
@@ -30,10 +30,13 @@ export function windowEnv (
       return html.replace(
         `<script id="env"></script>`,
         `<script id="env">
-          ${'window.__env__ =' + JSON.stringify(
-    loadEnv(mode, envDir), null, 2,
-  )}
-        </script>`)
+          ${`window.__env__ =${JSON.stringify(
+            loadEnv(mode, envDir),
+            null,
+            2,
+          )}`}
+        </script>`,
+      )
     },
   }
 }

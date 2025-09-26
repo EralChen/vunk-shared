@@ -16,7 +16,7 @@ export default eslint({
   ignores: [
     'node_modules',
     'dist',
-    '*.md',
+    '**/*.md',
     'docs/vite.config.mts',
   ],
 })

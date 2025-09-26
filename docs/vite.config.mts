@@ -7,10 +7,10 @@ import path from 'path'
 import Icons from 'unplugin-icons/vite'
 import IconsResolver from 'unplugin-icons/resolver'
 import Components from 'unplugin-vue-components/vite'
-import vueDevTools from 'vite-plugin-vue-devtools'
+// import vueDevTools from 'vite-plugin-vue-devtools'
 import { packagesDir, workRoot } from '@lib-env/path'
 import { fixPath } from '@lib-env/build-utils'
-import { explorerTree, createMarkdownPlugin } from '@lib-env/app-utils'
+import { explorerTree, createMarkdownPlugin, createExcelPlugin } from '@lib-env/app-utils'
 import unocss from 'unocss/vite'
 import { PluginOption } from 'vite'
 
@@ -77,7 +77,7 @@ export default defineConfig(async ({ mode }) => {
     },
 
     plugins: [
-      vueDevTools(),
+      // vueDevTools(),
       explorerTree({
         root: packagesDir,
         ignore: [
@@ -92,6 +92,8 @@ export default defineConfig(async ({ mode }) => {
           'win32',
         ],
       }),
+
+      createExcelPlugin({}),
 
       
       vike({
