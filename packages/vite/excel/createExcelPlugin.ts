@@ -1,5 +1,6 @@
 import type { PluginOption } from 'vite'
-import * as XLSX from 'xlsx'
+import type { WorkSheet } from 'xlsx'
+import { readFile, utils } from 'xlsx'
 
 export interface ExcelPluginOptions {
   // 是否保留空单元格：空值将使用 null 填充（否则跳过该键）
@@ -97,12 +98,12 @@ function rowsToObjects (
 }
 
 function sheetToJSONWithHeaderStrategy (
-  ws: XLSX.WorkSheet,
+  ws: WorkSheet,
   options: ExcelPluginOptions,
 ) {
   const raw = options.raw !== false
   // 先拿二维数组
-  const rows: RowsArray = XLSX.utils.sheet_to_json(ws, { header: 1, raw }) as any
+  const rows: RowsArray = utils.sheet_to_json(ws, { header: 1, raw }) as any
 
   if (Array.isArray(options.header)) {
     const headerKeys = dedupeHeaderKeys(options.header)
@@ -134,14 +135,14 @@ function sheetToJSONWithHeaderStrategy (
   }
 
   // 默认：交给 XLSX 的对象模式（使用第一行作为表头）
-  return XLSX.utils.sheet_to_json(ws, {
+  return utils.sheet_to_json(ws, {
     raw,
     defval: options.keepEmptyCells ? null : undefined,
     blankrows: !!options.keepBlankRows,
   })
 }
 
-function sheetToRows (ws: XLSX.WorkSheet, options: ExcelPluginOptions) {
+function sheetToRows (ws: WorkSheet, options: ExcelPluginOptions) {
   // 根据 header 策略选择转换方式
   const needsCustom
     = Array.isArray(options.header) || typeof options.header === 'number' || options.header === 'auto'
@@ -149,7 +150,7 @@ function sheetToRows (ws: XLSX.WorkSheet, options: ExcelPluginOptions) {
     return sheetToJSONWithHeaderStrategy(ws, options)
 
   const raw = options.raw !== false
-  return XLSX.utils.sheet_to_json(ws, {
+  return utils.sheet_to_json(ws, {
     raw,
     defval: options.keepEmptyCells ? null : undefined,
     blankrows: !!options.keepBlankRows,
@@ -179,7 +180,7 @@ export function createExcelPlugin (options: ExcelPluginOptions = {}): PluginOpti
       const sheetQuery = query.get('sheet') || undefined
 
       // 读取文件并解析
-      const wb = XLSX.readFile(file)
+      const wb = readFile(file)
       const sheetNames = wb.SheetNames || []
 
       if (sheetNames.length === 0) {
