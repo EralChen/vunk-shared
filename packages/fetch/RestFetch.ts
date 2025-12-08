@@ -13,6 +13,7 @@ export class RestFetch {
   requestThen: RestFetchConstructorOptions['requestThen']
   timeout: RestFetchConstructorOptions['timeout']
   ontimeout: RestFetchConstructorOptions['ontimeout']
+  ignoreFetchStatusError: RestFetchConstructorOptions['ignoreFetchStatusError']
 
   protected caches: Record<string, Promise<Response>>
   protected queues: Record<string, {
@@ -41,6 +42,7 @@ export class RestFetch {
 
     this.timeout = options.timeout
     this.ontimeout = options.ontimeout
+    this.ignoreFetchStatusError = options.ignoreFetchStatusError
 
     this.caches = {}
     this.queues = {}
@@ -103,7 +105,12 @@ export class RestFetch {
       })
       .then(responseDef.resolve, (err) => {
         middlewareCtx.res.reason = err
-        responseDef.resolve(err)
+        if (this.ignoreFetchStatusError) {
+          responseDef.resolve(err)
+        }
+        else {
+          responseDef.reject(err)
+        }
       })
 
     return responseDef
@@ -548,6 +555,11 @@ export interface RestFetchConstructorOptions {
    * 超时回调
    */
   ontimeout?: (config: RequestInit) => ReturnVoid
+
+  /**
+   * 跳过 fetch 状态码错误，不抛出异常 可在中间件中处理
+   */
+  ignoreFetchStatusError?: boolean
 
 }
 
