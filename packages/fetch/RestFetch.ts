@@ -218,7 +218,9 @@ export class RestFetch {
       const { done, value } = await reader.read()
       if (done)
         break
-      parser.feed(decoder.decode(value))
+      parser.feed(decoder.decode(value, {
+        stream: true,
+      }))
     }
 
     return cloneRes
