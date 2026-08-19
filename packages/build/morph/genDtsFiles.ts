@@ -74,7 +74,7 @@ export async function genDtsFiles (settings: GenDtsFilesSettings) {
       jsx: JsxEmit.Preserve,
       disableSizeLimit: true,
       esModuleInterop: true,
-      preserveSymlinks: true,
+      preserveSymlinks: false,
       moduleResolution: ModuleResolutionKind.Node10,
       target: ScriptTarget.ESNext,
       skipLibCheck: true,

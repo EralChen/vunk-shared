@@ -1,4 +1,4 @@
-import { ArrowFunction, Block, Expression, FunctionExpression, ParenthesizedExpression, SyntaxKind } from 'ts-morph'
+import { ArrowFunction, Block, Expression, FunctionExpression, ParenthesizedExpression, ReturnStatement, SyntaxKind } from 'ts-morph'
 import { getValueFromExpression } from './getValueFromExpression'
 
 /**
@@ -21,8 +21,8 @@ export function getCalledValueFromExpression (
     }
 
     if (body instanceof Block) {
-      const res = body.getChildrenOfKind(SyntaxKind.ReturnStatement)[0]
-      return getValueFromExpression(res.getExpression())
+      const res = body.getChildrenOfKind(SyntaxKind.ReturnStatement)[0] as ReturnStatement | undefined
+      return getValueFromExpression(res?.getExpression())
     }
 
     return body.getText()

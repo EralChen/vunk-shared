@@ -5,9 +5,22 @@
     "build": "gulp -f gulpfile.ts"
   },
   "dependencies": {
+    "@vunk-shared/markdown": "workspace:*",
+    "@vunk-shared/node": "workspace:*",
+    "@vunk-shared/regexp": "workspace:*",
+    "@vunk-shared/types": "workspace:*",
+    "markdown-it-async": "^2.2.0",
     "mdast-util-from-markdown": "^2.0.2",
     "mdast-util-to-markdown": "^2.1.2",
+    "unocss": "66.1.0-beta.11",
     "unocss-preset-vunk": "^1.0.4",
+    "unplugin-vue-markdown": "^29.2.0",
+    "vite": "^6.3.1",
+    "vitepress": "2.0.0-alpha.4",
+    "vue": "^3.5.13",
     "xlsx": "0.18.5"
+  },
+  "devDependencies": {
+    "@types/mdast": "^4.0.4"
   }
 }

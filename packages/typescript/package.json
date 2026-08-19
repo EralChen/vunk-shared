@@ -6,6 +6,6 @@
   },
   "dependencies": {
     "comment-parser": "^1.4.1",
-    "ts-morph": "latest"
+    "ts-morph": "^25.0.1"
   }
 }

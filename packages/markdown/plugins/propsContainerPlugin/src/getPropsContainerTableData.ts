@@ -1,7 +1,7 @@
 import { NormalObject } from '@vunk-shared/types'
 import { getCalledValueFromExpression, getTypeFromAsExpression, getValueFromObjectLiteralExpression, parseCommentFromRanges, emptyObjectLiteralExpression } from '@vunk-shared/typescript/morph'
 
-import { AsExpression, Project, PropertyAssignment, SourceFile, SyntaxKind } from 'ts-morph'
+import { AsExpression, ObjectLiteralExpression, Project, PropertyAssignment, SourceFile, SyntaxKind } from 'ts-morph'
 
 
 export interface PropsContainerTableRow {
@@ -70,15 +70,15 @@ export function getPropsContainerTableData (options: {
 
   const props = sourceFile
     .getVariableDeclarationOrThrow('props')
-    .getInitializerIfKindOrThrow(SyntaxKind.ObjectLiteralExpression)
+    .getInitializerIfKindOrThrow(SyntaxKind.ObjectLiteralExpression) as ObjectLiteralExpression
 
 
   const infoList = props.getProperties().reduce((a, prop) => {
     if (prop instanceof PropertyAssignment) {
       const name = prop.getName()
-      const obje =  prop.getInitializerIfKind(
+      const obje = (prop.getInitializerIfKind(
         SyntaxKind.ObjectLiteralExpression,
-      )  ?? emptyObjectLiteralExpression
+      ) ?? emptyObjectLiteralExpression) as ObjectLiteralExpression
 
 
       const requiredInfo = getValueFromObjectLiteralExpression(obje, 'required')

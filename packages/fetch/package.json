@@ -6,6 +6,7 @@
   },
   "dependencies": {
     "eventsource-parser": "^3.0.6",
+    "lodash-es": "^4.17.21",
     "qs": "^6.13.0",
     "util": "^0.12.5"
   },

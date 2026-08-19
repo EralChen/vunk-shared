@@ -5,9 +5,9 @@
     "build": "gulp -f gulpfile.ts"
   },
   "dependencies": {
-    "@vue/compiler-sfc": "latest",
-    "rollup": "latest",
-    "ts-morph": "latest",
-    "typescript": "latest"
+    "@vue/compiler-sfc": "^3.5.13",
+    "rollup": "^4.27.3",
+    "ts-morph": "^25.0.1",
+    "typescript": "^5.8.3"
   }
 }

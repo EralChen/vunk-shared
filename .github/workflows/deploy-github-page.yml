@@ -17,7 +17,7 @@ jobs:
     - name: Install dependencies
       run: | 
         node -v
-        npm install -g pnpm
+        corepack enable
         pnpm install
 
     - name: Build

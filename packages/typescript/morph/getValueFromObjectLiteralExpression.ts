@@ -49,7 +49,7 @@ export function getValueFromObjectLiteralExpression (
 
     const nObj = source
       .getVariableDeclarationOrThrow('data')
-      .getInitializerIfKindOrThrow(SyntaxKind.ObjectLiteralExpression)
+      .getInitializerIfKindOrThrow(SyntaxKind.ObjectLiteralExpression) as ObjectLiteralExpression
 
     const functionProp = nObj.addPropertyAssignment({
       name: prop.getName(),

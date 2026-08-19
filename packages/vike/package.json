@@ -3,5 +3,9 @@
   "private": true,
   "scripts": {
     "build": "gulp -f gulpfile.ts"
+  },
+  "dependencies": {
+    "@vunk-shared/array": "workspace:*",
+    "@vunk-shared/function": "workspace:*"
   }
 }
