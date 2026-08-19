@@ -15,7 +15,11 @@ export class RestFetch {
   ontimeout: RestFetchConstructorOptions['ontimeout']
   ignoreFetchStatusError: RestFetchConstructorOptions['ignoreFetchStatusError']
 
-  protected caches: Record<string, Promise<Response>>
+  protected caches: Record<string, {
+    promise: Promise<Response>
+    timestamp: number
+  }>
+
   protected queues: Record<string, {
     promise: Promise<Response>
     abortController: AbortController
@@ -56,10 +60,19 @@ export class RestFetch {
   ) {
     let readyPromise: Promise<Response>
     if (options.cache?.id) { // 如果提供缓存id 则从缓存获取promise
-      if (!this.caches[options.cache.id] || options.cache.forceUpdate) { // 如果没有缓存先赋值, 或者需要强制更新缓存
-        this.caches[options.cache.id] = this.initFetch(options, requestInit)
+      const cacheItem = this.caches[options.cache.id]
+      const isExpired = cacheItem
+        && options.cache.duration
+        && Date.now() - cacheItem.timestamp > options.cache.duration
+
+      if (!cacheItem || options.cache.forceUpdate || isExpired) {
+        // 如果没有缓存先赋值, 或者需要强制更新缓存, 或者缓存已过期(重新发起请求更新缓存)
+        this.caches[options.cache.id] = {
+          promise: this.initFetch(options, requestInit),
+          timestamp: Date.now(),
+        }
       }
-      readyPromise = this.caches[options.cache.id]
+      readyPromise = this.caches[options.cache.id].promise
       // https://github.com/whatwg/fetch/issues/196
       // res.json() 会消耗流数据 需要clone以便重用
         .then(res => res.clone())
@@ -649,6 +662,13 @@ export interface RestFetchRequestOptions {
      * 是否强制更新
      */
     forceUpdate?: boolean
+
+    /**
+     * 缓存时长
+     * 单位 ms
+     * 超过该时长后，缓存视为过期，下次请求会重新发起请求并更新缓存
+     */
+    duration?: number
   }
 
   /**
