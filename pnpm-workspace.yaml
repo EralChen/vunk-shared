@@ -3,4 +3,10 @@ packages:
   - packages/*
   - docs
   - app
-  
+allowBuilds:
+  '@parcel/watcher': true
+  '@vaadin/vaadin-usage-statistics': true
+  core-js: true
+  esbuild: true
+  koffi: true
+  vue-demi: true
