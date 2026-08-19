@@ -16,6 +16,8 @@ const external = [
   'ts-morph',
   'typescript',
   '@vue/compiler-sfc',
+  '@vue/language-core',
+  '@volar/typescript',
   'rollup',
 
   /^@rollup\//,

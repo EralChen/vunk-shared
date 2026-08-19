@@ -32,8 +32,8 @@ export default parallel(
   taskWithName(`gen ${baseDirname} types`, async () => {
 
     const compilerOptions: CompilerOptions = {
-      moduleResolution: ModuleResolutionKind.NodeNext,
-      module: ModuleKind.NodeNext,
+      moduleResolution: ModuleResolutionKind.Bundler,
+      module: ModuleKind.ESNext,
       skipLibCheck: true,
     }
     await genTypes({
